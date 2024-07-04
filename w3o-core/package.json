@@ -1,7 +1,7 @@
 {
-    "name": "@vapaee/w3o-code",
-    "version": "0.9.27",
-    "description": "Telos Zero Cloud Login",
+    "name": "w3o-core",
+    "version": "0.0.1",
+    "description": "Web3 Octopus Framework Core",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "MIT",
@@ -11,13 +11,12 @@
     ],
     "scripts": {
       "copy-version": "node scripts/copy_version.js",
-      "copy-scss": "node scripts/copy_scss.js",
-      "deploy-into-examples": "node scripts/deploy_lib.js",
-      "build": "yarn copy-version; yarn copy-scss; tsc",
+      "build": "yarn copy-version; tsc",
       "test": "jest",
       "prepublish": "yarn run build",
-      "dev": "yarn copy-version; yarn copy-scss; tsc -w",
-      "publish-on": "yarn run build && npm publish --access public"
+      "dev": "yarn copy-version; tsc -w",
+      "publish-on": "yarn run build && npm publish --access public",
+      "src": "node scripts/concatenate_src.js"
     },
     "devDependencies": {
       "@types/bn.js": "^5.1.5",
@@ -27,20 +26,10 @@
       "typescript": "^5.3.3"
     },
     "peerDependencies": {
-      "@greymass/eosio": "^0.7.0",
-      "@vapaee/logger": "^0.9.1",
-      "axios": "^1.6.7",
-      "metakeep": "^2.2.1",
-      "rxjs": ">=6.0.0",
-      "universal-authenticator-library": ">=0.3.0"
+      "rxjs": ">=6.0.0"
     },
     "dependencies": {
-      "@greymass/eosio": "^0.7.0",
-      "@vapaee/logger": "^0.9.1",
-      "axios": "^1.6.7",
-      "metakeep": "^2.2.1",
-      "rxjs": ">=6.0.0",
-      "universal-authenticator-library": "^0.3.0"
+      "rxjs": ">=6.0.0"
     }
   }
   
