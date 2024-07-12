@@ -10,11 +10,11 @@ interface LoggedLine {
 
 type LoggerContextParent = LoggerContext | undefined;
 
-class LoggerContext {
+export class LoggerContext {
     private static uniqueIdCounter = 0;
     private idValue: string;
     private parentContext?: LoggerContextParent;
-    private methodName: string;
+    // private methodName: string;
     private argsValue: any;
     private logsArray: LoggedLine[];
     private levelValue: number;
@@ -23,7 +23,7 @@ class LoggerContext {
     constructor(methodName: string, args: any, parent?: LoggerContextParent) {
         this.idValue = LoggerContext.generateUniqueId();
         this.parentContext = parent;
-        this.methodName = methodName;
+        // this.methodName = methodName;
         this.argsValue = args;
         this.logsArray = [];
         this.levelValue = parent ? parent.level() + 1 : 0;
@@ -91,18 +91,50 @@ class LoggerContext {
         const messagePrefix = `${this.id()} ${this.timestamp()}${'  '.repeat(this.level())}}`;
         console.error(messagePrefix, ...args);
     }
+
+    info(...args: any[]): void {
+        this.logsArray.push({
+            t: this.getCurrentTime(),
+            m: 'log',
+            args
+        });
+        const messagePrefix = `${this.id()} ${this.timestamp()}${'  '.repeat(this.level())}}`;
+        console.info(messagePrefix, ...args);
+    }
+
+    debug(...args: any[]): void {
+        this.logsArray.push({
+            t: this.getCurrentTime(),
+            m: 'log',
+            args
+        });
+        const messagePrefix = `${this.id()} ${this.timestamp()}${'  '.repeat(this.level())}}`;
+        console.debug(messagePrefix, ...args);
+    }
+
+    warn(...args: any[]): void {
+        this.logsArray.push({
+            t: this.getCurrentTime(),
+            m: 'log',
+            args
+        });
+        const messagePrefix = `${this.id()} ${this.timestamp()}${'  '.repeat(this.level())}}`;
+        console.warn(messagePrefix, ...args);
+    }
 }
 
 
 export class Logger {
     private name: string;
+    static current: LoggerContext;
 
     constructor(name: string) {
         this.name = name;
     }
 
-    method(methodName: string, args: any, context?: LoggerContextParent): LoggerContext {
-        return new LoggerContext(`${this.name}.${methodName}`, args, context);
+    method(methodName: string, args?: any, context?: LoggerContextParent): LoggerContext {
+        Logger.current = new LoggerContext(`${this.name}.${methodName}`, args, context);
+        return Logger.current;
     }
 }
 

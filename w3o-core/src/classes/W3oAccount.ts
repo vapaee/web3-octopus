@@ -5,6 +5,7 @@ import {
 
 // Representa una cuenta de usuario, incluyendo datos mínimos y una referencia a su autenticador
 export abstract class W3oAccount {
+    
     constructor(public readonly authenticator: W3oAuthenticator) {}
 
     // Método abstracto para obtener la dirección de la cuenta

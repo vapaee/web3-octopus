@@ -1,17 +1,13 @@
 import {
-    Web3Octopus,
-} from '.';
-
-import {
     BehaviorSubject
 } from 'rxjs';
 
 
 // Clase abstracta que representa un módulo (authenticador, network o servicio), su ID ()
-export abstract class W3oModule<T> {
+export abstract class W3oModule {
     initialized$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    constructor(public readonly w3o: Web3Octopus<T>) {}
+    constructor() {}
 
     // Método abstracto que deberá ser implementado por los móidulos que lo necesiten
     // esta función será llamada cuando todos los módulos requeridos estén inicializados

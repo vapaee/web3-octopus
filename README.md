@@ -11,10 +11,14 @@ Web3 Octopus es un framework que, en su capa más abstracta, se basa en tres con
 
 Esta arquitectura pretende establecer las bases para una solución uniforme en el ecosistema crypto y así permitirle a los desarrolladores crear y publicar módulos bien específicos de su negocio y beneficiarse de todos los módulos ya creados por la comunidad.
 
+
+Veamos un ejemplo de uso final configurando WEb3 Octopus para interactuar cuatro blockchains distintas:
+
 ```typescript
 // import the main class from the core
 import {
-    Web3Octopus,                     // the main class
+    Web3Octopus,                          // the main class
+    W3oIServices,                         // interface that includes the snapshot function
 } from '@vapaee/w3o-core';
 
 // import the classes to support Ethereum/EVM networks
@@ -25,7 +29,6 @@ import {
     EthereumMetamaskAuth,                 // extends W3oAuthenticator
     EthereumBraveAuth,                    // extends W3oAuthenticator
     EthereumWalletConnectAuth,            // extends W3oAuthenticator
-    EthereumSupportFactory,               // extends W3oNetworkSupportFactory
 } from '@vapaee/w3o-ethereum';
 
 // import the classes to support Antelope (EOSIO) networks
@@ -34,10 +37,9 @@ import {
     AntelopeTokensService,                // extends W3oService
     AntelopeBalancesService,              // extends W3oService
     AntelopeAnchorAuth,                   // extends W3oAuthenticator
-    AntelopeSupportFactory,               // extends W3oNetworkSupportFactory
 } from '@vapaee/w3o-antelope';
 
-// import the conficuration for each of the four Telos networks
+// import the configuration for each of the four Telos networks
 import {
     TelosEvmConfigJSON,                   // contains the mainnet evm network configuration JSON
     TelosEvmTestnetConfigJSON,            // contains the testnet evm network configuration JSON
@@ -45,14 +47,14 @@ import {
     TelosZeroTestnetConfigJSON,           // contains the testnet native network configuration JSON
 } from '@vapaee/w3o-telos';
 
-// import the conficuration just for EOS networks
+// import the configuration just for EOS networks
 import {
     EOSConfigJSON,                        // contains the mainnet native network configuration JSON
 } from '@vapaee/w3o-eos';
 
 // ---- Create the main class instance ----
 // the developer user may be creative and create his own service schema
-interface IMyServices {
+interface IMyServices extends W3oIServices {
     evm: {
         tokens: EthereumTokensService;     // extends W3oService
         balances: EthereumBalancesService; // extends W3oService
@@ -67,7 +69,9 @@ interface IMyServices {
 const octopus = new Web3Octopus<IMyServices>();
 
 // ---- Register Telos EVM support ----
-const telosEvmSupportSettings: W3oSupportSettings<IMyServices> = {
+const telosEvmSupportSettings: W3oNetworkSupportSettings<IMyServices> = {
+    // Network type
+    type: 'ethereum',
     // list of supported wallets for Ethereum-like networks
     auth: [
         new EthereumMetamaskAuth(octopus),
@@ -80,11 +84,12 @@ const telosEvmSupportSettings: W3oSupportSettings<IMyServices> = {
         new EthereumNetwork(TelosEvmTestnetConfigJSON, octopus)
     ]
 }
-const telosEvmSupport = new EthereumSupportFactory(telosEvmSupportSettings);
-octopus.addNetworkSupport(telosEvmSupport);
+octopus.addNetworkSupport(telosEvmSupportSettings);
 
 // ---- Register Telos/EOS support ----
-const telosEosSupportSettings = {
+const telosEosSupportSettings: W3oNetworkSupportSettings<IMyServices> = {
+    // Network type
+    type: 'antelope',
     // list of supported wallets for Antelope networks
     auth: [
         new AntelopeAnchorAuth(octopus)
@@ -97,8 +102,7 @@ const telosEosSupportSettings = {
         new AntelopeNetwork(EOSTestnetConfigJSON, octopus)
     ]
 }
-const telosEosSupport = new AntelopeSupportFactory(telosEosSupportSettings);
-octopus.addNetworkSupport(telosEosSupport);
+octopus.addNetworkSupport(telosEosSupportSettings);
 
 // ---- Register the services ----
 // paths must match the keys in the IMyServices interface
@@ -111,7 +115,9 @@ const services = [
     new FooService('foo', octopus)
 ];
 octopus.registerServices(services);
-octopus.init();
+octopus.init({
+    multisession: true, // if false, W3oSessionManager we maitain always one open session and logout the user if the network changes
+});
 
 export function getOctopus(): Web3Octopus<IMyServices> {
     return octopus;
@@ -135,11 +141,11 @@ getOctopus().services.foo.bar();
 
 # Clases Principales
 
-| #  | Entidad                   | Tipo             | Rol                                                                                          |
-|----|---------------------------|------------------|----------------------------------------------------------------------------------------------|
-| 1  | W3oNetworkType            | Tipo             | Define los tipos de redes blockchain soportadas.                                             |
-| 2  | W3oNetworkName            | Tipo             | Representa el nombre identificador de una red blockchain.                                    |
-| 3  | W3oAddress                | Tipo             | Representa la dirección o ID del usuario en una blockchain.                                  |
+| #  | Entidad                   | Tipo             | Rol                                                                                           |
+|----|---------------------------|------------------|-----------------------------------------------------------------------------------------------|
+| 1  | W3oNetworkType            | Tipo             | Define los tipos de redes blockchain soportadas. Ejemplos: "ethereum" | "antelope" | "solana" |
+| 2  | W3oNetworkName            | Tipo             | Representa el nombre identificador de una red blockchain.                                     |
+| 3  | W3oAddress                | Tipo             | Representa la dirección o ID del usuario en una blockchain.                                   |
 | 4  | W3oError                  | Clase            | Clase para manejar errores específicos dentro del framework, con un mensaje, código y payload.|
 | 5  | W3oAuthenticator          | Clase abstracta  | Proporciona métodos para autenticación de usuarios, gestión de cuentas y firma de transacciones.|
 | 6  | W3oTransaction            | Interfaz         | Representa una transacción en la blockchain, su implementación específica depende de la subclase.|
@@ -154,7 +160,7 @@ getOctopus().services.foo.bar();
 | 15 | W3oContract               | Clase            | Representa un contrato en la blockchain, proporciona métodos para obtener su ABI y tomar una captura de su estado.|
 | 16 | W3oNetworkManager         | Clase            | Gestiona las redes registradas en el framework, permitiendo actualizar su estado y acceder a la red actual.|
 | 17 | W3oNetworkSupportFactory  | Clase            | Proporciona soporte para una familia de redes, manejando la autenticación y configuración específica de cada red.|
-| 18 | W3oSupportSettings        | Interfaz         | Define la configuración de soporte, incluyendo autenticadores y configuraciones de red.       |
+| 18 | W3oNetworkSupportSettings | Interfaz         | Define la configuración de soporte, incluyendo autenticadores y configuraciones de red.       |
 | 19 | W3oAuthenticatorSettings  | Interfaz         | Define la configuración específica para autenticadores, será utilizada en la configuración del soporte de redes.|
 | 20 | W3oNetworkSettings        | Interfaz         | Define la configuración específica para redes, incluyendo nombre, ID de cadena, nombre para mostrar y enlaces útiles.|
 | 21 | W3oService                | Clase            | Representa un servicio en el framework, encapsula la interacción con un grupo de contratos, puede tener un estado interno y debe implementar un método `init` para inicializar su estado.|
