@@ -1,5 +1,8 @@
 
 # Web3 Octopus
+
+**This framework is still in development.**
+
 Web3 Octopus es un framework en TypeScript diseñado para facilitar el manejo de múltiples conexiones activas con diferentes blockchains simultáneamente. Cuenta con una arquitectura pensada para la incorporación de nuevas funcionalidades en forma de plugins, de manera tal que el desarrollador final pueda tomar sólo los módulos que le interesa usar y armar su propia versión de Octopus.
 
 # Arquitectura
