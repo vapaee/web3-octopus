@@ -1,10 +1,17 @@
+// w3o-core/src/classes/W3oTransactionResponse.ts
+
 import { Observable } from 'rxjs';
 import { W3oTransactionReceipt } from '../types';
 
-// Representa la respuesta de una transacción, incluyendo el hash de la transacción y una función para esperar el recibo
+/**
+ * Represents a transaction response, including its hash and a method to await the receipt
+ */
 export abstract class W3oTransactionResponse {
+
     constructor(public hash: string) {}
 
-    // Método abstracto para esperar el recibo de la transacción
+    /**
+     * Abstract method that returns an observable which emits the transaction receipt when available
+     */
     abstract wait(): Observable<W3oTransactionReceipt>;
 }

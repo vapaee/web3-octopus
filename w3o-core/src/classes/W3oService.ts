@@ -1,49 +1,29 @@
-import {
-    W3oModule,
-    Web3Octopus,
-} from '.';
-import { W3oIServices } from '../types';
+// w3o-core/src/classes/W3oNetworkManager.ts
 
+import { W3oContextFactory, W3oContext } from "./W3oContext";
+import { W3oModule } from "./W3oModule";
 
-// Clase abstracta que representa un módulo, incluyendo un método para inicializar el módulo y obtener un snapshot del estado interno
+const logger = new W3oContextFactory('W3oService');
+
+/**
+ * Abstract class that represents a service module with a specific path
+ */
 export abstract class W3oService extends W3oModule {
-    constructor(public path: string) {
-        super();
+    constructor(
+        public path: string,
+        parent: W3oContext,
+    ) {
+        const context = logger.method('constructor', { path }, parent);
+        super(context);
+    }
+
+    /**
+     * Returns a snapshot of the internal state of the service, including its path
+     */
+    override snapshot(): any {
+        return {
+            ...super.snapshot(),
+            path: this.path,
+        };
     }
 }
-
-// -- ejemplo de uso --
-class MyServiceClass extends W3oService {
-    w3oName = 'my-service';
-    w3oVersion = '1.0.0';
-    w3oRequire = [];
-    constructor(public path: string)  {
-        super(path);
-    }
-    init(): void {
-        console.log('init');
-        this.initialized$.next(true);
-    }
-    snapshot(): any {
-        return {};
-    }
-    hello() {
-        console.log('hello');
-    }
-}
-
-
-interface IMyServices extends W3oIServices {
-    foo: MyServiceClass;
-}
-const octopus = new Web3Octopus<IMyServices>();
-const myService = new MyServiceClass('foo');
-
-export function getOctopus() {
-    return octopus;
-}
-// --
-const oct = getOctopus();
-oct.services.foo.hello();
-myService.hello();
-

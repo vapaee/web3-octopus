@@ -1,34 +1,149 @@
+// w3o-core/src/classes/W3oModule.ts
+
 import {
-    BehaviorSubject
+    BehaviorSubject,
+    filter,
+    Observable,
+    take
 } from 'rxjs';
+import { W3oContextFactory, W3oContext } from './W3oContext';
+import { W3oInstance } from '../types';
 
+const logger = new W3oContextFactory('W3oModule');
 
-// Clase abstracta que representa un módulo (authenticador, network o servicio), su ID ()
+/**
+ * Abstract class that represents a reusable module with name, version and dependencies
+ */
 export abstract class W3oModule {
-    initialized$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    // Static registry of all registered modules
+    static modules: { [w3oId: string]: W3oModule } = {};
 
-    constructor() {}
-
-    // Método abstracto que deberá ser implementado por los móidulos que lo necesiten
-    // esta función será llamada cuando todos los módulos requeridos estén inicializados
-    init(): void {
-        this.initialized$.next(true);
+    /**
+     * Registers a module in the static registry
+     */
+    static registerModule(module: W3oModule, parent: W3oContext): void {
+        logger.method('registerModule', { w3oId: module.w3oId, module }, parent);
+        if (W3oModule.modules[module.w3oId]) {
+            throw new Error(`Module ${module.w3oId} already registered`);
+        }
+        W3oModule.modules[module.w3oId] = module;
     }
 
-    // Método abstracto para obtener la versión del módulo
+    /**
+     * Returns a module from the registry by its ID
+     */
+    static getModule(w3oId: string, parent: W3oContext): W3oModule | undefined {
+        logger.method('getModule', { w3oId }, parent);
+        return W3oModule.modules[w3oId];
+    }
+
+    /**
+     * Returns the full list of registered modules
+     */
+    static getModules(parent: W3oContext): W3oModule[] {
+        logger.method('getModules', {}, parent);
+        return Object.values(W3oModule.modules);
+    }
+
+    private __octopus!: W3oInstance;
+    private __requirements!: W3oModule[];
+    private __initialized$: BehaviorSubject<W3oModule | false> = new BehaviorSubject<W3oModule | false>(false);
+
+    constructor(
+        parent: W3oContext,
+    ) {
+        const context = logger.method('constructor', parent);
+
+        const [name, version] = this.w3oId.split('@');
+        if (!!name && !!version) {
+            W3oModule.registerModule(this, context);
+        } else {
+            setTimeout(() => {
+                if (!W3oModule.modules[this.w3oId]) {
+                    context.error('Module not registered. Try to register yourself after W3oModule constructor', { w3oId: this.w3oId });
+                }
+            }, 0);
+        }
+    }
+
+    /**
+     * Observable that emits once the module is initialized
+     */
+    get initialized$(): Observable<W3oModule> {
+        return this.__initialized$.asObservable().pipe(
+            filter((value): value is W3oModule => value !== false),
+            take(1),
+        );
+    }
+
+    /**
+     * Returns whether the module has been initialized
+     */
+    get initialized(): boolean {
+        return this.__initialized$.getValue() !== false;
+    }
+
+    /**
+     * Accessor for the Octopus instance, throws if not initialized
+     */
+    get octopus(): W3oInstance {
+        if (!this.__octopus) {
+            throw new Error(`Module(${this.w3oId}) not initialized. Try to initialize yourself after W3oModule constructor`);
+        }
+        return this.__octopus;
+    }
+
+    /**
+     * Accessor for the list of module requirements, throws if not initialized
+     */
+    get requirements(): W3oModule[] {
+        if (!this.__requirements) {
+            throw new Error(`Module(${this.w3oId}) not initialized. Try to initialize yourself after W3oModule constructor`);
+        }
+        return this.__requirements;
+    }
+
+    /**
+     * Initializes the module with Octopus instance and resolved dependencies
+     */
+    init(octopus: W3oInstance, requirements: W3oModule[], parent: W3oContext): void {
+        logger.method('init', { w3oId: this.w3oId, octopus, requirements }, parent);
+        this.__octopus = octopus;
+        this.__requirements = requirements;
+        this.__initialized$.next(this);
+    }
+
+    /**
+     * Abstract: Returns module version
+     */
     abstract get w3oVersion(): string;
 
-    // Método abstracto para obtener el nombre del módulo
+    /**
+     * Abstract: Returns module name
+     */
     abstract get w3oName(): string;
 
-    // Método abstracto para obtener la lista de dependencias del módulo
+    /**
+     * Abstract: Returns list of module dependencies as w3oIds
+     */
     abstract get w3oRequire(): string[];
 
-    // Devuelve el ID del módulo
-    get w3oId(): string {
+    /**
+     * Computed property combining module name and version
+     */
+    public get w3oId(): string {
         return this.w3oName + '@' + this.w3oVersion;
     }
 
-    // Método abstracto para tomar una instantánea del estado del módulo
-    abstract snapshot(): any;
+    /**
+     * Returns a snapshot of this module’s metadata
+     */
+    snapshot() {
+        return {
+            w3oId: this.w3oId,
+            w3oName: this.w3oName,
+            w3oVersion: this.w3oVersion,
+            w3oRequire: this.w3oRequire,
+        };
+    }
 }

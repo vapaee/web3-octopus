@@ -1,0 +1,55 @@
+{
+  "name": "@vapaee/w3o-antelope",
+  "version": "1.0.0",
+  "description": "Web3 Octopus Antelope Support",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "clear": "rm -rf lib node_modules; npm run clear-code",
+    "clear-code": "bash -O globstar -c 'rm -f src/**/*.{d.ts,js,map}'",
+    "copy-version": "node scripts/copy_version.js",
+    "build": "npm run copy-version; tsc",
+    "test": "jest",
+    "dev": "npm sun clear; pm run copy-version; tsc -w",
+    "publish-on": "npm run build && npm publish --access public",
+    "src": "node scripts/concatenate_src.js"
+  },
+  "for-develop": {
+    "@vapaee/w3o-core": "file:../w3o-core",
+    "--": "--",
+    "@vapaee/w3o-antelope": "file:../w3o-antelope",
+    "@vapaee/w3o-telos": "file:../w3o-telos"
+  },
+  "dependencies": {
+    "@wharfkit/account": "^1.4.1",
+    "@wharfkit/antelope": "^1.0.13",
+    "@wharfkit/common": "^1.4.2",
+    "@wharfkit/session": "^1.4.0",
+    "@wharfkit/wallet-plugin-anchor": "^1.4.0",
+    "@wharfkit/wallet-plugin-cleos": "^1.2.0",
+    "@wharfkit/web-renderer": "^1.4.1",
+    "@vapaee/w3o-core": "file:../w3o-core",
+    "rxjs": ">=6.0.0"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.5",
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@wharfkit/account": "^1.4.1",
+    "@wharfkit/antelope": "^1.0.13",
+    "@wharfkit/common": "^1.4.2",
+    "@wharfkit/session": "^1.4.0",
+    "@wharfkit/wallet-plugin-anchor": "^1.4.0",
+    "@wharfkit/wallet-plugin-cleos": "^1.2.0",
+    "@wharfkit/web-renderer": "^1.4.1",
+    "rxjs": ">=6.0.0"
+  }
+}

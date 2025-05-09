@@ -1,130 +1,190 @@
 // w3o-core/src/classes/W3oAuthenticator.ts
 
-import { Observable } from 'rxjs';
-import {
-    Logger,
-    LoggerContext,
-    W3oAccount,
-    W3oError,
-    W3oTransactionResponse,
-    Web3Octopus,
-} from '.';
+
+import {Observable, Subject } from 'rxjs';
 import {
     W3oAddress,
     W3oNetworkName,
     W3oTransaction
 } from '../types';
+
+import { W3oContextFactory, W3oContext } from './W3oContext';
+import { W3oAccount } from './W3oAccount';
 import { W3oAuthSupport } from './W3oAuthSupport';
+import { W3oError } from './W3oError';
+import { W3oTransactionResponse } from './W3oTransactionResponse';
+import { W3oSession } from './W3oSession';
+import { W3oNetwork } from './W3oNetwork';
 
-const logger = new Logger('W3oAuthenticator');
+const logger = new W3oContextFactory('W3oAuthenticator');
 
+/**
+ * Class that encapsulates authentication logic, session association,
+ * and transaction signing for a specific network using a given support.
+ * Is responsible for managing user authentication using a specific support strategy,
+ * including login, logout, session handling and transaction signing.
+ */
 export class W3oAuthenticator {
     private __account: W3oAccount | null = null;
-    private __sessionId: string = '';
-    
+    private __session: W3oSession | null = null;
+
+    /**
+     * Emits when the session ID changes
+     */
+    public onSessionChange$: Subject<string> = new Subject<string>();
+
     constructor(
-        public readonly support: W3oAuthSupport
+        public readonly support: W3oAuthSupport,
+        public readonly network: W3oNetwork,
+        parent: W3oContext,
     ) {
-        
+        logger.method('constructor', { support }, parent);
     }
 
-    // Getter to obtain the user's account (throws an exception if not authenticated)
+    /**
+     * Returns the authenticated account or throws if not logged in
+     */
     get account(): W3oAccount {
         if (!this.__account) {
-            throw new W3oError(W3oError.ACCOUNT_NOT_LOGGED, {authenticator: this});
+            throw new W3oError(W3oError.ACCOUNT_NOT_LOGGED, { authenticator: this });
         }
         return this.__account;
     }
 
-    // Getter to obtain the authenticator's name from its support
+    /**
+     * Returns the authenticator's name
+     */
     get name(): string {
         return this.support.name;
     }
 
-    // Getter to obtain the authenticator's type from its support
+    /**
+     * Returns the authenticator's type
+     */
     get type(): string {
         return this.support.type;
     }
 
-    // Getter to obtain the session ID
+    /**
+     * Returns the current session ID or empty string
+     */
     get sessionId(): string {
-        return this.__sessionId;
+        return this.session.id ?? '';
     }
 
-    // Method to set the session ID (throws exception if the session is already set)
-    setSessionId(sessionId: string, parent: LoggerContext): void {
-        logger.method('setSessionId', {sessionId}, parent);
-        if (this.__sessionId !== '') {
-            throw new W3oError(W3oError.SESSION_ALREADY_SET, {authenticator: this, sessionId});
+    /**
+     * Returns the current session or throws if not set
+     */
+    get session(): W3oSession {
+        if (!this.__session) {
+            throw new W3oError(W3oError.SESSION_NOT_SET, { authenticator: this });
         }
-        this.__sessionId = sessionId;
+        return this.__session;
     }
 
-    // Method to check if the user is authenticated
+    /**
+     * Internally sets the session ID and emits session change event
+     */
+    private setSessionId(sessionId: string, parent: W3oContext): void {
+        logger.method('setSessionId', { sessionId }, parent);
+        this.onSessionChange$.next(sessionId);
+    }
+
+    /**
+     * Sets the session if not already set, otherwise throws
+     */
+    setSession(session: W3oSession, parent: W3oContext): void {
+        const context = logger.method('setSession', { session: session.id }, parent);
+        if (this.__session) {
+            throw new W3oError(W3oError.SESSION_ALREADY_SET, { authenticator: this, session });
+        }
+        this.__session = session;
+        this.setSessionId(session.id, context);
+    }
+
+    /**
+     * Returns true if the account is logged in
+     */
     isLogged(): boolean {
-        return this.account !== null;
+        return this.__account !== null;
     }
 
-    // Method to obtain the user's address
+    /**
+     * Returns the account address
+     */
     getAddress(): W3oAddress {
         return this.account.getAddress();
     }
 
-    // Method to obtain the user's account or null if not authenticated
+    /**
+     * Returns the authenticated account or null
+     */
     getAccount(): W3oAccount | null {
         return this.__account;
     }
 
-    // Method to check if the authenticator is read-only
+    /**
+     * Checks if the authenticator is in read-only mode
+     */
     isReadOnly(): boolean {
         return this.support.isReadOnly();
     }
 
-    // Method to sign a transaction
-    signTransaction(trx: W3oTransaction, parent: LoggerContext): Observable<W3oTransactionResponse> {
-        const context = logger.method('signTransaction', {trx}, parent);
+    /**
+     * Delegates transaction signing to the support and emits response
+     */
+    signTransaction(trx: W3oTransaction, parent: W3oContext): Observable<W3oTransactionResponse> {
+        const context = logger.method('signTransaction', { trx }, parent);
+        if (this.isReadOnly()) {
+            throw new W3oError(W3oError.READ_ONLY_AUTHENTICATOR, { authenticator: this });
+        }
         return new Observable<W3oTransactionResponse>(subscriber => {
             try {
-                const response = this.support.signTransaction(trx, context);
+                const response = this.support.signTransaction(this, trx, context);
                 response.subscribe({
                     next: (res) => subscriber.next(res),
                     error: (err) => subscriber.error(err),
                     complete: () => subscriber.complete(),
                 });
             } catch (error) {
-                context.error((error as Error).message);
+                context.error(error);
                 subscriber.error(error);
             }
         });
     }
 
-    // Method to log in to a specific network
-    login(network: W3oNetworkName, parent: LoggerContext): Observable<W3oAccount> {
-        const context = logger.method('login', {network}, parent);
-        return new Observable<W3oAccount>(subscriber => { 
-            try {
-                const accountObservable = this.support.login(network, context);
-                accountObservable.subscribe({
-                    next: (account) => {
-                        this.__account = account;
-                        subscriber.next(account);
-                    },
-                    error: (err) => subscriber.error(err),
-                    complete: () => subscriber.complete(),
-                });
-            } catch (error) {
-                context.error((error as Error).message);
-                subscriber.error(error);
-            }
-        });
-    }
-
-    // Method to automatically log in to a specific network
-    autoLogin(network: W3oNetworkName, address: W3oAddress, parent: LoggerContext): Observable<W3oAccount> {
-        const context = logger.method('autoLogin', {network, address}, parent);
+    /**
+     * Starts login process through the support layer
+     */
+    login(networkName: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
+        const context = logger.method('login', { networkName }, parent);
         return new Observable<W3oAccount>(subscriber => {
             try {
-                const accountObservable = this.support.autoLogin(network, address, context);
+                const accountObservable = this.support.login(this, networkName, context);
+                accountObservable.subscribe({
+                    next: (account) => {
+                        logger.log('this.support.login.subscribe() -> result', { account: account.getAddress() });
+                        this.__account = account;
+                        subscriber.next(account);
+                    },
+                    error: (err) => subscriber.error(err),
+                    complete: () => subscriber.complete(),
+                });
+            } catch (error) {
+                context.error((error as Error).message);
+                subscriber.error(error);
+            }
+        });
+    }
+
+    /**
+     * Attempts auto-login through the support layer
+     */
+    autoLogin(network: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
+        const context = logger.method('autoLogin', { network }, parent);
+        return new Observable<W3oAccount>(subscriber => {
+            try {
+                const accountObservable = this.support.autoLogin(this, network, context);
                 accountObservable.subscribe({
                     next: (account) => {
                         this.__account = account;
@@ -140,24 +200,30 @@ export class W3oAuthenticator {
         });
     }
 
-    // Method to log out
-    logout(parent: LoggerContext): void {
-        const context = logger.method('logout', undefined, parent);
+    /**
+     * Logs out the current account and removes its session
+     */
+    logout(parent: W3oContext): void {
+        const context = logger.method('logout', parent);
         try {
-            this.support.logout(context);
+            this.support.logout(this, context);
             this.__account = null;
-            Web3Octopus.instance.sessions.deleteSession(this.sessionId, context);
-            this.__sessionId = '';
+            this.__session = null;
         } catch (error) {
             context.error((error as Error).message);
         }
     }
 
-    // Method to take a snapshot of the authenticator's state
+    /**
+     * Returns a snapshot of the internal state
+     */
     snapshot(): any {
         return {
-            account: this.__account ? this.__account.snapshot() : null,
+            _class: 'W3oAuthenticator',
+            account: this.__account?.snapshot(),
+            session: this.__session?.snapshot(),
             support: this.support.snapshot(),
+            network: this.network.snapshot(),
         };
     }
 }

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es2017",
+        "target": "es6",
         "module": "commonjs",
         "rootDir": "./src",
         "outDir": "lib",
@@ -17,7 +17,9 @@
         "declaration": true
     },
     "lib": ["esnext"],
-    "include": [ "src/**/*.ts" ],
+    "include": [
+        "src/**/*.ts"
+    ],
     "exclude": [
         "node_modules",
         "**/*.test.ts"

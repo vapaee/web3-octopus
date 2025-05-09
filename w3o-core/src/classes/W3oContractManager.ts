@@ -1,57 +1,62 @@
 // w3o-core/src/classes/W3oContractManager.ts
 
-import { Observable } from 'rxjs';
-import { from } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import {
-    Logger,
-    LoggerContext,
-    W3oContract,
-    W3oNetwork,
-} from '.';
-
-import {
-    W3oAddress
+    W3oAddress,
+    W3oNetworkSettings,
 } from '../types';
+import { W3oContextFactory, W3oContext } from './W3oContext';
+import { W3oContract } from './W3oContract';
+import { W3oNetwork } from './W3oNetwork';
 
-const logger = new Logger('W3oContractManager');
+const logger = new W3oContextFactory('W3oContractManager');
 
-// Represents a contract manager, including methods to add, get, and list contracts
+/**
+ * Abstract manager for contracts, handles retrieval and caching of contract instances
+ */
 export abstract class W3oContractManager {
-    // This is a contract cache that will fill as they are requested
     private __contracts: { [address: string]: W3oContract | null } = {};
 
     constructor(
+        public readonly settings: W3oNetworkSettings,
         public readonly network: W3oNetwork,
-        parent: LoggerContext
+        parent: W3oContext
     ) {
-        logger.method('constructor', {network}, parent);
+        logger.method('constructor', { network }, parent);
     }
 
-    // Property to get the list of contracts
+    /**
+     * Returns a list of all cached contract instances (excluding nulls)
+     */
     get list(): W3oContract[] {
-        // Debemos filtrar los valores null para que la lista solo contenga contratos válidos
         return Object.values(this.__contracts).filter(contract => contract !== null) as W3oContract[];
     }
 
-    // Property to get the list of contract addresses
+    /**
+     * Returns a list of all contract addresses stored in the cache
+     */
     get addresses(): W3oAddress[] {
         return Object.keys(this.__contracts).map(address => address as W3oAddress);
     }
 
-    // Method to add a contract
-    addContract(address: W3oAddress, contract: W3oContract | null, parent: LoggerContext): void {
-        const context = logger.method('addContract', { address, contract }, parent);
+    /**
+     * Adds a contract to the cache
+     */
+    addContract(address: W3oAddress, contract: W3oContract | null, parent: W3oContext): void {
+        logger.method('addContract', { address, contract }, parent);
         if (contract) {
             this.__contracts[address] = contract;
-            context.info(`Contract added at address: ${address}`, parent);
+            logger.info(`Contract added at address: ${address}`);
         } else {
-            context.warn(`No contract provided for address: ${address}`, parent);
+            logger.warn(`No contract provided for address: ${address}`);
         }
     }
 
-    // Method to get a contract by its address
-    getContract(address: W3oAddress, parent: LoggerContext): Observable<W3oContract | null> {
+    /**
+     * Retrieves a contract by address from cache or fetches it from blockchain
+     */
+    getContract(address: W3oAddress, parent: W3oContext): Observable<W3oContract | null> {
         const context = logger.method('getContract', { address }, parent);
         const contract = this.__contracts[address];
         if (contract !== undefined) {
@@ -69,23 +74,27 @@ export abstract class W3oContractManager {
         );
     }
 
-    // Method to get all contracts
-    getContracts(parent: LoggerContext): W3oContract[] {
-        logger.method('getContracts', undefined, parent);
+    /**
+     * Returns the current list of cached contract instances
+     */
+    getContracts(parent: W3oContext): W3oContract[] {
+        logger.method('getContracts', parent);
         return this.list;
     }
 
-    // Method to get a token contract by its symbol
-    getTokenContract(symbol: string, parent: LoggerContext): Observable<W3oContract | null> {
+    /**
+     * Gets a token contract from network tokens, fetching it if needed
+     */
+    getTokenContract(symbol: string, parent: W3oContext): Observable<W3oContract | null> {
         const context = logger.method('getTokenContract', { symbol }, parent);
         const token = this.network.getToken(symbol, parent);
         if (!token) {
-            context.warn(`No token found with symbol: ${symbol}`, parent);
+            logger.warn(`No token found with symbol: ${symbol}`, parent);
             return from(Promise.resolve(null));
         }
         const existingContract = this.list.find(contract => contract.address === token.address) || null;
         if (existingContract) {
-            context.info(`Token contract found with symbol: ${symbol}`, parent);
+            logger.info(`Token contract found with symbol: ${symbol}`, parent);
             return from(Promise.resolve(existingContract));
         }
         return this.fetchContract(token.address as W3oAddress, context).pipe(
@@ -98,10 +107,14 @@ export abstract class W3oContractManager {
         );
     }
 
-    // Abstract method to request a contract from the blockchain by its address (it may not exist)
-    abstract fetchContract(address: W3oAddress, parent: LoggerContext): Observable<W3oContract | null>;
+    /**
+     * Abstract method to fetch a contract from blockchain by its address
+     */
+    abstract fetchContract(address: W3oAddress, parent: W3oContext): Observable<W3oContract | null>;
 
-    // Method to take a snapshot of the contract manager state
+    /**
+     * Returns a snapshot of all contracts currently cached
+     */
     snapshot(): any {
         return {
             contracts: this.list.map(contract => contract.snapshot()),

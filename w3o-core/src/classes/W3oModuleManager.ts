@@ -1,72 +1,166 @@
-import {
-    Logger,
-    LoggerContext,
-    W3oError,
-    W3oModule,
-} from '.';
+// w3o-core/src/classes/W3oModuleManager.ts
 
-import { combineLatest, BehaviorSubject } from 'rxjs';
+import { combineLatest, tap, filter, take } from 'rxjs';
 import {
     W3oGlobalSettings,
-    W3oModuleInstance
+    W3oModuleInstance,
+    W3oInstance
 } from '../types';
+import { W3oContextFactory, W3oContext } from './W3oContext';
+import { W3oModule } from './W3oModule';
+import { W3oError } from './W3oError';
+import { W3oManager } from './W3oManager';
 
-const logger = new Logger('W3oModuleManager');
+const logger = new W3oContextFactory('W3oModuleManager');
 
-// Clase que implementa un administrador de módulos
-export class W3oModuleManager implements W3oModuleInstance {
-    private __initialized = false;
-    private __modules: { [w3oId: string]: W3oModule } = {};
-    
-    constructor(settings: W3oGlobalSettings, parent: LoggerContext) {
-        logger.method('constructor', {settings}, parent);
+/**
+ * Class that implements a module manager
+ */
+export class W3oModuleManager extends W3oManager implements W3oModuleInstance {
+
+    constructor(
+        settings: W3oGlobalSettings,
+        parent: W3oContext
+    ) {
+        logger.method('constructor', { settings }, parent);
+        super('W3oModuleManager');
     }
 
-    registerModule(module: W3oModule, parent: LoggerContext): void {
-        logger.method('registerModule', { module }, parent);
-        if (this.__initialized) {
-            throw new W3oError(W3oError.ALREADY_INITIALIZED, { name: 'W3oModuleManager', message: 'modules cannot be registered after initialization' });
-        }
-        this.__modules[module.w3oId] = module;
-    }
-
-    init(parent: LoggerContext) {
-        logger.method('init', undefined, parent);
-        if (this.__initialized) {
+    /**
+     * Initializes the module manager and all registered modules with their dependencies
+     */
+    init(octopus: W3oInstance, parent: W3oContext): void {
+        const context = logger.method('init', { octopus, modules: Object.keys(W3oModule.modules).toString() }, parent);
+        if (this.__initCalled) {
             throw new W3oError(W3oError.ALREADY_INITIALIZED, { name: 'W3oModuleManager', message: 'Module manager already initialized' });
         }
-        this.__initialized = true;
-        for (const w3oId in this.__modules) {
-            // vamos a checkear que para cada módulo, se cumple que todos los módulos requeridos están registrados
-            const module = this.__modules[w3oId];
-            const missing = module.w3oRequire.filter((w3oId) => !this.__modules[w3oId]);
-            if (missing.length) {
-                throw new W3oError(W3oError.MODULE_REQUIREMENTS_NOT_MET, {
-                    module: module.w3oId,
-                    missing,
-                    message: `Module ${module.w3oId} requires modules ${missing.join(', ')} to be registered`
-                });
+        this.__initCalled = true;
+        const registeredModules = W3oModule.modules;
+        const list = Object.values(registeredModules);
+
+        for (const w3oId in registeredModules) {
+            const module = W3oModule.getModule(w3oId, context);
+            if (!module) {
+                context.error('Module not found', { w3oId });
+                continue;
             }
+            logger.debug('processing module', module.w3oId, 'with requirements', module.w3oRequire, { module });
+
             if (module.w3oRequire.length === 0) {
-                // Si no tiene requerimientos lo iniciamos inmediatamente
-                module.init();
-            } else {
-                // si tiene requerimientos, esperamos a que todos los requerimientos estén inicializados
-                const requirements: BehaviorSubject<boolean>[] = module.w3oRequire.map((w3oId) => this.__modules[w3oId].initialized$);
-                // usamos rxjs para esperar a que todos los requerimientos estén inicializados y luego iniciamos el módulo
-                combineLatest(requirements).subscribe(() => {
-                    // hacemos un checkeo adicional para asegurarnos de que todos los requerimientos están inicializados
-                    const missing_init = module.w3oRequire.filter((w3oId) => !this.__modules[w3oId].initialized$.value);
-                    if (missing_init.length) {
-                        throw new W3oError(W3oError.MODULE_REQUIREMENTS_NOT_MET, {
-                            module: module.w3oId,
-                            not_initialized: missing_init.map((w3oId) => this.__modules[w3oId].w3oId),
-                            message: `Module ${module.w3oId} requires modules ${missing_init.join(', ')} to be initialized`
-                        });
-                    }
-                    module.init()
-                });
+                module.init(octopus, [], context);
+                continue;
             }
+
+            const resolvedModules = module.w3oRequire.map((req) => {
+                const [reqName, reqRange] = req.split('@');
+                logger.debug('resolving requirement', { reqName, reqRange });
+                const candidates = list.filter((m) => m.w3oId.startsWith(reqName));
+                logger.debug('candidates', { candidates });
+                const requirementsMet = candidates.find((m) => {
+                    const actualVersion = m.w3oId.replace(`${reqName}@`, '');
+                    const range = reqRange || actualVersion;
+                    return this.versionSatisfies(actualVersion, range, context);
+                });
+                if (requirementsMet) {
+                    return requirementsMet;
+                } else {
+                    context.error(
+                        W3oError.MODULE_REQUIREMENTS_NOT_MET,
+                        {
+                            module: module.w3oId,
+                            requirement: req,
+                            message: `Module ${module.w3oId} requires module ${req} to be registered and initialized`
+                        }
+                    );
+                    return null;
+                }
+            });
+
+            const requirementsSubjects = (resolvedModules as W3oModule[]).map((m) => m.initialized$);
+
+            combineLatest(requirementsSubjects).pipe(
+                filter((value) => value.every((v) => !!v)),
+                take(1)
+            ).subscribe((requirements) => {
+                const missingInit = (resolvedModules as W3oModule[])
+                    .filter((m) => !m.initialized)
+                    .map((m) => m.w3oId);
+                if (missingInit.length) {
+                    context.error(
+                        W3oError.MODULE_REQUIREMENTS_NOT_MET,
+                        {
+                            module: module.w3oId,
+                            not_initialized: missingInit,
+                            message: `Module ${module.w3oId} requires modules ${missingInit.join(', ')} to be initialized`
+                        }
+                    );
+                } else {
+                    module.init(octopus, requirements, context);
+                }
+            });
         }
+
+        combineLatest(list.map((m) => m.initialized$)).pipe(
+            filter((value) => value.every((v) => !!v)),
+            take(1),
+            tap(() => {
+                this.__initialized$.next(true);
+                logger.log('ModuleManager initialized', { modules: Object.keys(W3oModule.modules).toString() });
+            })
+        ).subscribe();
+    }
+
+    /**
+     * Parses a version string like '1.2.3' into numeric components
+     */
+    private parseVersion(version: string): number[] {
+        return version.split('.').map((num) => parseInt(num, 10));
+    }
+
+    /**
+     * Checks if an actual version satisfies the requested semver range
+     */
+    private versionSatisfies(actualVersion: string, range: string, parent: W3oContext): boolean {
+        logger.method('versionSatisfies', { actualVersion, range }, parent);
+        const actual = this.parseVersion(actualVersion);
+        if (range.startsWith('^')) {
+            const base = this.parseVersion(range.slice(1));
+            return actual[0] === base[0] &&
+                (actual[1] > base[1] || (actual[1] === base[1] && actual[2] >= base[2]));
+        }
+        if (range.startsWith('~')) {
+            const base = this.parseVersion(range.slice(1));
+            return actual[0] === base[0] &&
+                actual[1] === base[1] &&
+                actual[2] >= base[2];
+        }
+        const expected = this.parseVersion(range);
+        const satisfies = actual[0] === expected[0] && actual[1] === expected[1] && actual[2] === expected[2];
+        logger.debug('version satisfies', { satisfies, actual, expected });
+        return satisfies;
+    }
+
+    /**
+     * Registers a module in the global module registry
+     */
+    registerModule(module: W3oModule, parent: W3oContext): void {
+        const context = logger.method('registerModule', { w3oId: module.w3oId, module }, parent);
+        W3oModule.registerModule(module, context);
+    }
+
+    /**
+     * Gets a module by its ID from the global registry
+     */
+    getModule<T extends W3oModule = W3oModule>(w3oId: string, parent: W3oContext): T | undefined {
+        const context = logger.method('getModule', { w3oId }, parent);
+        return W3oModule.getModule(w3oId, context) as T;
+    }
+
+    /**
+     * Gets all registered modules from the global registry
+     */
+    getModules(parent: W3oContext): W3oModule[] {
+        const context = logger.method('getModules', {}, parent);
+        return W3oModule.getModules(context);
     }
 }

@@ -1,12 +1,21 @@
-// Representa el tipo de red en la que opera Web3 Octopus
+// w3o-code/src/types/w3o-types.ts
+
+/**
+ * Represents the type of blockchain supported by Web3 Octopus
+ */
 export type W3oNetworkType = 'ethereum' | 'antelope' | 'solana';
 
-// Representa el nombre de un autenticador específico dentro de Web3 Octopus (ejemplo: 'metamask' | 'walletconnect' | 'ledger' | 'trezor')
+/**
+ * Represents the identifier for a specific authenticator (e.g., 'metamask', 'walletconnect')
+ */
 export type W3oAuthSupportName = string;
 
-// Representa el nombre de una red específica dentro de Web3 Octopus
-// ejemplos: 'telos' | 'telos-testnet' | 'eos' | 'jungle' | 'ethereum' | 'ropsten' | 'bsc' | 'bsc-testnet' | 'matic' | 'matic-testnet'
+/**
+ * Represents the name of a specific network instance (e.g., 'telos', 'ethereum', 'bsc-testnet')
+ */
 export type W3oNetworkName = string;
 
-// Representa la dirección de una cuenta dentro de una red
+/**
+ * Represents a blockchain address (e.g., account or contract address)
+ */
 export type W3oAddress = string;
