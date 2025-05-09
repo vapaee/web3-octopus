@@ -121,3 +121,4 @@ export abstract class W3oContractManager {
         };
     }
 }
+
