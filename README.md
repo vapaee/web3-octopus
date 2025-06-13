@@ -119,7 +119,7 @@ const services = [
 ];
 octopus.registerServices(services);
 octopus.init({
-    multisession: true, // if false, W3oSessionManager we maitain always one open session and logout the user if the network changes
+    multiSession: true, // if false, W3oSessionManager will maintain only one open session and logout the user if the network changes
 });
 
 export function getOctopus(): Web3Octopus<IMyServices> {
@@ -127,7 +127,7 @@ export function getOctopus(): Web3Octopus<IMyServices> {
 }
 ```
 
-Luego desde cualquier otro lado del proyecto podemos hacer lo sigueinte
+Luego desde cualquier otro lado del proyecto podemos hacer lo siguiente
 
 ```typescript
 // ejemplo de uso desde otro archivo
