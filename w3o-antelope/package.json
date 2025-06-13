@@ -14,7 +14,7 @@
     "copy-version": "node scripts/copy_version.js",
     "build": "npm run copy-version; tsc",
     "test": "jest",
-    "dev": "npm sun clear; pm run copy-version; tsc -w",
+    "dev": "npm run clear && npm run copy-version && tsc -w",
     "publish-on": "npm run build && npm publish --access public",
     "src": "node scripts/concatenate_src.js"
   },
