@@ -2,13 +2,6 @@
   "name": "web3octopus",
   "version": "1.0.0",
   "private": true,
-  "__workspaces": {
-    "packages": [
-      "w3o-core",
-      "w3o-antelope",
-      "example"
-    ]
-  },
   "scripts": {
     "serve": "npm --prefix example run start",
     "build:core": "npm --prefix w3o-core run build",
