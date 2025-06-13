@@ -2,23 +2,27 @@
     "name": "web3octopus",
     "version": "1.0.0",
     "scripts": {
-        "w3o": "npm run w3o-core && npm run w3o-antelope",
+        "w3o": "npm run w3o-core && npm run w3o-antelope && npm run w3o-ethereum",
         "w3o-core": "cd w3o-core && npm i && npm run build",
         "w3o-antelope": "cd w3o-antelope && npm i && npm run build",
+        "w3o-ethereum": "cd w3o-ethereum && npm i && npm run build",
         "clear-core": "cd w3o-core && npm run clear",
         "clear-antelope": "cd w3o-antelope && npm run clear",
-        "clear": "rm -rf lib node_modules .angular; npm run clear-core; npm run clear-antelope",
+        "clear-ethereum": "cd w3o-ethereum && npm run clear",
+        "clear": "rm -rf lib node_modules .angular; npm run clear-core; npm run clear-antelope; npm run clear-ethereum",
         "postinstall": "npm run w3o",
         "build": "npm run w3o"
     },
     "private": true,
     "for-develop": {
         "@vapaee/w3o-core": "file:./w3o-core",
-        "@vapaee/w3o-antelope": "file:./w3o-antelope"
+        "@vapaee/w3o-antelope": "file:./w3o-antelope",
+        "@vapaee/w3o-ethereum": "file:./w3o-ethereum"
     },
     "dependencies": {
         "@vapaee/w3o-core": "file:./w3o-core",
-        "@vapaee/w3o-antelope": "file:./w3o-antelope"
+        "@vapaee/w3o-antelope": "file:./w3o-antelope",
+        "@vapaee/w3o-ethereum": "file:./w3o-ethereum"
     },
     "devDependencies": {
     }

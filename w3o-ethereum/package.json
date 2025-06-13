@@ -1,0 +1,38 @@
+{
+  "name": "@vapaee/w3o-ethereum",
+  "version": "1.0.0",
+  "description": "Web3 Octopus Ethereum Support",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "clear": "rm -rf lib node_modules; npm run clear-code",
+    "clear-code": "bash -O globstar -c 'rm -f src/**/*.{d.ts,js,map}'",
+    "copy-version": "node scripts/copy_version.js",
+    "build": "npm run copy-version; tsc",
+    "test": "jest",
+    "dev": "npm run clear && npm run copy-version && tsc -w",
+    "publish-on": "npm run build && npm publish --access public",
+    "src": "node scripts/concatenate_src.js"
+  },
+  "dependencies": {
+    "@vapaee/w3o-core": "file:../w3o-core",
+    "ethers": "^6.10.0",
+    "wagmi": "^1.6.3",
+    "rxjs": ">=6.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "ethers": "^6.0.0",
+    "wagmi": "^1.6.0",
+    "rxjs": ">=6.0.0"
+  }
+}
