@@ -22,6 +22,7 @@ import {
     Web3Octopus,                          // the main class
     W3oIServices,                         // interface that includes the snapshot function
 } from '@vapaee/w3o-core';
+git branch -D 
 
 // import the classes to support Ethereum/EVM networks
 import {

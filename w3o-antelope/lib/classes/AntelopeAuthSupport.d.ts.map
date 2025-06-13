@@ -1,0 +1,1 @@
+{"version":3,"file":"AntelopeAuthSupport.d.ts","sourceRoot":"","sources":["../../src/classes/AntelopeAuthSupport.ts"],"names":[],"mappings":"AAEA,OAAO,EACH,UAAU,EAEV,cAAc,EACd,kBAAkB,EAErB,MAAM,kBAAkB,CAAC;AAI1B;;GAEG;AACH,8BAAsB,mBAAoB,SAAQ,cAAc;IAC5D;;OAEG;gBAEC,IAAI,EAAE,kBAAkB,EACxB,MAAM,EAAE,UAAU;CAKzB"}
