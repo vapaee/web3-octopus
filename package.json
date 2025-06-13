@@ -19,6 +19,6 @@
     "install:antelope": "npm --prefix w3o-antelope install",
     "install:example": "npm --prefix example install",
     "postinstall": "npm run install:core && npm run install:antelope && npm run install:example",
-    "clear": "rm -fr w3o-core/lib w3o-antelope/lib example/node_modules w3o-core/node_modules w3o-antelope/node_modules ./node_modules"
+    "clear": "rm -fr w3o-core/lib w3o-antelope/lib example/node_modules w3o-core/node_modules w3o-antelope/node_modules ./node_modules example/.angular"
   }
 }
