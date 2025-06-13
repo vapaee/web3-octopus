@@ -1,0 +1,93 @@
+@use 'mixin' as *;
+
+.c-token-transfer {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        &-text {
+            font-size: 14px;
+            color: var(--c-foreground-2);
+            margin: 0px;
+        }
+        &-balance {
+            font-weight: bold;
+            margin: 0px;
+        }
+    }
+
+    &__form {
+        &-title{
+            font-size: 14px;
+            color: var(--c-foreground-2);
+            margin: 0px;
+        }
+        &-input {
+            @include input;
+        }
+        &-button {
+            &--available {
+                @include button-1;
+            }
+            &--unavailable {
+                @include button-unable-0;
+            }
+        }
+        &-max {
+            color: var(--c-accent-0);
+            cursor: pointer;
+
+            &:hover,
+            &:active {
+                color: var(--c-foreground-2);
+            }
+
+            &.disable{
+                pointer-events: none;
+                opacity: 0.3;
+                cursor: default;
+            }
+        }
+    }
+
+    &__input {
+        &-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+            &-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: end;
+            }
+        }
+        &-buttons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+    }
+
+    &__status {
+        margin: 0px;
+        &-checking {
+            @include text-smaller;
+        }
+        &-valid {
+            @include text-smaller;
+            color: var(--c-success-0);
+        }
+
+        &-invalid {
+            @include text-smaller;
+            color: var(--c-alert-0);
+        }
+    }
+}

@@ -1,0 +1,26 @@
+<div class="c-login">
+    <button
+        class="c-login__btn"
+        (click)="login()"
+        *ngIf="!(sessionService.session$ | async)"
+    >{{'TYPES.BUTTON.LOGIN' | translate}}</button>
+
+    <div class="c-login__menu" *ngIf="(sessionService.session$ | async) as session">
+        <app-drop-down>
+            <!-- Dropdown Button -->
+            <button dropdown-button class="c-login__btn--active">
+                <lucide-icon [img]="UserIcon" size="18"></lucide-icon>
+                {{ session.address }}
+            </button>
+
+            <!-- Dropdown Body -->
+            <div dropdown-body class="c-login__menu-body">
+                <a class="c-login__menu-option" routerLink="/wallet">{{'PAGES.WALLET.NAME' | translate}}</a>
+                <a class="c-login__menu-option" routerLink="/accounts">{{'PAGES.ACCOUNTS.NAME' | translate}}</a>
+                <a class="c-login__menu-option" routerLink="/preferences">{{'PAGES.PREFERENCES.NAME' | translate}}</a>
+                <hr class="c-login__menu-separator">
+                <a class="c-login__menu-option" (click)="logout()">{{'TYPES.BUTTON.LOGOUT' | translate}}</a>
+            </div>
+        </app-drop-down>
+    </div>
+</div>

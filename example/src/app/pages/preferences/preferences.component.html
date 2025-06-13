@@ -1,0 +1,30 @@
+<div class="p-preferences">
+    <h2>{{ 'PAGES.PREFERENCES.TITLE' | translate }}</h2>
+    <p>{{ 'PAGES.PREFERENCES.DESCRIPTION' | translate }}</p>
+    <div class="p-preferences__section">
+        <h3>{{ 'PAGES.PREFERENCES.LANGUAGE.TITLE' | translate }}</h3>
+        <div class="p-preferences__lang">
+            <a class="p-preferences__lang-option" (click)="setLang('en')">{{ 'PAGES.PREFERENCES.LANGUAGE.EN' | translate }}</a>
+            <a class="p-preferences__lang-option" (click)="setLang('es')">{{ 'PAGES.PREFERENCES.LANGUAGE.ES' | translate }}</a>
+        </div>
+    </div>
+    <div class="p-preferences__section">
+        <h3>{{ 'PAGES.PREFERENCES.MODE.TITLE' | translate }}</h3>
+        <app-toggle [currentState]="(currentState$ | async) ?? 0" (stateChange)="onStateChange($event)">
+            <ng-template #stateContent>
+                <p>{{ 'PAGES.PREFERENCES.MODE.DARK' | translate }}</p>
+            </ng-template>
+            <ng-template #stateContent>
+                <p>{{ 'PAGES.PREFERENCES.MODE.LIGHT' | translate }}</p>
+            </ng-template>
+        </app-toggle>
+    </div>
+    <div class="p-preferences__section">
+        <h3>{{ 'PAGES.PREFERENCES.HUE.TITLE' | translate }}</h3>
+        <div class="p-preferences__theme-selector">
+            <p class="p-preferences__btn-default-theme" (click)="setHueTheme('default')">{{ 'PAGES.PREFERENCES.HUE.A' | translate }}</p>
+            <p class="p-preferences__btn-igneous-theme" (click)="setHueTheme('igneous')">{{ 'PAGES.PREFERENCES.HUE.B' | translate }}</p>
+            <p class="p-preferences__btn-emerald-theme" (click)="setHueTheme('emerald')">{{ 'PAGES.PREFERENCES.HUE.C' | translate }}</p>
+        </div>
+    </div>
+</div>

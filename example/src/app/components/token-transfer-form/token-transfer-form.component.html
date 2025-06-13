@@ -1,0 +1,95 @@
+<div class="c-token-transfer">
+    <!-- Form View -->
+    <div *ngIf="transferStatus.state === 'none'" class="c-token-transfer__container">
+        <div class="c-token-transfer__header">
+            <p class="c-token-transfer__header-text">{{ 'COMPONENTS.TRANSFER-FORM.AVAILABLE' | translate }}</p>
+            <p class="c-token-transfer__header-balance">
+                {{ balance?.amount?.formatted }} {{ balance?.token?.symbol }}
+            </p>
+        </div>
+
+        <form class="c-token-transfer__form" [formGroup]="form" (ngSubmit)="transfer()">
+            <!-- Recipient Input -->
+            <div class="c-token-transfer__input-container">
+                <label class="c-token-transfer__form-title" for="recipient">{{ 'COMPONENTS.TRANSFER-FORM.TO.TITLE' | translate }}</label>
+                <input class="c-token-transfer__form-input" id="recipient" type="text" formControlName="recipient" placeholder="{{ 'COMPONENTS.TRANSFER-FORM.TO.INPUT' | translate }}" />
+
+                <p *ngIf="form.get('recipient')?.value" class="c-token-transfer__status">
+                    <span *ngIf="form.get('recipient')?.pending" class="c-token-transfer__status-checking">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.CHECKING' | translate }}</span>
+                    <span *ngIf="form.get('recipient')?.errors?.['pattern']" class="c-token-transfer__status-invalid">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.INVALID-PATTERN' | translate }}</span>
+                    <span *ngIf="form.get('recipient')?.errors?.['selfTransfer']" class="c-token-transfer__status-invalid">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.INVALID-SELF' | translate }}</span>
+                    <span *ngIf="form.get('recipient')?.errors?.['accountNotFound']" class="c-token-transfer__status-invalid">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.INVALID-EXIST' | translate }}</span>
+                    <span *ngIf="form.get('recipient')?.valid && !form.get('recipient')?.pending" class="c-token-transfer__status-valid">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.VALID' | translate }}</span>
+                </p>
+            </div>
+
+            <!-- Amount Input -->
+            <div class="c-token-transfer__input-container">
+                <div class="c-token-transfer__input-container-bar">
+                    <label class="c-token-transfer__form-title" for="amount">{{ 'COMPONENTS.TRANSFER-FORM.AMOUNT.TITLE' | translate }}</label>
+                    <a *ngIf="!isMaxAmount()" class="c-token-transfer__form-max" (click)="useMax()">{{ 'COMPONENTS.TRANSFER-FORM.AMOUNT.USE-MAX' | translate }}</a>
+                </div>
+                <input class="c-token-transfer__form-input" id="amount" type="text" formControlName="amount" placeholder="{{ 'COMPONENTS.TRANSFER-FORM.AMOUNT.INPUT' | translate }}" autocomplete="off" />
+
+                <p *ngIf="form.get('amount')?.value !== null" class="c-token-transfer__status">
+                    <span *ngIf="form.get('amount')?.errors?.['invalidAmount']" class="c-token-transfer__status-invalid">{{ 'COMPONENTS.TRANSFER-FORM.AMOUNT.VALIDATION.INVALID-AMOUNT' | translate }}</span>
+                    <span *ngIf="form.get('amount')?.errors?.['outOfBalance']" class="c-token-transfer__status-invalid">{{ 'COMPONENTS.TRANSFER-FORM.AMOUNT.VALIDATION.INVALID-MAX' | translate }}</span>
+                    <span *ngIf="form.get('amount')?.valid" class="c-token-transfer__status-valid">{{ 'COMPONENTS.TRANSFER-FORM.AMOUNT.VALIDATION.VALID' | translate }}</span>
+                </p>
+            </div>
+
+            <!-- Transfer Button -->
+            <div class="c-token-transfer__input-buttons">
+                <button
+                    [class]="{
+                        'c-token-transfer__form-button': true,
+                        'c-token-transfer__form-button--available': form.valid,
+                        'c-token-transfer__form-button--unavailable': !form.valid
+                    }"
+                    type="submit"
+                    [disabled]="form.invalid || isLoading"
+                >
+                    {{ isLoading ? ['TYPES.BUTTON.PROCESSING' | translate] : ['TYPES.BUTTON.TRANSFER' | translate] }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success View -->
+    <div *ngIf="transferStatus.state === 'success'" class="c-token-transfer__container">
+        <p class="c-token-transfer__result">
+            <strong class="c-token-transfer__result-success">{{'COMPONENTS.TRANSFER-FORM.SUCCSES' | translate}}</strong>
+        </p>
+
+        <!-- Display transaction summary -->
+        <div class="c-token-transfer__summary-box" *ngIf="transferStatus.summary">
+            <p><strong>{{ 'TYPES.TRANSFER-SUMMARY.FROM' | translate }}</strong> {{ transferStatus.summary.from }}</p>
+            <p><strong>{{ 'TYPES.TRANSFER-SUMMARY.TO' | translate }}</strong> {{ transferStatus.summary.to }}</p>
+            <p><strong>{{ 'TYPES.TRANSFER-SUMMARY.AMOUNT' | translate }}</strong> {{ transferStatus.summary.amount }}</p>
+            <p><strong>{{ 'TYPES.TRANSFER-SUMMARY.TRANSACTION' | translate }}</strong>
+                <a [href]="'https://explorer.telos.net/transaction/' + transferStatus.summary.transaction" target="_blank">
+                    {{ transferStatus.summary.transaction.substring(0, 10) }} <!-- ✅ Shorten only in UI -->
+                </a>
+            </p>
+        </div>
+
+        <div class="c-token-transfer__input-buttons">
+            <button class="c-token-transfer__form-button c-token-transfer__form-button--available" (click)="close()">{{'TYPES.BUTTON.CLOSE' | translate}}</button>
+        </div>
+    </div>
+
+    <!-- Failure View -->
+    <div *ngIf="transferStatus.state === 'failure'" class="c-token-transfer__container">
+        <p class="c-token-transfer__result">
+            <strong class="c-token-transfer__result-fail">
+                {{'COMPONENTS.TRANSFER-FORM.FAILURE' | translate}}
+            </strong>
+        </p>
+        <p class="c-token-transfer__error-message">{{ transferStatus.message }}</p>
+
+        <div class="c-token-transfer__input-buttons">
+            <button class="c-token-transfer__form-button c-token-transfer__form-button--available" (click)="retry()">{{'TYPES.BUTTON.RETRY' | translate}}</button>
+            <button class="c-token-transfer__form-button c-token-transfer__form-button--available" (click)="close()">{{'TYPES.BUTTON.CLOSE' | translate}}</button>
+        </div>
+    </div>
+</div>

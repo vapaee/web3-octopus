@@ -43,6 +43,6 @@ export class W3oModuleConcept<T> extends W3oModule {
      * Returns the list of required module IDs
      */
     override get w3oRequire(): string[] {
-        return this.moduleId?.r ?? '';
+        return this.moduleId?.r ?? [];
     }
 }

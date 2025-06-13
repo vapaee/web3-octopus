@@ -1,0 +1,42 @@
+<app-side-container class="c-side-menu" id="mobile-side-menu" side="right">
+
+    <p class="c-side-menu__header">Mobile side-menu head</p>
+
+    <hr class="c-side-menu__separator">
+
+    <a class="c-side-menu__option" routerLink="/trade" routerLinkActive="active-link">
+        <lucide-icon [img]="ChartCandlestickIcon"></lucide-icon>
+        <p>{{'PAGES.TRADE.NAME' | translate}}</p>
+    </a>
+    <a class="c-side-menu__option" routerLink="/explore" routerLinkActive="active-link">
+        <lucide-icon [img]="ListTreeIcon"></lucide-icon>
+        <p>{{'PAGES.EXPLORE.NAME' | translate}}</p>
+    </a>
+    <a class="c-side-menu__option" routerLink="/pool" routerLinkActive="active-link">
+        <lucide-icon [img]="CoinsIcon"></lucide-icon>
+        <p>{{'PAGES.POOL.NAME' | translate}}</p>
+    </a>
+
+    <hr class="c-side-menu__separator">
+
+    <a class="c-side-menu__option" routerLink="/wallet" routerLinkActive="active-link">
+        <lucide-icon [img]="WalletIcon"></lucide-icon>
+        <p>{{'PAGES.WALLET.NAME' | translate}}</p>
+    </a>
+
+    <a class="c-side-menu__option" routerLink="/preferences" routerLinkActive="active-link">
+        <lucide-icon [img]="SettingsIcon"></lucide-icon>
+        <p>{{'PAGES.PREFERENCES.NAME' | translate}}</p>
+    </a>
+
+    <a class="c-side-menu__option" routerLink="/accounts" routerLinkActive="active-link">
+        <lucide-icon [img]="UsersIcon"></lucide-icon>
+        <p>{{'PAGES.ACCOUNTS.NAME' | translate}}</p>
+    </a>
+
+    <a class="c-side-menu__option" routerLink="/" routerLinkActive="active-link" *ngIf="isLogged" (click)="logout()">
+        <lucide-icon [img]="LogoutIcon"></lucide-icon>
+        <p>{{'TYPES.BUTTON.LOGOUT' | translate}}</p>
+    </a>
+
+</app-side-container>

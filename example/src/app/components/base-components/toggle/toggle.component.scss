@@ -1,0 +1,30 @@
+.c-toggle {
+    display: flex;
+    gap: 5px;
+    border-radius: 8px;
+    padding: 5px 5px;
+
+    &__button {
+        background-color: var(--c-background-1);
+        color: var(--c-foreground-2);
+        border: 1px solid var(--c-background-4);
+        border-radius: 8px;
+        padding: 0px 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover,
+        &:active {
+            box-shadow: var(--c-shadow-1);
+        }
+
+        &--active {
+            color: var(--c-foreground-2);
+            background-color: var(--c-background-3);
+            border: 1px solid var(--c-background-4);
+            box-shadow: none;
+        }
+    }
+}

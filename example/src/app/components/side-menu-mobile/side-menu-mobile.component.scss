@@ -1,0 +1,35 @@
+@use 'mixin' as *;
+
+.c-side-menu {
+
+    &__header{
+        color: var(--c-foreground-2);
+        border: 1px solid var(--c-background-1);
+        border-radius: 10px;
+        padding: 30px 20px;
+        margin: 0px 0px 10px 0px;
+    }
+
+    &__option {
+        @include hyperlink;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--c-foreground-2);
+        border: 1px solid var(--c-background-0);
+        border-radius: 10px;
+        padding: 0px 20px;
+
+        &:hover,
+        &:active {
+            background-color: var(--c-background-1);
+            color: var(--c-foreground-0);
+        }
+    }
+
+    &__separator {
+        @include hr-separator(0px);
+    }
+
+}
+

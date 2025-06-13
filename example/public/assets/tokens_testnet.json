@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Telos",
+        "symbol": "TLOS",
+        "account": "eosio.token",
+        "precision": 4,
+        "logo": "/assets/logos/telos.png",
+        "chain": "telos-testnet"
+    },
+    {
+        "name": "Tether (telos)",
+        "symbol": "USDT",
+        "account": "tokens.swaps",
+        "precision": 4,
+        "logo": "/assets/logos/USDT.png",
+        "chain": "telos-testnet"
+    },
+    {
+        "name": "Acorn UBI",
+        "symbol": "ACORN",
+        "account": "acornaccount",
+        "precision": 4,
+        "logo": "/assets/logos/acorn.png",
+        "chain": "telos-testnet"
+    }
+]

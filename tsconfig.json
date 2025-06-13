@@ -1,0 +1,7 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./w3o-core" },
+    { "path": "./w3o-antelope" }
+  ]
+}
