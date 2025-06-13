@@ -10,12 +10,12 @@ Web3 Octopus es un framework que, en su capa más abstracta, se basa en tres con
 
 - **Autenticación**: Se encarga de la identificación del usuario, el login y la firma de transacciones. Proporciona métodos para saber si el usuario está autenticado, obtener su dirección o ID y sus datos ampliados dependiendo de la blockchain.
 - **Network**: Representa los datos específicos de la blockchain, incluyendo su identificación (id, nombre, título, system coin), lista de tokens y endpoints. Gestiona la información sobre los contratos y tokens que existen en la red, permitiendo obtener datos actualizados y relevantes. Es responsable de proveer la abstracción de los contratos a partir de su ABI. Es decir, un objeto interactivo que abstrae la forma de interactuar con el contrato real y extraer datos públicos de él.
-- **Servicios**: Son abstracciones de funcionalidades cuya implementación se basa fuertemente en la interacción con los contratos sobre la blockchian. Se encargan de obtener los datos de donde sea necesario tomarlos y dejarlos disponibles para el desarrollador, usando observers tanto para disparar acciones internas como para proveer hacia afuera datos siempre actualizados. También suelen abstraer la complejidad que suele haber en sistemas que tinen varios contratos desplegados sobre una o más blockchians.
+- **Servicios**: Son abstracciones de funcionalidades cuya implementación se basa fuertemente en la interacción con los contratos sobre la blockchain. Se encargan de obtener los datos de donde sea necesario tomarlos y dejarlos disponibles para el desarrollador, usando observers tanto para disparar acciones internas como para proveer hacia afuera datos siempre actualizados. También suelen abstraer la complejidad que suele haber en sistemas que tienen varios contratos desplegados sobre una o más blockchains.
 
 Esta arquitectura pretende establecer las bases para una solución uniforme en el ecosistema crypto y así permitirle a los desarrolladores crear y publicar módulos bien específicos de su negocio y beneficiarse de todos los módulos ya creados por la comunidad.
 
 
-Veamos un ejemplo de uso final configurando WEb3 Octopus para interactuar cuatro blockchains distintas:
+Veamos un ejemplo de uso final configurando Web3 Octopus para interactuar cuatro blockchains distintas:
 
 ```typescript
 // import the main class from the core
@@ -119,7 +119,7 @@ const services = [
 ];
 octopus.registerServices(services);
 octopus.init({
-    multisession: true, // if false, W3oSessionManager we maitain always one open session and logout the user if the network changes
+    multiSession: true, // if false, W3oSessionManager will maintain only one open session and logout the user if the network changes
 });
 
 export function getOctopus(): Web3Octopus<IMyServices> {
@@ -127,7 +127,7 @@ export function getOctopus(): Web3Octopus<IMyServices> {
 }
 ```
 
-Luego desde cualquier otro lado del proyecto podemos hacer lo sigueinte
+Luego desde cualquier otro lado del proyecto podemos hacer lo siguiente
 
 ```typescript
 // ejemplo de uso desde otro archivo
