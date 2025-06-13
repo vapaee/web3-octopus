@@ -70,7 +70,7 @@ export class W3oError extends Error {
     public static readonly NOT_INITIALIZED                = { code: 1010, message: 'Not initialized' };
     public static readonly OCTOPUS_INSTANCE_NOT_FOUND     = { code: 1011, message: 'Octopus instance not found' };
     public static readonly READ_ONLY_AUTHENTICATOR        = { code: 1012, message: 'Read only authenticator' };
-    public static readonly SERVICE_OBJECT_NOT_FOUND       = { code: 1013, message: 'Service object wa not created' };
+    public static readonly SERVICE_OBJECT_NOT_FOUND       = { code: 1013, message: 'Service object was not created' };
     public static readonly SETTINGS_NOT_FOUND             = { code: 1014, message: 'Settings not found' };
     public static readonly SESSION_ALREADY_EXISTS         = { code: 1015, message: 'Session already exists' };
     public static readonly SESSION_ALREADY_SET            = { code: 1016, message: 'Session already set' };
