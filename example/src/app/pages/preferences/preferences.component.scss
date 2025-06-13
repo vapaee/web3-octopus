@@ -1,0 +1,76 @@
+@use 'mixin' as *;
+
+:host {
+    @include page;
+}
+
+.p-preferences {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &__lang{
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px;
+
+        &-option{
+            @include hyperlink
+        }
+    }
+
+    &__btn-default-theme {
+        @include button-0;
+        $start-color: hsl(190, 60%, 35%);
+        $end-color: hsl(220, 60%, 50%);
+
+        color: var(--c-foreground-1);
+        border: 1px solid var(--c-background-4);
+        background-image: var(--c-background-0) ;
+
+        &:hover,
+        &:active {
+            border: 1px solid var(--c-background-0);
+            color: var(--c-background-0);
+            background-image: linear-gradient(30deg, $end-color 0%, $start-color 100%);
+        }
+    }
+
+    &__btn-igneous-theme {
+        @include button-0;
+        $start-color: hsl(40, 80%, 35%);
+        $end-color: hsl(10, 70%, 50%);
+
+        color: var(--c-foreground-1);
+        border: 1px solid var(--c-background-4);
+        background-image: var(--c-background-0) ;
+
+        &:hover,
+        &:active {
+            border: 1px solid var(--c-background-0);
+            color: var(--c-background-0);
+            background-image: linear-gradient(30deg, $end-color 0%, $start-color 100%);
+        }
+    }
+
+    &__btn-emerald-theme {
+        @include button-0;
+        $start-color: hsl(140, 75%, 35%);
+        $end-color: hsl(170, 65%, 50%);
+
+        color: var(--c-foreground-1);
+        border: 1px solid var(--c-background-4);
+        background-image: var(--c-background-0) ;
+
+        &:hover,
+        &:active {
+            border: 1px solid var(--c-background-0);
+            color: var(--c-background-0);
+            background-image: linear-gradient(30deg, $end-color 0%, $start-color 100%);
+        }
+    }
+
+}

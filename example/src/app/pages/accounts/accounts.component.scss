@@ -1,0 +1,37 @@
+@use 'mixin' as *;
+
+:host {
+    @include page;
+}
+
+.p-accounts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    &__title {
+        @include text-title;
+    }
+
+    &__subtitle {
+        @include text-subtitle;
+    }
+
+    &__contained {
+        font-size: small;
+        border: 1px solid var(--c-background-2);
+        border-radius: 4px;
+        background-color: var(--c-background-1);
+        padding: 20px 30px;
+    }
+
+    &__add {
+        @include hyperlink;
+        color: var(--c-accent-0);
+
+        &:hover,
+        &:active {
+            color: var(--c-foreground-2);
+        }
+    }
+}

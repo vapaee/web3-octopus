@@ -1,0 +1,18 @@
+Estructura del directorio raíz: ./w3o-antelope/src
+
+├── classes/
+│   ├── AntelopeAccount.ts
+│   ├── AntelopeAuthAnchor.ts
+│   ├── AntelopeAuthSupport.ts
+│   ├── AntelopeChains.ts
+│   ├── AntelopeContractManager.ts
+│   ├── AntelopeError.ts
+│   ├── AntelopeNetwork.ts
+│   ├── AntelopeTokensService.ts
+│   ├── AntelopeWharfkit.ts
+│   └── index.ts
+├── index.ts
+├── types/
+│   ├── index.ts
+│   └── w3o-interfaces.ts
+└── version.ts

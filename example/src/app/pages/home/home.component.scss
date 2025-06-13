@@ -1,0 +1,14 @@
+@use 'mixin' as *;
+
+:host {
+    @include page;
+}
+
+.p-home {
+    &__title {
+        @include text-title;
+    }
+    &__subtitle {
+        @include text-subtitle;
+    }
+}

@@ -1,0 +1,61 @@
+.c-expandable {
+    border: 1px solid var(--c-background-3);
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 290px;
+    margin: auto;
+    transition: all 0.2s;
+
+    &--expanded {
+        box-shadow: var(--c-shadow-1);
+        border: 2px solid var(--c-accent-1);
+    }
+
+    &__header {
+        $header: &;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        padding: 5px 20px;
+        background-color: var(--c-background-1);
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s ease;
+
+        &:hover,
+        &:active {
+            background-color: var(--c-background-1);
+            color: var(--c-accent-0);
+            #{$header}-arrow {
+                color: var(--c-accent-0);
+            }
+        }
+
+        &--expanded {
+            background-color: var(--c-background-1);
+            color: var(--c-accent-0);
+            font-weight: bold;
+        }
+
+        &-arrow {
+            font-size: 14px;
+            color: var(--c-foreground-1);
+        }
+    }
+
+    &__body {
+        overflow: hidden;
+        background-color: var(--c-background-1);
+        border-top: 1px solid var(--c-background-3);
+        padding: 0px 20px;
+        transition: 0.3s ease;
+
+        &--expanded {
+            padding: 20px 20px 40px 20px;
+        }
+    }
+
+}
+
+

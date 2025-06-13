@@ -1,0 +1,106 @@
+{
+    "PAGES": {
+        "HOME": {
+            "NAME": "Inicio",
+            "TITLE": "DEX",
+            "DESCRIPTION": "Un mercado peer-to-peer donde las transacciones se realizan directamente entre operadores de criptomonedas."
+        },
+        "TRADE": {
+            "NAME": "Tradeo",
+            "TITLE": "Página de Tradeo",
+            "DESCRIPTION": "¡Descripción!"
+        },
+        "EXPLORE": {
+            "NAME": "Explorar",
+            "TITLE": "Página de Exploración",
+            "DESCRIPTION": "¡Descubre nuevo contenido aquí!"
+        },
+        "POOL": {
+            "NAME": "Piscina",
+            "TITLE": "Página de Piscina de Liquidez",
+            "DESCRIPTION": "¡Descripción!"
+        },
+        "WALLET": {
+            "NAME": "Billetera",
+            "ERROR": "Ninguna sesión activa. Inicia sesión para continuar",
+            "TITLE": "Billetera",
+            "DESCRIPTION": "Balance de tus tokens",
+            "LOADING": "Cargando..."
+        },
+        "PREFERENCES": {
+            "NAME": "Preferencias",
+            "TITLE": "Preferencias de Usuario",
+            "DESCRIPTION": "Configure su entorno",
+            "LANGUAGE": {
+                "TITLE": "Idioma",
+                "EN": "Ingles",
+                "ES": "Español"
+            },
+            "MODE": {
+                "TITLE": "Modo",
+                "DARK": "Oscuro",
+                "LIGHT": "Claro"
+            },
+            "HUE": {
+                "TITLE": "Color",
+                "A": "Océano",
+                "B": "Ígneo",
+                "C": "Esmeralda"
+            }
+        },
+        "ACCOUNTS": {
+            "NAME": "Sesiones",
+            "TITLE": "Página de Sesiones",
+            "DESCRIPTION": "Aquí se guardan tus distintas sessiones",
+            "ERROR": "Inicia sesión para continuar",
+            "CONNECTED": "Conectado como:",
+            "ADD": "Agregar cuenta"
+        }
+    },
+    "COMPONENTS": {
+        "TRANSFER-FORM": {
+            "TITLE": "Transferir",
+            "AVAILABLE": "Disponible:",
+            "TO": {
+                "TITLE": "Transferir a:",
+                "INPUT": "Inserte usuario destinatario",
+                "VALIDATION": {
+                    "CHECKING": "⏳ Verificando Usuario",
+                    "INVALID-PATTERN": "❌ Patrón EOSIO Incorrecto, 1-12 caracteres (a-z, 1-5)",
+                    "INVALID-SELF": "❌ No puede enviar a sí mismo",
+                    "INVALID-EXIST": "❌ El usuario no existe",
+                    "VALID": "✅ Usuario Válido"
+                }
+            },
+            "AMOUNT": {
+                "TITLE": "Cantidad:",
+                "INPUT": "Inserte número entero",
+                "USE-MAX": "Usar Todo",
+                "VALIDATION": {
+                    "INVALID-AMOUNT": "❌ Cantidad errónea",
+                    "INVALID-MAX": "❌ Cantidad supera su balance",
+                    "VALID": "✅ Cantidad Válida"
+                }
+            },
+            "SUCCESS": "✅ Transacción Exitosa",
+            "FAILURE": "❌ Transacción Fallida"
+        }
+    },
+    "TYPES": {
+        "BUTTON": {
+            "REFRESH": "Actualizar",
+            "RETRY": "Reintentar",
+            "CLOSE": "Cerrar",
+            "TRANSFER": "Transferir",
+            "PROCESSING": "Procesando...",
+            "LOGIN": "Iniciar Sesión",
+            "LOGOUT": "Cerrar Sesión"
+        },
+        "TRANSFER-SUMMARY": {
+            "FROM": "Origen:",
+            "TO": "Destino:",
+            "AMOUNT": "Cantidad:",
+            "TRANSACTION": "Transacción:"
+        }
+    }
+}

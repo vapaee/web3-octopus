@@ -1,0 +1,158 @@
+@mixin page {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin page-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin icon {
+    color: var(--c-foreground-2);
+    width: 26px;
+    height: 26px;
+}
+
+@mixin hyperlink {
+    text-decoration: none;
+    color: var(--c-foreground-2);
+    cursor: pointer;
+
+    &:hover,
+    &:active {
+        color: var(--c-accent-0);
+    }
+}
+
+@mixin input {
+    background-color: var(--c-background-0);
+    border: 1px solid var(--c-background-4);
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: var(--c-foreground-1);
+    outline: none;
+}
+
+@mixin hr-separator($horizontal-margin: 20px) {
+    width: calc(100% - #{$horizontal-margin * 2});
+    margin: 10px $horizontal-margin;
+    padding: 0px;
+    border: 0;
+    background-color: var(--c-background-4);
+    height: 1px;
+}
+
+@mixin text-title {
+    font-size: 24px;
+    color: var(--c-foreground-0);
+    margin: 20px 0;
+}
+
+@mixin text-subtitle {
+    font-size: 17px;
+    color: var(--c-foreground-2);
+    margin: 5px 0;
+}
+
+@mixin text-small {
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+@mixin text-smaller {
+    font-size: 12px;
+    color: var(--c-foreground-2);
+    margin: 2px 0;
+}
+
+@mixin button-base-0 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10pt;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: 0.3s;
+    cursor: pointer;
+    box-shadow: var(--c-shadow-0);
+    &:hover,
+    &:active {
+        box-shadow: var(--c-shadow-1);
+    }
+}
+
+@mixin button-unable-0 {
+    @include button-base-0;
+    color: var(--c-foreground-2);
+    border: none;
+    background-color: var(--c-background-2);
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+}
+
+@mixin button-0 {
+    @include button-base-0;
+    color: var(--c-background-0);
+    border: none;
+    background: var(--c-gradient-0);
+    &:hover,
+    &:active {
+        background: var(--c-gradient-1);
+    }
+}
+
+@mixin button-1 {
+    @include button-base-0;
+    color: var(--c-accent-0);
+    border: 1px solid var(--c-accent-0);
+    background-color: var(--c-background-0);
+    margin: 0;
+    outline: none;
+    &:hover,
+    &:active,
+    &:focus {
+        color: var(--c-background-0);
+        background-color: var(--c-accent-0);
+    }
+}
+
+@mixin input-normal {
+    background-color: var(--c-background-0);
+    border: 1px solid var(--c-background-4);
+    border-radius: 20px;
+    padding: 10px 15px;
+    color: var(--c-foreground-1);
+    outline: none;
+
+    &:focus {
+        border-color: var(--c-accent-0);
+        box-shadow: 0 0 4px var(--c-accent-0); // Add a subtle glow
+    }
+}
+
+@mixin input-range {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: var(--c-background-2);
+    outline: none;
+    margin: 0;
+}
+
+@mixin container-border {
+    border: 1px solid var(--c-background-2);
+    border-radius: 4px;
+    background-color: var(--c-background-1);
+    padding: 20px 30px;
+}

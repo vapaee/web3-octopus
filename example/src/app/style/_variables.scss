@@ -1,0 +1,68 @@
+// SEMANTIC CCOLOR VARIABLES:
+// The idea is to define color variables based on the "background-foreground-accent" concept,
+// by using only this color variables components get styled in a global way by automatically
+// adapting to light/dark & Hue themeing, mantaining good visual contrast and consistency */
+:root {
+    --h0: 190; // hue 0
+    --h1: 220; // hue 1
+}
+
+/* Dark Theme default*/
+body.dark-theme {
+    --c-background-0: hsl(var(--h0), 0%, 5%); // background dark 0
+    --c-background-1: hsl(var(--h0), 0%, 7%); // background dark 1
+    --c-background-2: hsl(var(--h0), 0%, 9%); // background dark 2
+    --c-background-3: hsl(var(--h0), 0%, 11%); // background dark 3
+    --c-background-4: hsl(var(--h0), 0%, 13%); // background dark 4
+
+    --c-foreground-2: hsl(var(--h0), 0%, 55%); // foreground light 2
+    --c-foreground-1: hsl(var(--h0), 0%, 75%); // foreground light 1
+    --c-foreground-0: hsl(var(--h0), 0%, 98%); // foreground light 0
+
+    --c-accent-0: hsl(var(--h0), 60%, 40%); // accent 0
+    --c-accent-1: hsl(var(--h0), 30%, 16%); // accent 1
+    --c-accent-2: hsl(var(--h0), 30%, 8%); // accent 2
+
+    --c-accent-0b: hsl(var(--h1), 60%, 40%);  // accent 0 b
+    --c-accent-1b: hsl(var(--h1), 40%, 16%); // accent 1 b
+    --c-accent-2b: hsl(var(--h1), 30%, 8%); // accent 2 b
+
+    --c-alert-0: hsl( 0, 70%, 50%);
+    --c-success-0: hsl( 100, 60%, 40%);
+
+    --c-gradient-0: linear-gradient(30deg, var(--c-accent-0) 30%, var(--c-accent-0b) 100%);
+    --c-gradient-1: linear-gradient(30deg, var(--c-accent-0b) 0%, var(--c-accent-0) 100%);
+
+    --c-shadow-0: 2px 2px 10px hsla(var(--h0), 60%, 60%, 0.0);
+    --c-shadow-1: 2px 2px 10px hsla(var(--h0), 60%, 80%, 0.08);
+}
+
+/* Light Theme */
+body.light-theme {
+    --c-background-0: hsl(var(--h0), 0%, 93%); // background light 0
+    --c-background-1: hsl(var(--h0), 0%, 90%); // background light 1
+    --c-background-2: hsl(var(--h0), 0%, 87%); // background light 2
+    --c-background-3: hsl(var(--h0), 0%, 84%); // background light 3
+    --c-background-4: hsl(var(--h0), 0%, 81%); // background light 4
+
+    --c-foreground-2: hsl(var(--h0), 0%, 50%); // foreground dark 2
+    --c-foreground-1: hsl(var(--h0), 0%, 40%); // foreground dark 1
+    --c-foreground-0: hsl(var(--h0), 0%, 0%); // foreground dark 0
+
+    --c-accent-0: hsl(var(--h0), 65%, 55%); // accent 0
+    --c-accent-1: hsl(var(--h0), 30%, 80%); // accent 1
+    --c-accent-2: hsl(var(--h0), 30%, 8%); // accent 2
+
+    --c-accent-0b: hsl(var(--h1), 60%, 55%);  // accent 0 b
+    --c-accent-1b: hsl(var(--h1), 40%, 16%); // accent 1 b
+    --c-accent-2b: hsl(var(--h1), 30%, 8%); // accent 2 b
+
+    --c-alert-0: hsl( 0, 60%, 50%);
+    --c-success-0: hsl( 100, 60%, 40%);
+
+    --c-gradient-0: linear-gradient(30deg, var(--c-accent-0) 0%, var(--c-accent-0b) 100%);
+    --c-gradient-1: linear-gradient(30deg, var(--c-accent-0b) 0%, var(--c-accent-0) 100%);
+
+    --c-shadow-0: 0px 0px 1px hsla(var(--h0), 0%, 0%, 0.10);
+    --c-shadow-1: 1px 2px 20px hsla(var(--h0), 0%, 0%, 0.08);
+}
