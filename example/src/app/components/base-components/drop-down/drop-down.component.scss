@@ -1,0 +1,27 @@
+.c-dropdown {
+    position: relative;
+    display: inline-block;
+
+    &__content {
+        position: absolute;
+        top: 50px;
+        right: 0px;
+        background-color: var(--c-background-0);
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        z-index: 100;  // Ensures the dropdown is on top
+        border-radius: 8px;
+    }
+
+    &__overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);  // Semi-transparent black
+        z-index: 99;  // Below the dropdown, but above everything else
+        backdrop-filter: blur(3px);
+    }
+}

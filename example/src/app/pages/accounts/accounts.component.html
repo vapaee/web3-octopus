@@ -1,0 +1,15 @@
+<div class="p-accounts">
+    <div class="p-accounts__title">{{ 'PAGES.ACCOUNTS.TITLE' | translate}}</div>
+    <p>{{ 'PAGES.ACCOUNTS.DESCRIPTION' | translate}}</p>
+
+    <ng-container *ngIf="sessionService.session$ | async as session; else loginTemplate">
+        <p class="p-accounts__subtitle">{{ 'PAGES.ACCOUNTS.CONNECTED' | translate}} {{ session.address }}</p>
+        <p class="p-accounts__contained">-<br>-<br>-<br>-</p>
+        <a class="p-accounts__add">+ {{ 'PAGES.ACCOUNTS.ADD' | translate}}</a>
+    </ng-container>
+
+    <ng-template #loginTemplate>
+        <p class="p-accounts__subtitle">{{ 'PAGES.ACCOUNTS.ERROR' | translate}}</p>
+        <app-login></app-login>
+    </ng-template>
+</div>

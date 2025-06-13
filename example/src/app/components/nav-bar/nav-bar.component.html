@@ -1,0 +1,67 @@
+<!-- Normal Navbar -->
+<!-- [ngIf]="!isMobileView; else mobileNav" -->
+<ng-container *ngIf="!isMobileView; else mobileNav">
+    <nav class="c-navbar">
+        <div class="c-navbar__row">
+            <a
+                class="c-navbar__logo"
+                routerLink="/"
+                routerLinkActive="active-link"
+                [routerLinkActiveOptions]="{ exact: true }"
+            >
+                <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradientStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="var(--c-accent-0)" />
+                            <stop offset="100%" stop-color="var(--c-accent-0b)" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="40" stroke="url(#gradientStroke)" stroke-width="15" fill="none" />
+                </svg>
+            </a>
+
+            <a class="c-navbar__button" routerLink="/trade" routerLinkActive="active-link">{{ 'PAGES.TRADE.NAME' | translate }}</a>
+            <a class="c-navbar__button" routerLink="/explore" routerLinkActive="active-link">{{ 'PAGES.EXPLORE.NAME' | translate }}</a>
+            <a class="c-navbar__button" routerLink="/pool" routerLinkActive="active-link">{{ 'PAGES.POOL.NAME' | translate }}</a>
+        </div>
+
+        <div class="c-navbar__row">
+
+            <app-drop-down>
+                <!-- Dropdown Button -->
+                <lucide-icon dropdown-button
+                    [img]="GlobeIcon"
+                    class="c-navbar__icon"
+                ></lucide-icon>
+
+                <!-- Dropdown Body -->
+                <div dropdown-body class="c-navbar__dropdown">
+                    <a class="c-navbar__dropdown-option" (click)="setLang('en')">{{ 'PAGES.PREFERENCES.LANGUAGE.EN' | translate }}</a>
+                    <a class="c-navbar__dropdown-option" (click)="setLang('es')">{{ 'PAGES.PREFERENCES.LANGUAGE.ES' | translate }}</a>
+                </div>
+            </app-drop-down>
+
+            <lucide-icon
+                [img]="isDarkTheme ? SunIcon : MoonIcon"
+                class="c-navbar__icon"
+                (click)="toggleTheme()"
+            ></lucide-icon>
+            <app-login></app-login>
+        </div>
+    </nav>
+</ng-container>
+
+<!-- Mobile Navbar | whidth < 599px -->
+
+<ng-template #mobileNav>
+    <nav class="c-navbar">
+        <div class="c-navbar__row c-navbar__row--mobile">
+            <lucide-icon [img]="QrIcon" class="c-navbar__icon c-navbar__icon--btn"></lucide-icon>
+
+            <app-login></app-login>
+
+            <lucide-icon [img]="MenuIcon" class="c-navbar__icon c-navbar__icon--btn" (click)="toggleMobileSideMenu()"></lucide-icon>
+        </div>
+    </nav>
+</ng-template>
+<!-- -->

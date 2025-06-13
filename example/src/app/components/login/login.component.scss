@@ -1,0 +1,25 @@
+@use 'mixin' as *;
+
+.c-login {
+    &__btn {
+        @include button-0;
+
+        &--active {
+            @include button-1
+        }
+    }
+    &__menu {
+        &-body {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px;
+        }
+        &-option {
+            @include hyperlink;
+        }
+        &-separator {
+            @include hr-separator(0px);
+        }
+    }
+}

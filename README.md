@@ -25,6 +25,7 @@ import {
     W3oIServices,
     W3oNetworkSupportSettings
 } from '@vapaee/w3o-core';
+git branch -D 
 
 import {
     AntelopeNetwork,
@@ -76,6 +77,7 @@ import { getOctopus } from '...';
 getOctopus().services.telos.balances$.subscribe(console.log);
 ```
 
+
 ## Instalación
 ```bash
 npm install
@@ -103,7 +105,7 @@ El script `build` compila los paquetes locales y deja todo listo para usarlos de
 | 11 | W3oNetworkLinks           | Interfaz         | Enlaces útiles como explorer o puente.                           |
 | 12 | W3oContractManager        | Clase            | Gestiona y cachea contratos desplegados en una red.              |
 | 13 | W3oContractABI            | Interfaz         | Describe la ABI de un contrato.                                  |
-| 14 | W3oToken                  | Clase            | Representación de un token estándar.                              |
+| 14 | W3oToken                  | Clase            | Representación de un token estándar.                             |
 | 15 | W3oContract               | Clase            | Representación de un contrato desplegado.                        |
 | 16 | W3oNetworkManager         | Clase            | Administración de las redes registradas.                         |
 | 17 | W3oNetworkSupportSettings | Interfaz         | Configuración de redes y autenticadores.                         |

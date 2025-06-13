@@ -1,0 +1,15 @@
+<div class="c-expandable" [ngClass]="{ 'c-expandable--expanded': isOpen }" [id]="'expandable-' + expandableId">
+    <div class="c-expandable__header" [ngClass]="{ 'c-expandable__header--expanded': isOpen }" (click)="toggleComponent()">
+        <ng-container *ngIf="!isOpen; else openHeader">
+            <ng-content select="[closedHeader]"></ng-content>
+            <span class="c-expandable__header-arrow">▼</span>
+        </ng-container>
+        <ng-template #openHeader>
+            <ng-content select="[openHeader]"></ng-content>
+            <span class="c-expandable__header-arrow">▲</span>
+        </ng-template>
+    </div>
+    <div class="c-expandable__body" [ngClass]="{ 'c-expandable__body--expanded': isOpen }" [style.maxHeight]="isOpen ? '500px' : '0'">
+        <ng-content select="[body]"></ng-content>
+    </div>
+</div>

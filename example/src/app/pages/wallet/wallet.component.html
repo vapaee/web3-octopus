@@ -1,0 +1,54 @@
+<div
+    *ngIf="actor; else noSession"
+    [class.mobile]="isMobileView"
+    class="p-wallet"
+>
+    <div class="p-wallet__header">
+        <div class="p-wallet__header-title">
+            {{ 'PAGES.WALLET.TITLE' | translate }}
+        </div>
+        <div class="p-wallet__header-subtitle">
+            {{ 'PAGES.WALLET.DESCRIPTION' | translate }}
+        </div>
+    </div>
+
+    <div class="p-wallet__loading" *ngIf="loading; else balanceList">
+        <p>{{ 'PAGES.WALLET.LOADING' | translate }}</p>
+    </div>
+
+    <ng-template #balanceList>
+        <app-expandable-group class="p-wallet__group">
+            <app-expandable
+                class="p-wallet__group-expandible"
+                *ngFor="let balance of balances"
+                [expandableId]="'expandable-' + balance.token.symbol"
+            >
+                <!-- Closed Header: Show Token Symbol and Balance -->
+                <div class="p-wallet__balance-head p-wallet__balance-head--closed" closedHeader>
+                    <img class="p-wallet__balance-icon" src="{{ balance.token.logo }}">
+                    <p>{{ balance.amount.formatted }} <strong>{{ balance.token.symbol }}</strong></p>
+                </div>
+
+                <!-- Open Header: (Optional) Show Same or Different Info When Expanded -->
+                <div class="p-wallet__balance-head p-wallet__balance-head--open" openHeader>
+                    <img class="p-wallet__balance-icon" src="{{ balance.token.logo }}">
+                    <p>{{ 'COMPONENTS.TRANSFER-FORM.TITLE' | translate }} {{ balance.token.symbol }}</p>
+                </div>
+
+                <!-- Expandable Body: Show Detailed Info -->
+                <div class="p-wallet__balance-body" body>
+                    <app-token-transfer-form [tokenSymbol]="balance.token.symbol"></app-token-transfer-form>
+                </div>
+            </app-expandable>
+        </app-expandable-group>
+        <a class="p-wallet__refresh" (click)="refreshBalances()">&#x21bb; {{ 'TYPES.BUTTON.REFRESH' | translate }} {{ 'PAGES.WALLET.NAME' | translate }}  </a>
+    </ng-template>
+</div>
+
+<ng-template #noSession>
+    <div class="p-wallet">
+        <div class="p-wallet__header-subtitle">
+            {{ 'PAGES.WALLET.ERROR' | translate }}
+        </div>
+    </div>
+</ng-template>

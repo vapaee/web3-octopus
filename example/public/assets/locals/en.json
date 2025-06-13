@@ -1,0 +1,106 @@
+{
+    "PAGES": {
+        "HOME": {
+            "NAME": "Home",
+            "TITLE": "DEX",
+            "DESCRIPTION": "A peer-to-peer marketplace where transactions occur directly between cryptocurrency traders."
+        },
+        "TRADE": {
+            "NAME": "Trade",
+            "TITLE": "Trading Page",
+            "DESCRIPTION": "Description!"
+        },
+        "EXPLORE": {
+            "NAME": "Explore",
+            "TITLE": "Exploration Page",
+            "DESCRIPTION": "Discover new content here!"
+        },
+        "POOL": {
+            "NAME": "Pool",
+            "TITLE": "Liquidity Pool Page",
+            "DESCRIPTION": "Description!"
+        },
+        "WALLET": {
+            "NAME": "Wallet",
+            "ERROR": "No active session. Log in to continue.",
+            "TITLE": "Wallet",
+            "DESCRIPTION": "Your token balance",
+            "LOADING": "Loading..."
+        },
+        "PREFERENCES": {
+            "NAME": "Preferences",
+            "TITLE": "User Preferences",
+            "DESCRIPTION": "Costomize your environment",
+            "LANGUAGE": {
+                "TITLE": "Language",
+                "EN": "English",
+                "ES": "Spanish"
+            },
+            "MODE": {
+                "TITLE": "Mode",
+                "DARK": "Dark",
+                "LIGHT": "Light"
+            },
+            "HUE": {
+                "TITLE": "Hue",
+                "A": "Ocean",
+                "B": "Igneous",
+                "C": "Emerald"
+            }
+        },
+        "ACCOUNTS": {
+            "NAME": "Accounts",
+            "TITLE": "Acounts Page",
+            "DESCRIPTION": "Your accounts are stored here.",
+            "ERROR": "Log in to continue.",
+            "CONNECTED": "Connected as:",
+            "ADD": "Add new account"
+        }
+    },
+    "COMPONENTS": {
+        "TRANSFER-FORM": {
+            "TITLE": "Transfer",
+            "AVAILABLE": "Available:",
+            "TO": {
+                "TITLE": "Transfer to:",
+                "INPUT": "Enter recipient username",
+                "VALIDATION": {
+                    "CHECKING": "⏳ Verifying User",
+                    "INVALID-PATTERN": "❌ Invalid EOSIO pattern, 1-12 characters (a-z, 1-5)",
+                    "INVALID-SELF": "❌ Cannot send to yourself",
+                    "INVALID-EXIST": "❌ User does not exist",
+                    "VALID": "✅ Valid User"
+                }
+            },
+            "AMOUNT": {
+                "TITLE": "Amount:",
+                "INPUT": "Enter a whole number",
+                "USE-MAX": "Use All",
+                "VALIDATION": {
+                    "INVALID-AMOUNT": "❌ Invalid amount",
+                    "INVALID-MAX": "❌ Amount exceeds your balance",
+                    "VALID": "✅ Valid Amount"
+                }
+            },
+            "SUCCESS": "✅ Transaction Successful",
+            "FAILURE": "❌ Transaction Failed"
+        }
+    },
+    "TYPES": {
+        "BUTTON": {
+            "REFRESH": "Refresh",
+            "RETRY": "Retry",
+            "CLOSE": "Close",
+            "TRANSFER": "Transfer",
+            "PROCESSING": "Processing...",
+            "LOGIN": "Log In",
+            "LOGOUT": "Log out"
+        },
+        "TRANSFER-SUMMARY": {
+            "FROM": "From:",
+            "TO": "To:",
+            "AMOUNT": "Amount:",
+            "TRANSACTION": "Transaction:"
+        }
+    }
+}

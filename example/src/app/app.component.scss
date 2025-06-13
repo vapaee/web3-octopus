@@ -1,0 +1,38 @@
+:host {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+}
+
+.navbar {
+    width: 100%;
+}
+
+.view {
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    background: linear-gradient(rgba(0, 0, 0, 0.06) 0px, rgba(0, 0, 0, 0) 50px);
+
+    /* Firefox scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-accent-0) var(--c-background-1);
+}
+
+/* Custom scrollbar for Webkit browsers */
+.view::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.view::-webkit-scrollbar-track {
+    background: var(--c-background-1);
+}
+
+.view::-webkit-scrollbar-thumb {
+    background-color: var(--c-accent-0);
+    border-radius: 4px;
+    border: 2px solid var(--c-background-1);
+}
