@@ -75,7 +75,7 @@ export class W3oToken {
      * @returns boolean - true if the token is a native token, false otherwise
      */
     getIconUrl(): string {
-        return this.data['iconUrl'] ?? this.data['icon'] ?? this.data['logo'] ?? '/asstets/icons/tokens/unknown.svg';
+        return this.data['logoURI'] ?? this.data['iconUrl'] ?? this.data['icon'] ?? this.data['logo'] ?? '/asstets/icons/tokens/unknown.svg';
     }
 
     /**

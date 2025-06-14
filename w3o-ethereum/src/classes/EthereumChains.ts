@@ -17,7 +17,7 @@ const EthereumMainnetConfigJSON: W3oEthereumNetworkSettings = {
     chainId: '1',
     displayName: 'Ethereum Mainnet',
     rpcUrl: 'https://mainnet.infura.io/v3/your_project_id',
-    tokensUrl: 'assets/tokens_mainnet.json',
+    tokensUrl: 'assets/tokens-ethereum-ethereum-mainnet.json',
     links: {
         explorer: 'https://etherscan.io',
         bridge: '',
@@ -45,7 +45,7 @@ const GoerliConfigJSON: W3oEthereumNetworkSettings = {
     chainId: '5',
     displayName: 'Goerli Testnet',
     rpcUrl: 'https://goerli.infura.io/v3/your_project_id',
-    tokensUrl: 'assets/tokens_goerli.json',
+    tokensUrl: 'assets/tokens-ethereum-goerli.json',
     links: {
         explorer: 'https://goerli.etherscan.io',
         bridge: '',
@@ -60,6 +60,62 @@ export class GoerliNetwork extends EthereumNetwork {
         super(
             { ...GoerliConfigJSON },
             (new W3oContextFactory('GoerliNetwork')).method('constructor', { settings }, parent)
+        );
+    }
+}
+
+const TelosEVMConfigJSON: W3oEthereumNetworkSettings = {
+    w3oName: 'ethereum.network.telos-evm',
+    w3oVersion,
+    w3oRequire,
+    type,
+    name: 'telos-evm' as W3oNetworkName,
+    chainId: '40',
+    displayName: 'Telos EVM',
+    rpcUrl: 'https://mainnet.telos.net/evm',
+    tokensUrl: 'assets/tokens-ethereum-telos-evm.json',
+    links: {
+        explorer: 'https://teloscan.io',
+        bridge: '',
+        ecosystem: '',
+        website: 'https://telos.net',
+        wallet: ''
+    } as W3oNetworkLinks
+};
+
+export class TelosEVMNetwork extends EthereumNetwork {
+    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+        super(
+            { ...TelosEVMConfigJSON },
+            (new W3oContextFactory('TelosEVMNetwork')).method('constructor', { settings }, parent)
+        );
+    }
+}
+
+const TelosEVMTestnetConfigJSON: W3oEthereumNetworkSettings = {
+    w3oName: 'ethereum.network.telos-evm-testnet',
+    w3oVersion,
+    w3oRequire,
+    type,
+    name: 'telos-evm-testnet' as W3oNetworkName,
+    chainId: '41',
+    displayName: 'Telos EVM Testnet',
+    rpcUrl: 'https://testnet.telos.net/evm',
+    tokensUrl: 'assets/tokens-ethereum-telos-evm-testnet.json',
+    links: {
+        explorer: 'https://testnet.teloscan.io',
+        bridge: '',
+        ecosystem: '',
+        website: 'https://telos.net',
+        wallet: ''
+    } as W3oNetworkLinks
+};
+
+export class TelosEVMTestnetNetwork extends EthereumNetwork {
+    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+        super(
+            { ...TelosEVMTestnetConfigJSON },
+            (new W3oContextFactory('TelosEVMTestnetNetwork')).method('constructor', { settings }, parent)
         );
     }
 }

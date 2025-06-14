@@ -1,0 +1,46 @@
+[
+    {
+      "chainId": 41,
+      "address": "___NATIVE_CURRENCY___",
+      "symbol": "TLOS",
+      "name": "Telos",
+      "decimals": 18
+    },
+    {
+      "chainId": 41,
+      "address": "0xa9991E4daA44922D00a78B6D986cDf628d46C4DD",
+      "symbol": "STLOS",
+      "name": "Staked TLOS",
+      "coingeckoId": false,
+      "cmcId": false,
+      "logoURI": "https://raw.githubusercontent.com/telosnetwork/token-list/main/logos/stlos.png",
+      "decimals": 18,
+      "tags": ["telosevm"],
+      "issuer": "Telos",
+      "issuer_link": "https://telos.net/"
+    },
+    {
+      "chainId": 41,
+      "address": "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9",
+      "symbol": "WTLOS",
+      "name": "Wrapped TLOS",
+      "coingeckoId": "telos",
+      "cmcId": 4660,
+      "logoURI": "https://raw.githubusercontent.com/telosnetwork/token-list/main/logos/wtlos.png",
+      "decimals": 18,
+      "tags": ["telosevm"],
+      "issuer": "Telos",
+      "issuer_link": "https://telos.net/"
+    },
+    {
+      "chainId": 41,
+      "address": "0xe1aFB545B5701D884a674d90b31927BBd0fcA380",
+      "symbol": "USDT",
+      "name": "Tether USD (testnet)",
+      "coingeckoId": false,
+      "cmcId": false,
+      "logoURI": "https://raw.githubusercontent.com/elkfinance/tokens/main/logos/avax/0xc7198437980c041c805A1EDcbA50c1Ce5db95118/logo.png",
+      "decimals": 6,
+      "tags": []
+    }
+]
