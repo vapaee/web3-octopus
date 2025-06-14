@@ -6,12 +6,14 @@
     "serve": "npm --prefix example run start",
     "build:core": "npm --prefix w3o-core run build",
     "build:antelope": "npm --prefix w3o-antelope run build",
+    "build:ethereum": "npm --prefix w3o-ethereum run build",
     "build:example": "npm --prefix example run build",
-    "build": "npm run build:core && npm run build:antelope",
+    "build": "npm run build:core && npm run build:antelope && npm run build:ethereum && npm run build:example",
     "install:core": "npm --prefix w3o-core install",
     "install:antelope": "npm --prefix w3o-antelope install",
+    "install:ethereum": "npm --prefix w3o-ethereum install",
     "install:example": "npm --prefix example install",
-    "postinstall": "npm run install:core && npm run install:antelope && npm run install:example",
+    "postinstall": "npm run install:core && npm run install:antelope && npm run install:ethereum && npm run install:example",
     "clear": "rm -fr w3o-core/lib w3o-antelope/lib example/node_modules w3o-core/node_modules w3o-antelope/node_modules ./node_modules example/.angular"
   }
 }

@@ -14,9 +14,9 @@
         "moduleResolution": "node",
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "declaration": true
+        "declaration": true,
+        "lib": ["esnext"]
     },
-    "lib": ["esnext"],
     "include": [
         "src/**/*.ts"
     ],
