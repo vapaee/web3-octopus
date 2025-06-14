@@ -16,6 +16,7 @@ import {
 // import the classes to support Antelope (EOSIO) networks
 import {
     AntelopeTokensService,                // extends W3oService
+    AntelopeResourcesService,
     AntelopeAuthAnchor,
     TelosZeroNetwork,
     TelosZeroTestnetNetwork,
@@ -64,6 +65,7 @@ export class Web3OctopusService implements OnDestroy {
             // paths must match the keys in the IMyServices interface
             const services: W3oService[] = [
                 new AntelopeTokensService('tokens', context),
+                new AntelopeResourcesService('resources', context),
             ];
             octopus.registerServices(services);
             octopus.init(
@@ -74,6 +76,14 @@ export class Web3OctopusService implements OnDestroy {
                 },
                 context
             );
+
+            octopus.sessions.current$.subscribe(session => {
+                if (session?.authenticator) {
+                    octopus.services.resources
+                        .getResources$(session.authenticator, context)
+                        .subscribe(res => console.log('Resources', res));
+                }
+            });
 
         } catch (error) {
             context.error('constructor', error);
