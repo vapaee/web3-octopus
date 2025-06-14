@@ -21,7 +21,7 @@ const EOSConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.EOS.id.toString(),
     displayName: Chains.EOS.name,
     rpcUrl: 'https://eos.greymass.com',
-    tokensUrl: 'assets/tokens_eos.json',
+    tokensUrl: 'assets/tokens-antelope-eos.json',
     links: {
         explorer: '',
         bridge: '',
@@ -52,7 +52,7 @@ const FIOConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.FIO.id.toString(),
     displayName: Chains.FIO.name,
     rpcUrl: 'https://fio.greymass.com',
-    tokensUrl: 'assets/tokens_fio.json',
+    tokensUrl: 'assets/tokens-antelope-fio.json',
     links: {
         explorer: '',
         bridge: '',
@@ -83,7 +83,7 @@ const FIOTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.FIOTestnet.id.toString(),
     displayName: Chains.FIOTestnet.name,
     rpcUrl: 'https://testnet.fioprotocol.io',
-    tokensUrl: 'assets/tokens_fiotestnet.json',
+    tokensUrl: 'assets/tokens-antelope-fio-testnet.json',
     links: {
         explorer: '',
         bridge: '',
@@ -114,7 +114,7 @@ const Jungle4ConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.Jungle4.id.toString(),
     displayName: Chains.Jungle4.name,
     rpcUrl: 'https://jungle4.greymass.com',
-    tokensUrl: 'assets/tokens_jungle4.json',
+    tokensUrl: 'assets/tokens-antelope-jungle4.json',
     links: {
         explorer: '',
         bridge: '',
@@ -145,7 +145,7 @@ const KylinTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.KylinTestnet.id.toString(),
     displayName: Chains.KylinTestnet.name,
     rpcUrl: 'https://kylin.eosn.io',
-    tokensUrl: 'assets/tokens_kylin.json',
+    tokensUrl: 'assets/tokens-antelope-kylin-testnet.json',
     links: {
         explorer: '',
         bridge: '',
@@ -177,7 +177,7 @@ const LibreConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.Libre.id.toString(),
     displayName: Chains.Libre.name,
     rpcUrl: 'https://api.libre.org',
-    tokensUrl: 'assets/tokens_libre.json',
+    tokensUrl: 'assets/tokens-antelope-libre.json',
     links: {
         explorer: '',
         bridge: '',
@@ -208,7 +208,7 @@ const LibreTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.LibreTestnet.id.toString(),
     displayName: Chains.LibreTestnet.name,
     rpcUrl: 'https://testnet.libre.org',
-    tokensUrl: 'assets/tokens_libretestnet.json',
+    tokensUrl: 'assets/tokens-antelope-libre-testnet.json',
     links: {
         explorer: '',
         bridge: '',
@@ -240,7 +240,7 @@ const ProtonConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.Proton.id.toString(),
     displayName: Chains.Proton.name,
     rpcUrl: 'https://proton.greymass.com',
-    tokensUrl: 'assets/tokens_proton.json',
+    tokensUrl: 'assets/tokens-antelope-proton.json',
     links: {
         explorer: '',
         bridge: '',
@@ -271,7 +271,7 @@ const ProtonTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.ProtonTestnet.id.toString(),
     displayName: Chains.ProtonTestnet.name,
     rpcUrl: 'https://testnet.protonchain.com',
-    tokensUrl: 'assets/tokens_protontestnet.json',
+    tokensUrl: 'assets/tokens-antelope-proton-testnet.json',
     links: {
         explorer: '',
         bridge: '',
@@ -303,7 +303,7 @@ const TelosZeroConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.Telos.id.toString(),
     displayName: Chains.Telos.name,
     rpcUrl: 'https://mainnet.telos.net',
-    tokensUrl: 'assets/tokens_mainnet.json',
+    tokensUrl: 'assets/tokens-antelope-telos.json',
     links: {
         explorer: '',
         bridge: '',
@@ -334,7 +334,7 @@ const TelosZeroTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.TelosTestnet.id.toString(),
     displayName: 'Telos Zero Testnet',
     rpcUrl: 'https://testnet.telos.net',
-    tokensUrl: 'assets/tokens_testnet.json',
+    tokensUrl: 'assets/tokens-antelope-telos-testnet.json',
     links: {
         explorer: '',
         bridge: '',
@@ -366,7 +366,7 @@ const UXConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.UX.id.toString(),
     displayName: Chains.UX.name,
     rpcUrl: 'https://api.uxnetwork.io',
-    tokensUrl: 'assets/tokens_ux.json',
+    tokensUrl: 'assets/tokens-antelope-ux.json',
     links: {
         explorer: '',
         bridge: '',
@@ -397,7 +397,7 @@ const WAXConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.WAX.id.toString(),
     displayName: Chains.WAX.name,
     rpcUrl: 'https://wax.greymass.com',
-    tokensUrl: 'assets/tokens_wax.json',
+    tokensUrl: 'assets/tokens-antelope-wax.json',
     links: {
         explorer: '',
         bridge: '',
@@ -428,7 +428,7 @@ const WAXTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.WAXTestnet.id.toString(),
     displayName: Chains.WAXTestnet.name,
     rpcUrl: 'https://wax-testnet.greymass.com',
-    tokensUrl: 'assets/tokens_waxtestnet.json',
+    tokensUrl: 'assets/tokens-antelope-wax-testnet.json',
     links: {
         explorer: '',
         bridge: '',
@@ -459,7 +459,7 @@ const XPRConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.XPR.id.toString(),
     displayName: Chains.XPR.name,
     rpcUrl: 'https://xpr.greymass.com',
-    tokensUrl: 'assets/tokens_xpr.json',
+    tokensUrl: 'assets/tokens-antelope-xpr.json',
     links: {
         explorer: '',
         bridge: '',
@@ -490,7 +490,7 @@ const XPRTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     chainId: Chains.XPRTestnet.id.toString(),
     displayName: Chains.XPRTestnet.name,
     rpcUrl: 'https://testnet.protonchain.com',
-    tokensUrl: 'assets/tokens_xprtestnet.json',
+    tokensUrl: 'assets/tokens-antelope-xpr-testnet.json',
     links: {
         explorer: '',
         bridge: '',

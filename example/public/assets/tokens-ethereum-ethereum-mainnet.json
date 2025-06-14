@@ -1,0 +1,8 @@
+[
+  {
+    "address": "___NATIVE_CURRENCY___",
+    "symbol": "ETH",
+    "name": "Ether",
+    "decimals": 18
+  }
+]
