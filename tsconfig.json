@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "./w3o-core" },
-    { "path": "./w3o-antelope" }
+    { "path": "./w3o-antelope" },
+    { "path": "./w3o-ethereum" }
   ]
 }

@@ -21,18 +21,18 @@
   "dependencies": {
     "@vapaee/w3o-core": "file:../w3o-core",
     "ethers": "^6.10.0",
-    "wagmi": "^1.6.3",
+    "wagmi": "2.15.6",
     "rxjs": ">=6.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.3.3"
+    "typescript": "5.3.3"
   },
   "peerDependencies": {
     "ethers": "^6.0.0",
-    "wagmi": "^1.6.0",
+    "wagmi": "2.15.6",
     "rxjs": ">=6.0.0"
   }
 }
