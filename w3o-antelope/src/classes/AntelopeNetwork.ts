@@ -53,6 +53,28 @@ export class AntelopeNetwork extends W3oNetwork {
                                 subscriber.error(error);
                             });
                     });
+                },
+                post: <T>(url: string, body: any): Observable<T> => {
+                    return new Observable<T>(subscriber => {
+                        fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(body)
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                subscriber.next(data as T);
+                                subscriber.complete();
+                            })
+                            .catch(error => {
+                                subscriber.error(error);
+                            });
+                    });
                 }
             } as W3oHttpClient;
         }
