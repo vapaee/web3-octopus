@@ -20,8 +20,7 @@
   },
   "dependencies": {
     "@vapaee/w3o-core": "*",
-    "ethers": "^6.10.0",
-    "wagmi": "2.15.6",
+    "ethers": "^5.5.1",
     "rxjs": ">=6.0.0"
   },
   "devDependencies": {
@@ -31,8 +30,7 @@
     "typescript": "5.8.3"
   },
   "peerDependencies": {
-    "ethers": "^6.0.0",
-    "wagmi": "2.15.6",
+    "ethers": "^5.5.1",
     "rxjs": ">=6.0.0"
   }
 }
