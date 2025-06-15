@@ -19,6 +19,9 @@
       "@vapaee/w3o-antelope": [
         "../w3o-antelope/src"
       ],
+      "@vapaee/w3o-ethereum": [
+        "../w3o-ethereum/src"
+      ],
       "@app/*": [
         "src/app/*"
       ]
