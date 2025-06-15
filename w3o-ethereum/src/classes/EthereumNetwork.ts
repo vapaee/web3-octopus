@@ -48,7 +48,7 @@ export class EthereumNetwork extends W3oNetwork {
 
         this.initialized$.subscribe((result) => {
             if (result) {
-                const wagmiConfig = EthereumWagmi.wagmi(settings, context);
+                EthereumWagmi.wagmi(settings, context);
                 const chain: Chain = {
                     id: parseInt(settings.chainId, 10),
                     name: settings.displayName,
@@ -125,6 +125,7 @@ export class EthereumNetwork extends W3oNetwork {
 
     override validateAccount(address: string, parent: W3oContext): Observable<boolean> {
         const context = logger.method('validateAccount', { address }, parent);
+        void context;
         // Basic validation: check hex string length
         const isValid = /^0x[a-fA-F0-9]{40}$/.test(address);
         return new Observable<boolean>(subscriber => {

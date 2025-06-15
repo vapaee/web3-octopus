@@ -9,12 +9,9 @@ import {
     W3oBalance,
     W3oAuthenticator,
     W3oToken,
-    W3oTransferStatus,
     W3oTransferSummary,
-    W3oError,
 } from "@vapaee/w3o-core";
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from "rxjs";
-import { map } from "rxjs/operators";
 import { ethers } from "ethers";
 import { EthereumAccount } from "./EthereumAccount";
 
@@ -53,6 +50,7 @@ export class EthereumTokensService extends W3oService {
 
     public getBalances$(auth: W3oAuthenticator, parent: W3oContext): BehaviorSubject<W3oBalance[]> {
         const context = logger.method('getBalances$', { auth }, parent);
+        void context;
         let balances$ = auth.session.storage.get('balances$') as BehaviorSubject<W3oBalance[]>;
         if (!balances$) {
             balances$ = new BehaviorSubject<W3oBalance[]>([]);
@@ -73,7 +71,7 @@ export class EthereumTokensService extends W3oService {
         return new Observable<W3oBalance>((observer) => {
             contract.balanceOf(address).then((balance: any) => {
                 const value = Number(balance.toString());
-                const formatted = (value / Math.pow(10, token.decimals)).toFixed(token.decimals);
+                const formatted = (value / Math.pow(10, token.precision)).toFixed(token.precision);
                 observer.next({ amount: { value, formatted }, token });
                 observer.complete();
             }).catch((error: any) => {
@@ -101,8 +99,11 @@ export class EthereumTokensService extends W3oService {
     public updateAllBalances(auth: W3oAuthenticator, parent: W3oContext): void {
         const context = logger.method('updateAllBalances', { auth }, parent);
         const balances$ = this.getBalances$(auth, context);
-        combineLatest(auth.network.tokens$.map(token => this.fetchSingleBalance(auth, token, context))).subscribe(balances => {
-            balances.forEach(b => this.addSingleBalanceToState(balances$, b));
+        auth.network.tokens$.subscribe(tokens => {
+            const obs = tokens.map(t => this.fetchSingleBalance(auth, t, context));
+            combineLatest(obs).subscribe(balances => {
+                balances.forEach(b => this.addSingleBalanceToState(balances$, b));
+            });
         });
     }
 
@@ -115,6 +116,7 @@ export class EthereumTokensService extends W3oService {
         parent: W3oContext
     ): Observable<W3oTransferSummary> {
         const context = logger.method('transferToken', { auth, to, quantity, token }, parent);
+        void memo;
         const result$ = new Subject<W3oTransferSummary>();
         try {
             const provider = (auth.account as EthereumAccount).authenticator.network['client'];

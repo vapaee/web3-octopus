@@ -14,6 +14,10 @@
     "install:ethereum": "npm --prefix w3o-ethereum install",
     "install:example": "npm --prefix example install",
     "postinstall": "npm run install:core && npm run install:antelope && npm run install:ethereum && npm run install:example",
-    "clear": "rm -fr w3o-core/lib w3o-antelope/lib example/node_modules w3o-core/node_modules w3o-antelope/node_modules ./node_modules example/.angular"
+    "clear:core": "rm -fr w3o-core/lib w3o-core/node_modules",
+    "clear:antelope": "rm -fr w3o-antelope/lib w3o-antelope/node_modules",
+    "clear:ethereum": "rm -fr w3o-ethereum/lib w3o-ethereum/node_modules",
+    "clear:example": "rm -fr example/node_modules example/.angular",
+    "clear": "npm run clear:core && npm run clear:antelope && npm run clear:ethereum && npm run clear:example"
   }
 }

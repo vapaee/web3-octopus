@@ -16,7 +16,7 @@ import {
 import { EthereumAuthSupport } from './EthereumAuthSupport';
 import { Observable } from 'rxjs';
 import { EthereumAccount } from './EthereumAccount';
-import { ethers } from 'ethers';
+import { BrowserProvider, JsonRpcSigner } from 'ethers';
 import { EthereumError } from './EthereumError';
 
 const logger = new W3oContextFactory('EthereumAuthMetamask');
@@ -24,6 +24,13 @@ const logger = new W3oContextFactory('EthereumAuthMetamask');
 export class EthereumTransactionResponse extends W3oTransactionResponse {
     constructor(hash: string) {
         super(hash);
+    }
+
+    wait(): Observable<any> {
+        return new Observable<any>(observer => {
+            observer.next({} as any);
+            observer.complete();
+        });
     }
 }
 
@@ -45,9 +52,9 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
         logger.info('EthereumAuthMetamask OK!', super.w3oId);
     }
 
-    private getProvider(): ethers.BrowserProvider {
+    private getProvider(): BrowserProvider {
         if (typeof window !== 'undefined' && (window as any).ethereum) {
-            return new ethers.BrowserProvider((window as any).ethereum);
+            return new BrowserProvider((window as any).ethereum);
         }
         throw new W3oError(EthereumError.PROVIDER_NOT_FOUND);
     }
@@ -84,14 +91,20 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
 
     signTransaction(auth: W3oAuthenticator, trx: W3oTransaction, parent: W3oContext): Observable<EthereumTransactionResponse> {
         const context = logger.method('signTransaction', { trx }, parent);
+        void auth;
         return new Observable<EthereumTransactionResponse>(observer => {
             try {
                 const provider = this.getProvider();
-                provider.getSigner().sendTransaction(trx as any).then(tx => {
-                    observer.next(new EthereumTransactionResponse(tx.hash));
-                    observer.complete();
+                provider.getSigner().then((signer: JsonRpcSigner) => {
+                    signer.sendTransaction(trx as any).then(tx => {
+                        observer.next(new EthereumTransactionResponse(tx.hash));
+                        observer.complete();
+                    }).catch(err => {
+                        context.error('signTransaction failed', err);
+                        observer.error(err);
+                    });
                 }).catch(err => {
-                    context.error('signTransaction failed', err);
+                    context.error('getSigner failed', err);
                     observer.error(err);
                 });
             } catch (error) {

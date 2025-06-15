@@ -32,7 +32,7 @@ export class EthereumContractManager extends W3oContractManager {
         const context = logger.method('fetchContract', { address }, parent);
         return new Observable<W3oContract | null>((observer) => {
             try {
-                const contract = new ethers.Contract(address, [], (this.network as EthereumNetwork).client);
+                new ethers.Contract(address, [], (this.network as EthereumNetwork).client);
                 observer.next({ address, name: '', abi: [] } as unknown as W3oContract);
                 observer.complete();
             } catch (error) {
