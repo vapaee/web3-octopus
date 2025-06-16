@@ -1,52 +1,51 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { LoginComponent } from '@app/components/login/login.component';
 import { SessionService } from '@app/services/session-kit.service';
+import { Web3OctopusService } from '@app/services/web3-octopus.service';
 import { SharedModule } from '@app/shared/shared.module';
-import { connectWallet, sendEth, signMessage } from 'src/prueba';
+import { W3oContextFactory, W3oSession } from '@vapaee/w3o-core';
+import { LucideAngularModule, X } from 'lucide-angular';
 
 @Component({
     selector: 'app-accounts',
     standalone: true,
     imports: [
         LoginComponent,
-        SharedModule
+        SharedModule,
+        FormsModule,
+        LucideAngularModule,
     ],
     templateUrl: './accounts.component.html',
     styleUrls: ['./accounts.component.scss']
 })
 export class AccountsComponent {
-    constructor(public sessionService: SessionService) {}
+    readonly XIcon = X;
+    networks = this.w3o.octopus.networks.list;
+    selectedNetwork = this.w3o.octopus.networks.current.name;
 
+    constructor(
+        public sessionService: SessionService,
+        private w3o: Web3OctopusService,
+    ) {}
 
-    loginEVM() {
-        connectWallet()
-            .then((addresses) => {
-                console.log('Connected on Telos:', addresses)
-            })
-            .catch((error) => {
-                console.error('Error connecting wallet:', error)
-            })
+    get sessions(): W3oSession[] {
+        return this.w3o.octopus.sessions.list;
     }
 
-
-    signMessage() {
-        signMessage('0xa30b5e3c8Fee56C135Aecb733cd708cC31A5657a', 'Hello, sign this message!')
-            .then((signature) => {
-                console.log('Signature:', signature);
-            }).catch((error) => {
-                console.error('Error signing message:', error);
-            });
+    changeNetwork(name: string) {
+        this.w3o.octopus.networks.setCurrentNetwork(
+            name,
+            new W3oContextFactory('AccountsComponent').method('changeNetwork')
+        );
+        this.selectedNetwork = name;
     }
 
-    sendEth() {
-        sendEth(
-            '0xa30b5e3c8Fee56C135Aecb733cd708cC31A5657a',
-            '123'
-        ).then((txHash) => {
-            console.log('Transaction hash:', txHash);
-        }).catch((error) => {
-            console.error('Error sending ETH:', error);
-        });
+    logoutSession(session: W3oSession) {
+        session.logout(new W3oContextFactory('AccountsComponent').method('logoutSession'));
     }
 
+    shorten(address: string): string {
+        return address.length > 13 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
+    }
 }
