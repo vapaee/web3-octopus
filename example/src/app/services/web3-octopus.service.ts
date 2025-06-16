@@ -20,6 +20,11 @@ import {
     TelosZeroNetwork,
     TelosZeroTestnetNetwork,
 } from '@vapaee/w3o-antelope';
+// import the classes to support Ethereum networks
+import {
+    EthereumAuthMetamask,
+    TelosEVMNetwork,
+} from '@vapaee/w3o-ethereum';
 
 import { VortDEXw3oServices } from '@app/types';
 
@@ -57,6 +62,16 @@ export class Web3OctopusService implements OnDestroy {
                 ]
             }
             this.octopus.addNetworkSupport(telosSupportSettings, context);
+
+            // ---- Register Telos EVM support ----
+            const telosEvmSupportSettings: W3oNetworkSupportSettings = {
+                type: 'ethereum',
+                chain: new EthereumAuthMetamask(context),
+                networks: [
+                    new TelosEVMNetwork({}, context),
+                ]
+            }
+            this.octopus.addNetworkSupport(telosEvmSupportSettings, context);
 
             // ---- Register the services ----
             // paths must match the keys in the IMyServices interface

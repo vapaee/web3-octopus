@@ -71,9 +71,12 @@ const TelosEVMConfigJSON: W3oEthereumNetworkSettings = {
     type,
     name: 'telos-evm' as W3oNetworkName,
     chainId: '40',
-    displayName: 'Telos EVM',
+    displayName: 'Telos EVM Mainnet',
     rpcUrl: 'https://mainnet.telos.net/evm',
     tokensUrl: 'assets/tokens-ethereum-telos-evm.json',
+    symbol: 'TLOS',
+    nativeCurrency: 'Telos',
+    decimals: 18,
     links: {
         explorer: 'https://teloscan.io',
         bridge: '',
@@ -102,6 +105,9 @@ const TelosEVMTestnetConfigJSON: W3oEthereumNetworkSettings = {
     displayName: 'Telos EVM Testnet',
     rpcUrl: 'https://testnet.telos.net/evm',
     tokensUrl: 'assets/tokens-ethereum-telos-evm-testnet.json',
+    symbol: 'TLOS',
+    nativeCurrency: 'Telos',
+    decimals: 18,
     links: {
         explorer: 'https://testnet.teloscan.io',
         bridge: '',
