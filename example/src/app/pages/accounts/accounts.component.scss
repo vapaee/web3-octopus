@@ -25,6 +25,7 @@
 
     &__session {
         @include container-border;
+        cursor: pointer;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -49,6 +50,15 @@
         display: flex;
         align-items: center;
         gap: 10px;
+    }
+
+    &__network-select {
+        margin-right: 10px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--c-background-2);
+        background-color: var(--c-background-1);
+        color: var(--c-foreground-0);
     }
 
     &__login-btn {

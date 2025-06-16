@@ -16,6 +16,10 @@ const logger = new W3oContextFactory('RedirectService');
 })
 export class RedirectService implements OnDestroy {
     private destroy$ = new Subject<void>();
+    private enabled = true;
+
+    enable() { this.enabled = true; }
+    disable() { this.enabled = false; }
 
     constructor(
         private router: Router,
@@ -40,7 +44,10 @@ export class RedirectService implements OnDestroy {
         this.sessionService.session$
             .pipe(takeUntil(this.destroy$))
             .subscribe(session => {
-                logger.debug('Redirect - Session changed:', { isMobile, session });
+                logger.debug('Redirect - Session changed:', { isMobile, session, enabled: this.enabled });
+                if (!this.enabled) {
+                    return;
+                }
                 if (session) {
                     if (isMobile) {
                         this.router.navigate(['/wallet']);

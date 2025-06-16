@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from '@app/services/session-kit.service';
 import { Web3OctopusService } from '@app/services/web3-octopus.service';
+import { RedirectService } from '@app/services/redirect.service';
 import { SharedModule } from '@app/shared/shared.module';
 import { W3oContextFactory, W3oSession } from '@vapaee/w3o-core';
 import { LucideAngularModule, X } from 'lucide-angular';
@@ -19,7 +20,7 @@ const logger = new W3oContextFactory('AccountsComponent');
     templateUrl: './accounts.component.html',
     styleUrls: ['./accounts.component.scss']
 })
-export class AccountsComponent {
+export class AccountsComponent implements OnInit, OnDestroy {
     readonly XIcon = X;
     networks = this.w3o.octopus.networks.list;
     selectedNetwork = this.w3o.octopus.networks.current.name;
@@ -27,7 +28,16 @@ export class AccountsComponent {
     constructor(
         public sessionService: SessionService,
         private w3o: Web3OctopusService,
+        private redirect: RedirectService,
     ) {}
+
+    ngOnInit() {
+        this.redirect.disable();
+    }
+
+    ngOnDestroy() {
+        this.redirect.enable();
+    }
 
     get sessions(): W3oSession[] {
         return this.w3o.octopus.sessions.list;
@@ -49,6 +59,7 @@ export class AccountsComponent {
     }
 
     selectSession(session: W3oSession) {
+        this.redirect.enable();
         const context = logger.method('selectSession');
         this.w3o.octopus.sessions.setCurrentSession(session.id, context);
     }

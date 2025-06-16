@@ -14,7 +14,7 @@
     </ng-template>
 
     <div class="p-accounts__login">
-        <select [(ngModel)]="selectedNetwork" (change)="changeNetwork(selectedNetwork)">
+        <select class="p-accounts__network-select" [(ngModel)]="selectedNetwork" (change)="changeNetwork(selectedNetwork)">
             <option *ngFor="let net of networks" [ngValue]="net.name">{{ net.settings.displayName }}</option>
         </select>
         <button class="p-accounts__login-btn" (click)="login()">{{ 'TYPES.BUTTON.LOGIN' | translate }}</button>
