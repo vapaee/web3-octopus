@@ -29,4 +29,30 @@ export class W3oDefaultHttpClient implements W3oHttpClient {
                 });
         });
     }
+
+    /**
+     * Performs a POST request with a JSON body and returns an observable with the response JSON
+     */
+    post<T>(url: string, body: unknown): Observable<T> {
+        return new Observable<T>(subscriber => {
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    subscriber.next(data as T);
+                    subscriber.complete();
+                })
+                .catch(error => {
+                    subscriber.error(error);
+                });
+        });
+    }
 }
