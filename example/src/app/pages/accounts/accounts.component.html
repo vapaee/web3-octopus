@@ -3,10 +3,10 @@
     <p>{{ 'PAGES.ACCOUNTS.DESCRIPTION' | translate}}</p>
 
     <div class="p-accounts__sessions" *ngIf="sessions.length > 0; else noSessions">
-        <div class="p-accounts__session" *ngFor="let s of sessions">
+        <div class="p-accounts__session" *ngFor="let s of sessions" (click)="selectSession(s)">
             <img class="p-accounts__network-icon" [src]="'/assets/logos/' + (s.network.name.replace('-testnet','')) + '.png'"/>
             <span class="p-accounts__account">{{ shorten(s.address) }}</span>
-            <lucide-icon [img]="XIcon" class="p-accounts__logout" (click)="logoutSession(s)"></lucide-icon>
+            <lucide-icon [img]="XIcon" class="p-accounts__logout" (click)="logoutSession(s); $event.stopPropagation()"></lucide-icon>
         </div>
     </div>
     <ng-template #noSessions>
@@ -17,6 +17,6 @@
         <select [(ngModel)]="selectedNetwork" (change)="changeNetwork(selectedNetwork)">
             <option *ngFor="let net of networks" [ngValue]="net.name">{{ net.settings.displayName }}</option>
         </select>
-        <app-login></app-login>
+        <button class="p-accounts__login-btn" (click)="login()">{{ 'TYPES.BUTTON.LOGIN' | translate }}</button>
     </div>
 </div>

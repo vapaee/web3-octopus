@@ -50,4 +50,8 @@
         align-items: center;
         gap: 10px;
     }
+
+    &__login-btn {
+        @include button-0;
+    }
 }

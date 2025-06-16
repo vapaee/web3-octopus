@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoginComponent } from '@app/components/login/login.component';
 import { SessionService } from '@app/services/session-kit.service';
 import { Web3OctopusService } from '@app/services/web3-octopus.service';
 import { SharedModule } from '@app/shared/shared.module';
@@ -11,7 +10,6 @@ import { LucideAngularModule, X } from 'lucide-angular';
     selector: 'app-accounts',
     standalone: true,
     imports: [
-        LoginComponent,
         SharedModule,
         FormsModule,
         LucideAngularModule,
@@ -43,6 +41,17 @@ export class AccountsComponent {
 
     logoutSession(session: W3oSession) {
         session.logout(new W3oContextFactory('AccountsComponent').method('logoutSession'));
+    }
+
+    login() {
+        this.sessionService.login();
+    }
+
+    selectSession(session: W3oSession) {
+        this.w3o.octopus.sessions.setCurrentSession(
+            session.id,
+            new W3oContextFactory('AccountsComponent').method('selectSession')
+        );
     }
 
     shorten(address: string): string {
