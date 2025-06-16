@@ -53,6 +53,8 @@ export class WalletComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 this.isMobileView = result.matches;
             });
+        
+        this.refreshBalances();
     }
 
     refreshBalances() {
@@ -64,5 +66,6 @@ export class WalletComponent implements OnInit, OnDestroy {
         if (this.balanceSubscription) this.balanceSubscription.unsubscribe();
         this.destroy$.next();
         this.destroy$.complete();
+        console.log('WalletComponent destroyed');
     }
 }

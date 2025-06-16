@@ -146,7 +146,8 @@ export interface W3oSessionInstance {
  */
 export interface W3oNetworkInstance {
     getNetwork(name: W3oNetworkName, parent: W3oContext): W3oNetwork;
-    onNetworkChange$: Observable<W3oNetworkName | null>;
+    setCurrentNetwork(name: W3oNetworkName, parent: W3oContext): void;
+    current$: Observable<W3oNetwork>;
     currentNetworkName: string | null;
     current: W3oNetwork;
 }

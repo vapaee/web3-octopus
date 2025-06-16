@@ -1,6 +1,6 @@
 // w3o-core/src/classes/W3oNetworkManager.ts
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import {
     W3oGlobalSettings,
     W3oNetworkInstance,
@@ -21,7 +21,12 @@ const logger = new W3oContextFactory('W3oNetworkManager');
 export class W3oNetworkManager extends W3oManager implements W3oNetworkInstance {
     private __networks: W3oNetwork[] = [];
 
-    public onNetworkChange$: BehaviorSubject<W3oNetworkName | null> = new BehaviorSubject<string | null>(null);
+    private __current$: BehaviorSubject<W3oNetwork | null> = new BehaviorSubject<W3oNetwork | null>(null);
+
+    /** Observable that emits the current network whenever it changes */
+    get current$(): Observable<W3oNetwork> {
+        return this.__current$.asObservable() as Observable<W3oNetwork>;
+    }
 
     octopus!: W3oInstance;
 
@@ -37,18 +42,19 @@ export class W3oNetworkManager extends W3oManager implements W3oNetworkInstance 
      * Returns the name of the currently selected network
      */
     get currentNetworkName(): string | null {
-        return this.onNetworkChange$.value;
+        const current = this.__current$.value;
+        return current ? current.name : null;
     }
 
     /**
      * Returns the currently selected network instance
      */
     get current(): W3oNetwork {
-        const name = this.currentNetworkName;
-        if (!name) {
-            throw new W3oError(W3oError.NETWORK_NOT_FOUND, { name, snapshot: this.snapshot() });
+        const net = this.__current$.value;
+        if (!net) {
+            throw new W3oError(W3oError.NETWORK_NOT_FOUND, { name: null, snapshot: this.snapshot() });
         }
-        return this.getNetwork(name, W3oContextFactory.current!);
+        return net;
     }
 
     /**
@@ -102,11 +108,8 @@ export class W3oNetworkManager extends W3oManager implements W3oNetworkInstance 
      */
     setCurrentNetwork(name: W3oNetworkName, parent: W3oContext): void {
         const context = logger.method('setCurrentNetwork', { name }, parent);
-        const net = this.getNetwork(name, context) as W3oNetwork;
-        if (!net) {
-            throw new W3oError(W3oError.NETWORK_NOT_FOUND, { name, snapshot: this.snapshot() });
-        }
-        this.onNetworkChange$.next(name);
+        const net = this.getNetwork(name, context);
+        this.__current$.next(net);
     }
 
     /**

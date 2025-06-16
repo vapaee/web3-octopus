@@ -1,25 +1,23 @@
 <!-- example/src/app/pages/accounts/accounts.component.html -->
 <div class="p-accounts">
     <div class="p-accounts__title">{{ 'PAGES.ACCOUNTS.TITLE' | translate}}</div>
-    <p>{{ 'PAGES.ACCOUNTS.DESCRIPTION' | translate}}</p>
 
-    <ng-container *ngIf="sessionService.session$ | async as session; else loginTemplate">
-        <p class="p-accounts__subtitle">{{ 'PAGES.ACCOUNTS.CONNECTED' | translate}} {{ session.address }}</p>
-        <p class="p-accounts__contained">-<br>-<br>-<br>-</p>
-        <a class="p-accounts__add">+ {{ 'PAGES.ACCOUNTS.ADD' | translate}}</a>
-    </ng-container>
-
-    <ng-template #loginTemplate>
+    <div class="p-accounts__sessions" *ngIf="sessions.length > 0; else noSessions">
+        <p>{{ 'PAGES.ACCOUNTS.DESCRIPTION' | translate}}</p>
+        <div class="p-accounts__session" *ngFor="let s of sessions" (click)="selectSession(s)">
+            <img class="p-accounts__network-icon" [src]="'/assets/logos/' + (s.network.name.replace('-testnet','')) + '.png'"/>
+            <span class="p-accounts__account">{{ shorten(s.address) }}</span>
+            <lucide-icon [img]="XIcon" class="p-accounts__logout" (click)="logoutSession(s); $event.stopPropagation()"></lucide-icon>
+        </div>
+    </div>
+    <ng-template #noSessions>
         <p class="p-accounts__subtitle">{{ 'PAGES.ACCOUNTS.ERROR' | translate}}</p>
-        <app-login></app-login>
-        <button class="p-accounts__add" (click)="loginEVM()">
-            Login Telos
-        </button>
-        <button class="p-accounts__add" (click)="signMessage()">
-            signMessage
-        </button>
-        <button class="p-accounts__add" (click)="sendEth()">
-            sendEth
-        </button>
     </ng-template>
+
+    <div class="p-accounts__login">
+        <select class="p-accounts__network-select" [(ngModel)]="selectedNetwork" (change)="changeNetwork(selectedNetwork)">
+            <option *ngFor="let net of networks" [ngValue]="net.name">{{ net.settings.displayName }}</option>
+        </select>
+        <button class="p-accounts__login-btn" (click)="login()">{{ 'TYPES.BUTTON.LOGIN' | translate }}</button>
+    </div>
 </div>
