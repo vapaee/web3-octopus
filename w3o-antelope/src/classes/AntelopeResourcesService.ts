@@ -17,7 +17,7 @@ import {
     W3oService,
     W3oTransactionReceipt
 } from '@vapaee/w3o-core';
-import { AntelopeResources } from '../types';
+import { AntelopeResources, AntelopeAccountData } from '../types';
 
 const logger = new W3oContextFactory('AntelopeResourcesService');
 
@@ -96,7 +96,7 @@ export class AntelopeResourcesService extends W3oService {
         const http = auth.network.settings.httpClient!;
         const rpc = auth.network.settings.rpcUrl;
 
-        const getAccount$ = http.post<any>(`${rpc}/v1/chain/get_account`, { account_name: address })
+        const getAccount$ = http.post<AntelopeAccountData>(`${rpc}/v1/chain/get_account`, { account_name: address })
             .pipe(catchError(() => of(null)));
 
         const rexbalParams = { json: true, code: 'eosio', scope: address, table: 'rexbal' };
@@ -113,7 +113,7 @@ export class AntelopeResourcesService extends W3oService {
     }
 
     /** Parses RPC responses into AntelopeResources */
-    private parseResources(account: any, rexbal: any, rexfund: any, context: W3oContext): AntelopeResources {
+    private parseResources(account: AntelopeAccountData | null, rexbal: any, rexfund: any, context: W3oContext): AntelopeResources {
         logger.method('parseResources', { account, rexbal, rexfund }, context);
 
         if (!account) {
