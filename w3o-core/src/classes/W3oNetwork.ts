@@ -15,16 +15,18 @@ import { W3oContractManager } from './W3oContractManager';
 import { W3oToken } from './W3oToken';
 import { W3oDefaultHttpClient } from './W3oDefaultHttpClient';
 import { W3oTokenList } from './W3oTokenList';
+import { W3oChainSupport } from './W3oChainSupport';
 
 const logger = new W3oContextFactory('W3oNetwork');
 
 /**
- * Abstract class that represents a specific blockchain network with token and contract management capabilities.
+ * class that represents a specific blockchain network with token and contract management capabilities.
  */
-export abstract class W3oNetwork extends W3oModule {
+export class W3oNetwork extends W3oModule {
 
     private __contractCtrl: W3oContractManager;
     private __tokenlist: W3oTokenList;
+    public support!: W3oChainSupport;
 
     constructor(
         public readonly settings: W3oNetworkSettings,
@@ -36,21 +38,21 @@ export abstract class W3oNetwork extends W3oModule {
         }
         super(context);
         this.__contractCtrl = this.createContractManager(this, context);
-        this.__tokenlist = new W3oTokenList(settings.httpClient!, settings.tokensUrl);
+        this.__tokenlist = new W3oTokenList(settings.httpClient!, settings.tokensUrl!, context);
     }
 
     /**
      * Getter to retrieve the network type.
      */
     get type(): W3oNetworkType {
-        return this.settings.type;
+        return this.settings?.type || 'other';
     }
 
     /**
      * Getter to retrieve the network name.
      */
     get name(): W3oNetworkName {
-        return this.settings.name;
+        return this.settings?.name || 'unknown';
     }
 
     /**
@@ -72,10 +74,23 @@ export abstract class W3oNetwork extends W3oModule {
      */
     override init(octopus: W3oInstance, requirements: W3oModule[], parent: W3oContext): void {
         const context = logger.method('init', { w3oId: this.w3oId, octopus, requirements }, parent);
-        this.fetchTokens(context).subscribe(tokens => {
+        this.support = requirements[0] as W3oChainSupport;
+        this.fetchTokens(context).subscribe((tokens: W3oToken[]) => {
             logger.info('Tokens fetched', { tokens });
             super.init(octopus, requirements, context);
         });
+    }
+
+    override get w3oVersion(): string {
+        throw new Error('w3oVersion need to be overridden in the subclass');
+    }
+
+    override get w3oRequire(): string[] {
+        throw new Error('w3oRequire need to be overridden in the subclass');
+    }
+
+    override get w3oName(): string {
+        throw new Error('w3oName need to be overridden in the subclass');
     }
 
     /**
@@ -109,33 +124,44 @@ export abstract class W3oNetwork extends W3oModule {
     }
 
     /**
-     * Abstract method to create the specific contract manager for the network.
+     * Creates the contract manager for the network.
      */
-    abstract createContractManager(network: W3oNetwork, parent: W3oContext): W3oContractManager;
+    createContractManager(network: W3oNetwork, parent: W3oContext): W3oContractManager {
+        const context = logger.method('createContractManager', { network }, parent);
+        return new W3oContractManager(this.settings as any as W3oNetworkSettings, network, context);
+    }
 
     /**
-     * Abstract method to retrieve the native system token of the network.
+     * Returns the native system token. To be overridden by specific networks.
      */
-    abstract getSystemToken(): W3oToken;
+    getSystemToken(): W3oToken {
+        const context = logger.method('getSystemToken', undefined);
+        context.error('getSystemToken not implemented');
+        return {} as W3oToken;
+    }
 
     /**
-     * Abstract method to update the internal state of the network.
+     * Updates internal state. To be overridden by specific networks.
      */
-    abstract updateState(): Observable<void>;
+    updateState(): Observable<void> {
+        const context = logger.method('updateState', undefined);
+        context.error('updateState not implemented');
+        return new Observable<void>();
+    }
 
     /**
-     * Abstract method to perform a read-only query to a smart contract.
+     * Performs a read-only query via the chain support.
      */
-    abstract queryContract(params: { [key: string]: any }): Observable<any>;
+    queryContract(params: { [key: string]: any }, parent?: W3oContext): Observable<any> {
+        const context = logger.method('updateState', parent);
+        return this.support.queryContract(this.name, params, context);
+    }
 
     /**
      * Validates if a given address is a valid account on the network.
      */
     validateAccount(address: string, parent: W3oContext): Observable<boolean> {
-        logger.method('validateAccount', {address}, parent);
-        return new Observable<boolean>(subscriber => {
-            subscriber.next(true); // Simulate a successful validation (Ethereum, Solana, etc.)
-            subscriber.complete();
-        });
+        const context = logger.method('validateAccount', { address, network: this.name }, parent);
+        return this.support.validateAccount(address, context);
     }
 }

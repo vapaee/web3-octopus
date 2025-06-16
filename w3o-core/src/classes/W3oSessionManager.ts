@@ -291,10 +291,10 @@ export class W3oSessionManager extends W3oManager implements W3oSessionInstance 
 
             const separator = W3oSession.ID_SEPARATOR;
             for (const id of data.sessions) {
-                const [address, authenticatorName, networkName] = id.split(separator);
+                const [address, networkType, networkName] = id.split(separator);
                 const network = this.octopus.networks.getNetwork(networkName, context);
-                const authenticator = this.octopus.auth.createAuthenticator(authenticatorName, network, context);
-                console.log('There are ', data.sessions.length, ' sessions in local storage', { address, authenticatorName, networkName });
+                const authenticator = this.octopus.auth.createAuthenticator(network, context);
+                console.log('There are ', data.sessions.length, ' sessions in local storage', { address, networkType, networkName });
                 if (isFirstSession) {
                     this.createCurrentSession(address, authenticator, network, context);
                     isFirstSession = false;

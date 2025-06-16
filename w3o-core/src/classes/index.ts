@@ -19,7 +19,7 @@ export * from './W3oToken';
 export * from './W3oTokenList';
 export * from './W3oNetwork';
 export * from './W3oSession';
-export * from './W3oAuthSupport';
+export * from './W3oChainSupport';
 
 export * from './W3oModuleManager';
 export * from './W3oNetworkManager';

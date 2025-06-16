@@ -3,12 +3,11 @@
 /**
  * Represents the type of blockchain supported by Web3 Octopus
  */
-export type W3oNetworkType = 'ethereum' | 'antelope' | 'solana';
+export type W3oNetworkType = 'ethereum' | 'antelope' | 'solana' | 'cosmos' | 'polkadot' | 'other';
 
 /**
  * Represents the identifier for a specific authenticator (e.g., 'metamask', 'walletconnect')
  */
-export type W3oAuthSupportName = string;
 
 /**
  * Represents the name of a specific network instance (e.g., 'telos', 'ethereum', 'bsc-testnet')

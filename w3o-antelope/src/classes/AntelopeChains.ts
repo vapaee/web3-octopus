@@ -1,12 +1,12 @@
 // w3o-antelope/src/classes/AntelopeChains.ts
 
-import { W3oContextFactory, W3oContext, W3oNetworkSettings, W3oNetworkLinks, W3oNetworkName, W3oNetworkType } from '@vapaee/w3o-core';
+import { W3oContextFactory, W3oContext, W3oNetworkLinks, W3oNetworkName, W3oNetworkType } from '@vapaee/w3o-core';
 import { Chains } from '@wharfkit/common';
 import { W3oAntelopeNetworkSettings } from '../types';
-import { AntelopeNetwork } from './AntelopeNetwork';
+import { W3oNetwork } from '@vapaee/w3o-core';
 
 const type = 'antelope' as W3oNetworkType;
-const w3oRequire = ['antelope.network.support@1.0.0'];
+const w3oRequire = ['antelope.chain.support@1.0.0'];
 const w3oVersion = '1.0.0';
 
 // ---- EOS ----
@@ -31,12 +31,24 @@ const EOSConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class EOSNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class EOSNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...EOSConfigJSON, chain: Chains.EOS },
+            { ...EOSConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('EOSNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.eos';
     }
 }
 
@@ -62,12 +74,24 @@ const FIOConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class FIONetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class FIONetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...FIOConfigJSON, chain: Chains.FIO },
+            { ...FIOConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('FIONetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.fio';
     }
 }
 
@@ -93,12 +117,24 @@ const FIOTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class FIOTestnetNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class FIOTestnetNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...FIOTestnetConfigJSON, chain: Chains.FIOTestnet },
+            { ...FIOTestnetConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('FIOTestnetNetwork')).method('constructor', {settings}, parent)
         );
+    }
+    
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.fio-testnet';
     }
 }
 
@@ -124,12 +160,24 @@ const Jungle4ConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class Jungle4Network extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class Jungle4Network extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...Jungle4ConfigJSON, chain: Chains.Jungle4 },
+            { ...Jungle4ConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('Jungle4Network')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.jungle4';
     }
 }
 
@@ -155,12 +203,24 @@ const KylinTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class KylinTestnetNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class KylinTestnetNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...KylinTestnetConfigJSON, chain: Chains.KylinTestnet },
+            { ...KylinTestnetConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('KylinTestnetNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.kylin-testnet';
     }
 }
 
@@ -187,12 +247,24 @@ const LibreConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class LibreNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class LibreNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...LibreConfigJSON, chain: Chains.Libre },
+            { ...LibreConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('LibreNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.libre';
     }
 }
 
@@ -218,12 +290,24 @@ const LibreTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class LibreTestnetNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class LibreTestnetNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...LibreTestnetConfigJSON, chain: Chains.LibreTestnet },
+            { ...LibreTestnetConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('LibreTestnetNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.libre-testnet';
     }
 }
 
@@ -250,12 +334,24 @@ const ProtonConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class ProtonNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class ProtonNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...ProtonConfigJSON, chain: Chains.Proton },
+            { ...ProtonConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('ProtonNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.proton';
     }
 }
 
@@ -281,12 +377,24 @@ const ProtonTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class ProtonTestnetNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class ProtonTestnetNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...ProtonTestnetConfigJSON, chain: Chains.ProtonTestnet },
+            { ...ProtonTestnetConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('ProtonTestnetNetwork')).method('constructor', {settings}, parent)
         );
+    }
+    
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.proton-testnet';
     }
 }
 
@@ -313,13 +421,26 @@ const TelosZeroConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class TelosZeroNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class TelosZeroNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...TelosZeroConfigJSON, chain: Chains.Telos },
+            { ...TelosZeroConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('TelosZeroNetwork')).method('constructor', {settings}, parent)
         );
     }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.telos'
+    }
+
 }
 
 // ---- Telos (Testnet) ----
@@ -344,13 +465,26 @@ const TelosZeroTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class TelosZeroTestnetNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class TelosZeroTestnetNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...TelosZeroTestnetConfigJSON, chain: Chains.TelosTestnet },
+            { ...TelosZeroTestnetConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('TelosZeroTestnetNetwork')).method('constructor', {settings}, parent)
         );
     }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.telos-testnet';
+    }
+
 }
 
 
@@ -376,12 +510,24 @@ const UXConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class UXNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class UXNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...UXConfigJSON, chain: Chains.UX },
+            { ...UXConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('UXNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.ux';
     }
 }
 
@@ -407,12 +553,24 @@ const WAXConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class WAXNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class WAXNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...WAXConfigJSON, chain: Chains.WAX },
+            { ...WAXConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('WAXNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.wax';
     }
 }
 
@@ -438,12 +596,24 @@ const WAXTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class WAXTestnetNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class WAXTestnetNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...WAXTestnetConfigJSON, chain: Chains.WAXTestnet },
+            { ...WAXTestnetConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('WAXTestnetNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.wax-testnet';
     }
 }
 
@@ -469,12 +639,24 @@ const XPRConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class XPRNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class XPRNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...XPRConfigJSON, chain: Chains.XPR },
+            { ...XPRConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('XPRNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.xpr';
     }
 }
 
@@ -500,11 +682,23 @@ const XPRTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class XPRTestnetNetwork extends AntelopeNetwork {
-    constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
+export class XPRTestnetNetwork extends W3oNetwork {
+    constructor(settings: Partial<W3oAntelopeNetworkSettings>, parent: W3oContext) {
         super(
-            { ...XPRTestnetConfigJSON, chain: Chains.XPRTestnet },
+            { ...XPRTestnetConfigJSON, ...settings } as W3oAntelopeNetworkSettings,
             (new W3oContextFactory('XPRTestnetNetwork')).method('constructor', {settings}, parent)
         );
+    }
+
+    override get w3oVersion(): string {
+        return w3oVersion;
+    }
+
+    override get w3oRequire(): string[] {
+        return w3oRequire;
+    }
+
+    override get w3oName(): string {
+        return 'antelope.network.xpr-testnet';
     }
 }

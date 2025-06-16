@@ -45,7 +45,7 @@ export class W3oSession {
         parent: W3oContext,
     ) {
         logger.method('constructor', {address, authenticator, network}, parent);
-        this.__id = `${address}${W3oSession.ID_SEPARATOR}${authenticator.name}${W3oSession.ID_SEPARATOR}${network.name}`;
+        this.__id = `${address}${W3oSession.ID_SEPARATOR}${authenticator.type}${W3oSession.ID_SEPARATOR}${network.name}`;
     }
 
     /**

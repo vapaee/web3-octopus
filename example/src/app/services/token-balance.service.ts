@@ -99,7 +99,7 @@ export class TokenBalanceService {
                 limit: 100, // Fetch up to 100 token entries
             };
             return new Promise<Balance>((resolve, reject) => {
-                session.network.queryContract(params).subscribe((result: any) => {
+                session.network.queryContract(params, context).subscribe((result: any) => {
                     if (!result?.rows?.length) {
                         console.warn(`⚠️ No balance found for ${token.symbol}. Returning zero balance.`);
                         resolve({ amount: { value: 0, formatted: this.formatBalance(0, token) }, token });

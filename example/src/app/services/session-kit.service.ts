@@ -44,7 +44,7 @@ export class SessionService {
         const context = logger.method('login');
         try {
             const network = this.w3o.octopus.networks.current.name;
-            this.w3o.octopus.auth.login(network, 'antelope', 'anchor', context);
+            this.w3o.octopus.auth.login(network, 'antelope', context);
         } catch (error) {
             console.error('Login failed:', error);
             throw error;

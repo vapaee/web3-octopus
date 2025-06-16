@@ -71,7 +71,7 @@ export abstract class W3oModule {
      */
     get initialized$(): Observable<W3oModule> {
         return this.__initialized$.asObservable().pipe(
-            filter((value): value is W3oModule => value !== false),
+            filter((value: false | W3oModule): value is W3oModule => value !== false),
             take(1),
         );
     }

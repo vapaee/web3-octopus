@@ -3,7 +3,6 @@
 import { BehaviorSubject, filter, Observable, take } from 'rxjs';
 import {
     W3oAuthInstance,
-    W3oAuthSupportName,
     W3oGlobalSettings,
     W3oNetworkType,
     W3oInstance,
@@ -11,7 +10,7 @@ import {
 } from '../types';
 
 import { W3oContextFactory, W3oContext } from './W3oContext';
-import { W3oAuthSupport } from './W3oAuthSupport';
+import { W3oChainSupport } from './W3oChainSupport';
 import { W3oNetwork } from './W3oNetwork';
 import { W3oAuthenticator } from './W3oAuthenticator';
 import { W3oSession } from './W3oSession';
@@ -24,8 +23,7 @@ const logger = new W3oContextFactory('W3oAuthManager');
  * Auth manager that handles available authenticators and user login/logout flows
  */
 export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
-    private __byType: { [authType: W3oNetworkType | string]: W3oAuthSupport[] } = {};
-    private __byName: { [authName: W3oAuthSupportName | string]: W3oAuthSupport } = {};
+    private __byType: { [authType: W3oNetworkType | string]: W3oChainSupport } = {};
 
     octopus!: W3oInstance;
 
@@ -56,40 +54,22 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
     /**
      * Adds an auth support provider to the manager before initialization
      */
-    addAuthSupport(auth: W3oAuthSupport, parent: W3oContext): void {
-        logger.method('add', { auth }, parent);
+    addChainSupport(chain: W3oChainSupport, parent: W3oContext): void {
+        logger.method('addChainSupport', { chain }, parent);
         if (this.__initCalled) {
-            throw new W3oError(W3oError.ALREADY_INITIALIZED, { auth });
+            throw new W3oError(W3oError.ALREADY_INITIALIZED, { chain });
         }
-        this.__byName[auth.name] = auth;
-        if (!this.__byType[auth.type]) {
-            this.__byType[auth.type] = [];
-        }
-        this.__byType[auth.type].push(auth);
-    }
-
-    /**
-     * Retrieves an authenticator support by its name
-     */
-    get(name: string): W3oAuthSupport {
-        return this.__byName[name];
-    }
-
-    /**
-     * Lists available authenticator supports by network type
-     */
-    list(type: string): W3oAuthSupport[] {
-        return this.__byType[type];
+        this.__byType[chain.type] = chain;
     }
 
     /**
      * Creates a new authenticator instance from a registered support
      */
-    createAuthenticator(name: W3oAuthSupportName, network: W3oNetwork, parent: W3oContext): W3oAuthenticator {
-        logger.method('createAuthenticator', { name, network }, parent);
-        const auth = this.get(name);
+    createAuthenticator(network: W3oNetwork, parent: W3oContext): W3oAuthenticator {
+        logger.method('createAuthenticator', { network }, parent);
+        const auth = this.__byType[network.type];
         if (!auth) {
-            throw new W3oError(W3oError.AUTH_SUPPORT_NOT_FOUND, { name });
+            throw new W3oError(W3oError.AUTH_SUPPORT_NOT_FOUND, { type: network.type });
         }
         return auth.createAuthenticator(network, parent);
     }
@@ -101,16 +81,14 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
     login(
         chain: W3oNetworkName,
         network: W3oNetworkType,
-        authName: W3oAuthSupportName,
         parent: W3oContext
     ): Observable<W3oSession>;
     login(
         networkNameOrParent: W3oNetworkName | W3oContext,
         networkType?: W3oNetworkType,
-        authName?: W3oAuthSupportName,
         parent?: W3oContext
     ): Observable<W3oSession> {
-        return this.__authenticate('login', networkNameOrParent, networkType, authName, parent);
+        return this.__authenticate('login', networkNameOrParent, networkType, parent);
     }
 
     /**
@@ -120,16 +98,14 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
     autoLogin(
         chain: W3oNetworkName,
         network: W3oNetworkType,
-        authName: W3oAuthSupportName,
         parent: W3oContext
     ): Observable<W3oSession>;
     autoLogin(
         networkNameOrParent: W3oNetworkName | W3oContext,
         networkType?: W3oNetworkType,
-        authName?: W3oAuthSupportName,
         parent?: W3oContext
     ): Observable<W3oSession> {
-        return this.__authenticate('autoLogin', networkNameOrParent, networkType, authName, parent);
+        return this.__authenticate('autoLogin', networkNameOrParent, networkType, parent);
     }
 
     /**
@@ -139,30 +115,25 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
         method: 'login' | 'autoLogin',
         networkNameOrParent: W3oNetworkName | W3oContext,
         networkType?: W3oNetworkType,
-        authName?: W3oAuthSupportName,
         parent?: W3oContext
     ): Observable<W3oSession> {
         if (typeof networkNameOrParent !== 'string') {
             const context = logger.method(method, networkNameOrParent);
             const network = this.octopus.networks.current as W3oNetwork;
-            const authList = this.list(network.type);
-            const defaultAuthName = authList[0]?.name;
-            context.assert(!!defaultAuthName, 'No default authenticator found for network type', { networkType: network.type });
-            return this.__authenticate(method, network.name, network.type, defaultAuthName, networkNameOrParent);
+            return this.__authenticate(method, network.name, network.type, networkNameOrParent);
         }
 
         const networkName = networkNameOrParent;
-        const context = logger.method(method, { networkName, networkType, authName }, parent!);
-        const auth = this.get(authName!);
-
+        const context = logger.method(method, { networkName, networkType }, parent!);
+        const networkInstance = this.octopus.networks.getNetwork(networkName, context);
+        const auth = this.__byType[networkType ?? networkInstance.type];
         if (!auth) {
-            throw new W3oError(W3oError.AUTH_SUPPORT_NOT_FOUND, { authName });
+            throw new W3oError(W3oError.AUTH_SUPPORT_NOT_FOUND, { type: networkType ?? networkInstance.type });
         }
 
         const subject = new BehaviorSubject<W3oSession | null>(null);
         const exec = () => {
             try {
-                const networkInstance = this.octopus.networks.getNetwork(networkName, context);
                 const authenticator = auth.createAuthenticator(networkInstance, context);
                 authenticator[method](networkName, context).subscribe({
                     next: account => {
@@ -210,15 +181,12 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
      */
     snapshot(): any {
         const snapshot = {
-            byType: {} as { [authType: string]: any[] },
-            byName: [] as string[],
+            byType: {} as { [authType: string]: any },
         };
 
         for (const type in this.__byType) {
-            snapshot.byType[type] = this.__byType[type].map(auth => auth.snapshot());
+            snapshot.byType[type] = this.__byType[type].snapshot();
         }
-
-        snapshot.byName.push(...Object.keys(this.__byName));
 
         return snapshot;
     }
