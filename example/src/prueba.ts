@@ -18,15 +18,18 @@ const TELOS_NETWORK_PARAMS = {
 export type EthereumAddress = `0x${string}`
 
 // Instanciación básica para navegador
-const provider = new ethers.providers.Web3Provider(window.ethereum!)
+let provider = new ethers.providers.Web3Provider(window.ethereum!)
 
 async function ensureTelosNetwork() {
+    console.log('ensureTelosNetwork()');
     if (!window.ethereum) {
         throw new Error('MetaMask no está instalado')
     }
 
     const currentChainId = await provider.send('eth_chainId', [])
     if (currentChainId === TELOS_CHAIN_ID_HEX) {
+        console.log('Ya estás conectado a la red Telos EVM');
+        provider = new ethers.providers.Web3Provider(window.ethereum!);
         return
     }
 
@@ -40,6 +43,8 @@ async function ensureTelosNetwork() {
             throw switchError
         }
     }
+
+    provider = new ethers.providers.Web3Provider(window.ethereum!);
 }
 
 // 1. Solicitar conexión con MetaMask y obtener cuentas
