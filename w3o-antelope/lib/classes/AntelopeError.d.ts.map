@@ -1,1 +1,0 @@
-{"version":3,"file":"AntelopeError.d.ts","sourceRoot":"","sources":["../../src/classes/AntelopeError.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,QAAQ,EAAE,MAAM,kBAAkB,CAAC;AAE5C;;GAEG;AACH,qBAAa,aAAc,SAAQ,QAAQ;IAEvC;;OAEG;gBACS,KAAK,EAAE;QAAE,OAAO,EAAE,MAAM,CAAC;QAAC,IAAI,EAAE,MAAM,CAAA;KAAE,EAAE,OAAO,CAAC,EAAE,GAAG;IAInE;;OAEG;IACH,gBAAuB,kBAAkB;;;MAAiD;CAE7F"}
