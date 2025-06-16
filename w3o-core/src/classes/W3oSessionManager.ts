@@ -117,12 +117,9 @@ export class W3oSessionManager extends W3oManager implements W3oSessionInstance 
         }
         this.__initCalled = true;
         this.octopus = octopus;
-        octopus.networks.onNetworkChange$.subscribe((name) => {
+        octopus.networks.current$.subscribe((network) => {
+            const name = network.name;
             logger.debug('network change detected', { name });
-            if (!name) {
-                this.__current$.next(null);
-                return;
-            }
             const current = this.__current$.value;
             if (current && current.network.settings.name === name) {
                 logger.debug('current session matches network, keeping session');
@@ -236,6 +233,10 @@ export class W3oSessionManager extends W3oManager implements W3oSessionInstance 
             throw new W3oError(W3oError.SESSION_NOT_FOUND, { id });
         }
         this.__current$.next(session);
+        const netName = session.network.settings.name;
+        if (this.octopus.networks.currentNetworkName !== netName) {
+            this.octopus.networks.setCurrentNetwork(netName, parent);
+        }
     }
 
     /**
