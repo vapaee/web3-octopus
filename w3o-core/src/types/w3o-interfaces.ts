@@ -3,7 +3,7 @@
 import { Observable } from 'rxjs';
 import {
     W3oAuthenticator,
-    W3oAuthSupport,
+    W3oChainSupport,
     W3oContext,
     W3oModule,
     W3oNetwork,
@@ -12,7 +12,6 @@ import {
 } from '../classes';
 import {
     W3oAddress,
-    W3oAuthSupportName,
     W3oNetworkName,
     W3oNetworkType
 } from './w3o-types';
@@ -104,7 +103,7 @@ export interface W3oContractABI {}
  */
 export interface W3oNetworkSupportSettings {
     type: W3oNetworkType;
-    auth: W3oAuthSupport[];
+    chain: W3oChainSupport;
     networks: W3oNetwork[];
 }
 
@@ -156,7 +155,7 @@ export interface W3oNetworkInstance {
  * Represents the authentication management instance.
  */
 export interface W3oAuthInstance {
-    createAuthenticator(name: W3oAuthSupportName, network: W3oNetwork, parent: W3oContext): W3oAuthenticator;
+    createAuthenticator(network: W3oNetwork, parent: W3oContext): W3oAuthenticator;
 }
 
 /**

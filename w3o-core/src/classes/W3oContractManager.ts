@@ -15,7 +15,7 @@ const logger = new W3oContextFactory('W3oContractManager');
 /**
  * Abstract manager for contracts, handles retrieval and caching of contract instances
  */
-export abstract class W3oContractManager {
+export class W3oContractManager {
     private __contracts: { [address: string]: W3oContract | null } = {};
 
     constructor(
@@ -63,7 +63,7 @@ export abstract class W3oContractManager {
             return from(Promise.resolve(contract));
         }
         return this.fetchContract(address, context).pipe(
-            mergeMap(fetchedContract => {
+            mergeMap((fetchedContract: W3oContract | null) => {
                 if (fetchedContract) {
                     this.addContract(address, fetchedContract, context);
                 } else {
@@ -98,7 +98,7 @@ export abstract class W3oContractManager {
             return from(Promise.resolve(existingContract));
         }
         return this.fetchContract(token.address as W3oAddress, context).pipe(
-            mergeMap(fetchedContract => {
+            mergeMap((fetchedContract: W3oContract | null) => {
                 if (fetchedContract) {
                     this.addContract(token.address as W3oAddress, fetchedContract, context);
                 }
@@ -110,7 +110,9 @@ export abstract class W3oContractManager {
     /**
      * Abstract method to fetch a contract from blockchain by its address
      */
-    abstract fetchContract(address: W3oAddress, parent: W3oContext): Observable<W3oContract | null>;
+    fetchContract(address: W3oAddress, parent: W3oContext): Observable<W3oContract | null> {
+        return this.network.support.fetchContract(address, parent);
+    }
 
     /**
      * Returns a snapshot of all contracts currently cached

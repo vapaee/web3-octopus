@@ -3,7 +3,6 @@
 import {
     W3oContext,
     W3oContextFactory,
-    W3oAuthSupportName,
     W3oInstance,
     W3oTransaction,
     W3oTransactionResponse,
@@ -37,7 +36,7 @@ export class EthereumTransactionResponse extends W3oTransactionResponse {
 export class EthereumAuthMetamask extends EthereumAuthSupport {
     constructor(parent: W3oContext) {
         const context = logger.method('constructor', parent);
-        super('metamask' as W3oAuthSupportName, context);
+        super(context);
     }
 
     override get w3oVersion(): string { return '1.0.0'; }

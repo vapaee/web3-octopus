@@ -136,7 +136,7 @@ export class Web3Octopus<Tw3o extends W3oIServices & WithSnapshot> implements W3
      */
     get whenReady(): Observable<void> {
         return this.onInitialized$.pipe(
-            filter(initialized => initialized),
+            filter((initialized: boolean) => initialized),
             map(() => undefined)
         );
     }
@@ -162,17 +162,15 @@ export class Web3Octopus<Tw3o extends W3oIServices & WithSnapshot> implements W3
         }
 
         const sub = this.onManagersReady$.pipe(
-            filter(initialized => initialized)
+            filter((initialized: any) => initialized)
         ).subscribe(() => {
-            logger.log('processing support', support.type, 'with requirements', support.networks, support.auth, { support });
+            logger.log('processing support', support.type, 'with requirements', support.networks, support.chain, { support });
 
             for (const network of support.networks) {
                 this.networks.addNetwork(network, context);
             }
 
-            for (const auth of support.auth) {
-                this.auth.addAuthSupport(auth, context);
-            }
+            this.auth.addChainSupport(support.chain, context);
 
             if (support.networks.length > 0) {
                 new W3oModuleConcept(
@@ -182,13 +180,11 @@ export class Web3Octopus<Tw3o extends W3oIServices & WithSnapshot> implements W3
                 );
             }
 
-            if (support.auth.length > 0) {
-                new W3oModuleConcept(
-                    { v: '1.0.0', n: `${support.type}.auth.support`, r: [`${support.type}.network.support`] },
-                    { auth: support.auth },
-                    context
-                );
-            }
+            new W3oModuleConcept(
+                { v: '1.0.0', n: `${support.type}.auth.support`, r: [`${support.type}.network.support`] },
+                { chain: support.chain },
+                context
+            );
 
             new W3oModuleConcept(
                 { v: '1.0.0', n: `${support.type}.global.support`, r: [`${support.type}.network.support`, `${support.type}.auth.support`] },

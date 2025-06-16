@@ -12,7 +12,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@vapaee/w3o-core": "*",
+    "@vapaee/w3o-core": "file:../w3o-core/lib",
     "@wharfkit/account": "^1.4.1",
     "@wharfkit/antelope": "^1.0.13",
     "@wharfkit/common": "^1.4.2",

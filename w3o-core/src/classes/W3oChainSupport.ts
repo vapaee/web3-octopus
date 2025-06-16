@@ -2,10 +2,10 @@
 
 import { Observable } from 'rxjs';
 import {
-    W3oAuthSupportName,
     W3oNetworkName,
     W3oNetworkType,
-    W3oTransaction
+    W3oTransaction,
+    W3oAddress,
 } from '../types';
 import { W3oContextFactory, W3oContext } from './W3oContext';
 import { W3oModule } from './W3oModule';
@@ -13,19 +13,19 @@ import { W3oAuthenticator } from './W3oAuthenticator';
 import { W3oTransactionResponse } from './W3oTransactionResponse';
 import { W3oAccount } from './W3oAccount';
 import { W3oNetwork } from './W3oNetwork';
+import { W3oContract } from './W3oContract';
 
-const logger = new W3oContextFactory('W3oAuthSupport');
+const logger = new W3oContextFactory('W3oChainSupport');
 
 /**
  * Abstract class that represents a user authenticator
  */
-export abstract class W3oAuthSupport extends W3oModule {
+export abstract class W3oChainSupport extends W3oModule {
     constructor(
-        public readonly name: W3oAuthSupportName,
         public readonly type: W3oNetworkType,
         parent: W3oContext,
     ) {
-        const context = logger.method('constructor', { name, type }, parent);
+        const context = logger.method('constructor', { type }, parent);
         super(context);
     }
 
@@ -61,4 +61,11 @@ export abstract class W3oAuthSupport extends W3oModule {
      * Abstract method to log out
      */
     abstract logout(auth: W3oAuthenticator, parent: W3oContext): void;
+
+    /** Additional chain specific methods */
+    abstract queryContract(networkName: W3oNetworkName, params: { [key: string]: any }, parent: W3oContext): Observable<any>;
+
+    abstract validateAccount(username: string, parent: W3oContext): Observable<boolean>;
+
+    abstract fetchContract(address: W3oAddress, parent: W3oContext): Observable<W3oContract | null>;
 }

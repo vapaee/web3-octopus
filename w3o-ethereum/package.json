@@ -12,7 +12,7 @@
     "clear": "rm -rf lib node_modules; npm run clear-code",
     "clear-code": "bash -O globstar -c 'rm -f src/**/*.{d.ts,js,map}'",
     "copy-version": "node scripts/copy_version.js",
-    "build": "npm run copy-version; tsc",
+    "build": "",
     "test": "jest",
     "dev": "npm run clear && npm run copy-version && tsc -w",
     "publish-on": "npm run build && npm publish --access public",
