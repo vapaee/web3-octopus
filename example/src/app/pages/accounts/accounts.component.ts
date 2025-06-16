@@ -19,11 +19,13 @@ export class AccountsComponent {
 
 
     loginEVM() {
-        connectWallet().then((addresses) => {
-            console.log('Connected addresses:', addresses);
-        }).catch((error) => {
-            console.error('Error connecting wallet:', error);
-        });
+        connectWallet()
+            .then((addresses) => {
+                console.log('Connected on Telos:', addresses)
+            })
+            .catch((error) => {
+                console.error('Error connecting wallet:', error)
+            })
     }
 
 
