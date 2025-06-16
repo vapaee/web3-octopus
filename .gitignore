@@ -131,3 +131,10 @@ dist
 
 Notas.txt
 example/.angular
+w3o-ethereum/lib
+w3o-core/lib
+w3o-antelope/lib
+w3o-ethereum/node_modules
+w3o-core/node_modules
+w3o-antelope/node_modules
+example/node_modules
