@@ -21,7 +21,7 @@ const logger = new W3oContextFactory('EthereumNetwork');
  */
 export class EthereumNetwork extends W3oNetwork {
     private _settings!: W3oEthereumNetworkSettings;
-    private _provider!: ethers.JsonRpcProvider;
+    private _provider!: ethers.providers.JsonRpcProvider;
 
     constructor(settings: W3oEthereumNetworkSettings, parent: W3oContext) {
         const context = logger.method('constructor', { chain: settings.displayName, settings }, parent);
@@ -42,7 +42,7 @@ export class EthereumNetwork extends W3oNetwork {
         }
         super(settings, context);
         this._settings = settings;
-        this._provider = new ethers.JsonRpcProvider(settings.rpcUrl);
+        this._provider = new ethers.providers.JsonRpcProvider(settings.rpcUrl);
         W3oModule.registerModule(this, context);
     }
 
@@ -50,7 +50,7 @@ export class EthereumNetwork extends W3oNetwork {
         return this._settings;
     }
 
-    get provider(): ethers.JsonRpcProvider {
+    get provider(): ethers.providers.JsonRpcProvider {
         return this._provider;
     }
 
