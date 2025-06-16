@@ -20,7 +20,7 @@ import { W3oChainSupport } from './W3oChainSupport';
 const logger = new W3oContextFactory('W3oNetwork');
 
 /**
- * Abstract class that represents a specific blockchain network with token and contract management capabilities.
+ * class that represents a specific blockchain network with token and contract management capabilities.
  */
 export class W3oNetwork extends W3oModule {
 
@@ -38,33 +38,21 @@ export class W3oNetwork extends W3oModule {
         }
         super(context);
         this.__contractCtrl = this.createContractManager(this, context);
-        this.__tokenlist = new W3oTokenList(settings.httpClient!, settings.tokensUrl);
-    }
-
-    override get w3oVersion(): string {
-        return (this.settings as any).w3oVersion ?? '1.0.0';
-    }
-
-    override get w3oName(): string {
-        return (this.settings as any).w3oName ?? `${this.type}.network.${this.name}`;
-    }
-
-    override get w3oRequire(): string[] {
-        return (this.settings as any).w3oRequire ?? [];
+        this.__tokenlist = new W3oTokenList(settings.httpClient!, settings.tokensUrl!, context);
     }
 
     /**
      * Getter to retrieve the network type.
      */
     get type(): W3oNetworkType {
-        return this.settings.type;
+        return this.settings?.type || 'other';
     }
 
     /**
      * Getter to retrieve the network name.
      */
     get name(): W3oNetworkName {
-        return this.settings.name;
+        return this.settings?.name || 'unknown';
     }
 
     /**
@@ -87,10 +75,22 @@ export class W3oNetwork extends W3oModule {
     override init(octopus: W3oInstance, requirements: W3oModule[], parent: W3oContext): void {
         const context = logger.method('init', { w3oId: this.w3oId, octopus, requirements }, parent);
         this.support = requirements[0] as W3oChainSupport;
-        this.fetchTokens(context).subscribe(tokens => {
+        this.fetchTokens(context).subscribe((tokens: W3oToken[]) => {
             logger.info('Tokens fetched', { tokens });
             super.init(octopus, requirements, context);
         });
+    }
+
+    override get w3oVersion(): string {
+        throw new Error('w3oVersion need to be overridden in the subclass');
+    }
+
+    override get w3oRequire(): string[] {
+        throw new Error('w3oRequire need to be overridden in the subclass');
+    }
+
+    override get w3oName(): string {
+        throw new Error('w3oName need to be overridden in the subclass');
     }
 
     /**
@@ -128,7 +128,7 @@ export class W3oNetwork extends W3oModule {
      */
     createContractManager(network: W3oNetwork, parent: W3oContext): W3oContractManager {
         const context = logger.method('createContractManager', { network }, parent);
-        return new W3oContractManager(this.settings, network, context);
+        return new W3oContractManager(this.settings as any as W3oNetworkSettings, network, context);
     }
 
     /**

@@ -136,7 +136,7 @@ export class Web3Octopus<Tw3o extends W3oIServices & WithSnapshot> implements W3
      */
     get whenReady(): Observable<void> {
         return this.onInitialized$.pipe(
-            filter(initialized => initialized),
+            filter((initialized: boolean) => initialized),
             map(() => undefined)
         );
     }
@@ -162,7 +162,7 @@ export class Web3Octopus<Tw3o extends W3oIServices & WithSnapshot> implements W3
         }
 
         const sub = this.onManagersReady$.pipe(
-            filter(initialized => initialized)
+            filter((initialized: any) => initialized)
         ).subscribe(() => {
             logger.log('processing support', support.type, 'with requirements', support.networks, support.chain, { support });
 

@@ -16,7 +16,16 @@ export class W3oTokenList {
     constructor(
         private http: W3oHttpClient,
         private url: string,
-    ) {}
+        parent: W3oContext
+    ) {
+        logger.method('constructor', { url }, parent);
+        if (!url) {
+            throw new Error('Token list URL must be provided');
+        }
+        if (!http) {
+            throw new Error('HTTP client must be provided');
+        }
+    }
 
     /**
      * Observable that emits the current token list
@@ -38,10 +47,10 @@ export class W3oTokenList {
     public load(parent: W3oContext): Observable<W3oToken[]> {
         logger.method('load', parent);
         this.http.get<W3oTokenData[]>(this.url).subscribe({
-            next: tokens => {
+            next: (tokens: W3oTokenData[]) => {
                 this.__list$.next(tokens.map(data => new W3oToken(data)));
             },
-            error: err => console.error('Error loading token list:', err),
+            error: (err: any) => console.error('Error loading token list:', err),
         });
         return this.__list$.asObservable();
     }
@@ -57,14 +66,14 @@ export class W3oTokenList {
      * Returns tokens that match the given symbol
      */
     getTokensBySymbol(symbol: string): W3oToken[] {
-        return this.__list$.getValue().filter(token => token.symbol === symbol);
+        return this.__list$.getValue().filter((token:W3oToken) => token.symbol === symbol);
     }
 
     /**
      * Returns tokens that match the given address
      */
     getTokensByAddress(address: string): W3oToken[] {
-        return this.__list$.getValue().filter(token => token.address === address);
+        return this.__list$.getValue().filter((token:W3oToken) => token.address === address);
     }
 
     /**
@@ -87,7 +96,7 @@ export class W3oTokenList {
      */
     snapshot(): any {
         return {
-            list: this.__list$.getValue().map(token => token.snapshot()),
+            list: this.__list$.getValue().map((token:W3oToken) => token.snapshot()),
             url: this.url,
         };
     }

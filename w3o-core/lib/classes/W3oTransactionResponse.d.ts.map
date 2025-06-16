@@ -1,0 +1,1 @@
+{"version":3,"file":"W3oTransactionResponse.d.ts","sourceRoot":"","sources":["../../src/classes/W3oTransactionResponse.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,UAAU,EAAE,MAAM,MAAM,CAAC;AAClC,OAAO,EAAE,qBAAqB,EAAE,MAAM,UAAU,CAAC;AAEjD;;GAEG;AACH,8BAAsB,sBAAsB;IAErB,IAAI,EAAE,MAAM;gBAAZ,IAAI,EAAE,MAAM;IAE/B;;OAEG;IACH,QAAQ,CAAC,IAAI,IAAI,UAAU,CAAC,qBAAqB,CAAC;CACrD"}

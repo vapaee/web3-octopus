@@ -54,11 +54,16 @@ export abstract class W3oModule {
     ) {
         const context = logger.method('constructor', parent);
 
+        context.log('context de this.w3oId.split("@")', { self: {...this} });
         const [name, version] = this.w3oId.split('@');
+        context.log('Module name and version', { name, version });
         if (!!name && !!version) {
+            context.log('Registering module', { w3oId: this.w3oId });
             W3oModule.registerModule(this, context);
         } else {
+            context.error('w3oId. Module name or version is missing. We wait...');
             setTimeout(() => {
+                context.error('w3oId', { w3oId: this.w3oId });
                 if (!W3oModule.modules[this.w3oId]) {
                     context.error('Module not registered. Try to register yourself after W3oModule constructor', { w3oId: this.w3oId });
                 }
@@ -71,7 +76,7 @@ export abstract class W3oModule {
      */
     get initialized$(): Observable<W3oModule> {
         return this.__initialized$.asObservable().pipe(
-            filter((value): value is W3oModule => value !== false),
+            filter((value: false | W3oModule): value is W3oModule => value !== false),
             take(1),
         );
     }

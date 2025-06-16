@@ -48,7 +48,7 @@ export class AntelopeTokensService extends W3oService {
      */
     get w3oRequire(): string[] {
         return [
-            'antelope.auth.anchor@1.0.0',
+            'antelope.chain.support@1.0.0',
             'antelope.network.support@1.0.0',
         ];
     }

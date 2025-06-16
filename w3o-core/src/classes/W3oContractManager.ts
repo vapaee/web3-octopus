@@ -63,7 +63,7 @@ export class W3oContractManager {
             return from(Promise.resolve(contract));
         }
         return this.fetchContract(address, context).pipe(
-            mergeMap(fetchedContract => {
+            mergeMap((fetchedContract: W3oContract | null) => {
                 if (fetchedContract) {
                     this.addContract(address, fetchedContract, context);
                 } else {
@@ -98,7 +98,7 @@ export class W3oContractManager {
             return from(Promise.resolve(existingContract));
         }
         return this.fetchContract(token.address as W3oAddress, context).pipe(
-            mergeMap(fetchedContract => {
+            mergeMap((fetchedContract: W3oContract | null) => {
                 if (fetchedContract) {
                     this.addContract(token.address as W3oAddress, fetchedContract, context);
                 }
