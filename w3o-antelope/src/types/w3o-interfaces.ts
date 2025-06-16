@@ -45,3 +45,20 @@ export interface AntelopeTransaction extends W3oTransaction {
     context_free_actions?: ActionType[];   // Optional context-free actions
     context_free_data?: string[];          // Optional context-free data
 }
+
+/**
+ * Represents the set of resources associated with an Antelope account.
+ */
+export interface AntelopeResources {
+    total: string;
+    liquid: string;
+    rexStaked: string;
+    rexDeposits: string;
+    cpuStaked: string;
+    netStaked: string;
+    refunding: string;
+    delegatedToOthers: string;
+    delegatedByOthers: string;
+    ramTotal: string;
+    ramAvailable: string;
+}
