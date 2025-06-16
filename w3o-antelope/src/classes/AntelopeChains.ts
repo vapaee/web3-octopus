@@ -3,7 +3,7 @@
 import { W3oContextFactory, W3oContext, W3oNetworkSettings, W3oNetworkLinks, W3oNetworkName, W3oNetworkType } from '@vapaee/w3o-core';
 import { Chains } from '@wharfkit/common';
 import { W3oAntelopeNetworkSettings } from '../types';
-import { AntelopeNetwork } from './AntelopeNetwork';
+import { W3oNetwork } from '@vapaee/w3o-core';
 
 const type = 'antelope' as W3oNetworkType;
 const w3oRequire = ['antelope.network.support@1.0.0'];
@@ -31,7 +31,7 @@ const EOSConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class EOSNetwork extends AntelopeNetwork {
+export class EOSNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...EOSConfigJSON, chain: Chains.EOS },
@@ -62,7 +62,7 @@ const FIOConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class FIONetwork extends AntelopeNetwork {
+export class FIONetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...FIOConfigJSON, chain: Chains.FIO },
@@ -93,7 +93,7 @@ const FIOTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class FIOTestnetNetwork extends AntelopeNetwork {
+export class FIOTestnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...FIOTestnetConfigJSON, chain: Chains.FIOTestnet },
@@ -124,7 +124,7 @@ const Jungle4ConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class Jungle4Network extends AntelopeNetwork {
+export class Jungle4Network extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...Jungle4ConfigJSON, chain: Chains.Jungle4 },
@@ -155,7 +155,7 @@ const KylinTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class KylinTestnetNetwork extends AntelopeNetwork {
+export class KylinTestnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...KylinTestnetConfigJSON, chain: Chains.KylinTestnet },
@@ -187,7 +187,7 @@ const LibreConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class LibreNetwork extends AntelopeNetwork {
+export class LibreNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...LibreConfigJSON, chain: Chains.Libre },
@@ -218,7 +218,7 @@ const LibreTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class LibreTestnetNetwork extends AntelopeNetwork {
+export class LibreTestnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...LibreTestnetConfigJSON, chain: Chains.LibreTestnet },
@@ -250,7 +250,7 @@ const ProtonConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class ProtonNetwork extends AntelopeNetwork {
+export class ProtonNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...ProtonConfigJSON, chain: Chains.Proton },
@@ -281,7 +281,7 @@ const ProtonTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class ProtonTestnetNetwork extends AntelopeNetwork {
+export class ProtonTestnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...ProtonTestnetConfigJSON, chain: Chains.ProtonTestnet },
@@ -313,7 +313,7 @@ const TelosZeroConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class TelosZeroNetwork extends AntelopeNetwork {
+export class TelosZeroNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...TelosZeroConfigJSON, chain: Chains.Telos },
@@ -344,7 +344,7 @@ const TelosZeroTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class TelosZeroTestnetNetwork extends AntelopeNetwork {
+export class TelosZeroTestnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...TelosZeroTestnetConfigJSON, chain: Chains.TelosTestnet },
@@ -376,7 +376,7 @@ const UXConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class UXNetwork extends AntelopeNetwork {
+export class UXNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...UXConfigJSON, chain: Chains.UX },
@@ -407,7 +407,7 @@ const WAXConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class WAXNetwork extends AntelopeNetwork {
+export class WAXNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...WAXConfigJSON, chain: Chains.WAX },
@@ -438,7 +438,7 @@ const WAXTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class WAXTestnetNetwork extends AntelopeNetwork {
+export class WAXTestnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...WAXTestnetConfigJSON, chain: Chains.WAXTestnet },
@@ -469,7 +469,7 @@ const XPRConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class XPRNetwork extends AntelopeNetwork {
+export class XPRNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...XPRConfigJSON, chain: Chains.XPR },
@@ -500,7 +500,7 @@ const XPRTestnetConfigJSON: W3oAntelopeNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class XPRTestnetNetwork extends AntelopeNetwork {
+export class XPRTestnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...XPRTestnetConfigJSON, chain: Chains.XPRTestnet },

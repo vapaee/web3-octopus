@@ -10,7 +10,7 @@ import {
 
 import { W3oContextFactory, W3oContext } from './W3oContext';
 import { W3oAccount } from './W3oAccount';
-import { W3oAuthSupport } from './W3oAuthSupport';
+import { W3oChainSupport } from './W3oChainSupport';
 import { W3oError } from './W3oError';
 import { W3oTransactionResponse } from './W3oTransactionResponse';
 import { W3oSession } from './W3oSession';
@@ -34,7 +34,7 @@ export class W3oAuthenticator {
     public onSessionChange$: Subject<string> = new Subject<string>();
 
     constructor(
-        public readonly support: W3oAuthSupport,
+        public readonly support: W3oChainSupport,
         public readonly network: W3oNetwork,
         parent: W3oContext,
     ) {
@@ -55,7 +55,7 @@ export class W3oAuthenticator {
      * Returns the authenticator's name
      */
     get name(): string {
-        return this.support.name;
+        return this.support.w3oName;
     }
 
     /**
