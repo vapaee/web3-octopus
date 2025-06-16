@@ -6,6 +6,8 @@ import { SharedModule } from '@app/shared/shared.module';
 import { W3oContextFactory, W3oSession } from '@vapaee/w3o-core';
 import { LucideAngularModule, X } from 'lucide-angular';
 
+const logger = new W3oContextFactory('AccountsComponent');
+
 @Component({
     selector: 'app-accounts',
     standalone: true,
@@ -32,15 +34,14 @@ export class AccountsComponent {
     }
 
     changeNetwork(name: string) {
-        this.w3o.octopus.networks.setCurrentNetwork(
-            name,
-            new W3oContextFactory('AccountsComponent').method('changeNetwork')
-        );
+        const context = logger.method('changeNetwork');
+        this.w3o.octopus.networks.setCurrentNetwork(name, context);
         this.selectedNetwork = name;
     }
 
     logoutSession(session: W3oSession) {
-        session.logout(new W3oContextFactory('AccountsComponent').method('logoutSession'));
+        const context = logger.method('logoutSession');
+        session.logout(context);
     }
 
     login() {
@@ -48,10 +49,8 @@ export class AccountsComponent {
     }
 
     selectSession(session: W3oSession) {
-        this.w3o.octopus.sessions.setCurrentSession(
-            session.id,
-            new W3oContextFactory('AccountsComponent').method('selectSession')
-        );
+        const context = logger.method('selectSession');
+        this.w3o.octopus.sessions.setCurrentSession(session.id, context);
     }
 
     shorten(address: string): string {
