@@ -6,7 +6,7 @@ import { W3oAntelopeNetworkSettings } from '../types';
 import { W3oNetwork } from '@vapaee/w3o-core';
 
 const type = 'antelope' as W3oNetworkType;
-const w3oRequire = ['antelope.network.support@1.0.0'];
+const w3oRequire = ['antelope.chain.support@1.0.0'];
 const w3oVersion = '1.0.0';
 
 // ---- EOS ----

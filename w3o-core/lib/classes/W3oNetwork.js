@@ -116,8 +116,9 @@ export class W3oNetwork extends W3oModule {
     /**
      * Performs a read-only query via the chain support.
      */
-    queryContract(params) {
-        return this.support.queryContract(params);
+    queryContract(params, parent) {
+        const context = logger.method('updateState', parent);
+        return this.support.queryContract(this.name, params, context);
     }
     /**
      * Validates if a given address is a valid account on the network.

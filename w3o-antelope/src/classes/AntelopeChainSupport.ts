@@ -9,11 +9,9 @@ import {
     W3oTransaction,
     W3oTransactionResponse,
     W3oNetworkName,
-    W3oModule,
     W3oError,
     W3oContract,
     W3oAddress,
-    W3oInstance,
 } from '@vapaee/w3o-core';
 import { AntelopeWharfkit, WharfkitInstance } from './AntelopeWharfkit';
 import { Session } from '@wharfkit/session';
@@ -111,7 +109,8 @@ export class AntelopeChainSupport extends W3oChainSupport {
     }
 
     override signTransaction(auth: W3oAuthenticator, trx: W3oTransaction, parent: W3oContext): Observable<W3oTransactionResponse> {
-        const session = this.getWharfkitSession(auth, parent);
+        const context = logger.method('signTransaction', { trx }, parent);
+        const session = this.getWharfkitSession(auth, context);
         const transaction = trx as AntelopeTransaction;
         return new Observable(observer => {
             session.transact(transaction).then(response => {
@@ -122,9 +121,9 @@ export class AntelopeChainSupport extends W3oChainSupport {
         });
     }
 
-    override queryContract(params: { [key: string]: any }): Observable<any> {
+    override queryContract(networkName: W3oNetworkName, params: { [key: string]: any }, parent: W3oContext): Observable<any> {
         return new Observable(observer => {
-            const wk = this.getWharfkit(params.code, logger.method('queryContract', params));
+            const wk = this.getWharfkit(networkName, logger.method('queryContract', params, parent));
             wk.accountKit.client.v1.chain.get_table_rows(params as any).then(result => {
                 observer.next(result);
                 observer.complete();

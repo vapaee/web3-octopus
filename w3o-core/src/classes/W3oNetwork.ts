@@ -152,8 +152,9 @@ export class W3oNetwork extends W3oModule {
     /**
      * Performs a read-only query via the chain support.
      */
-    queryContract(params: { [key: string]: any }): Observable<any> {
-        return this.support.queryContract(params);
+    queryContract(params: { [key: string]: any }, parent?: W3oContext): Observable<any> {
+        const context = logger.method('updateState', parent);
+        return this.support.queryContract(this.name, params, context);
     }
 
     /**

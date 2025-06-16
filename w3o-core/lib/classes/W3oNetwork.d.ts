@@ -70,7 +70,7 @@ export declare class W3oNetwork extends W3oModule {
      */
     queryContract(params: {
         [key: string]: any;
-    }): Observable<any>;
+    }, parent?: W3oContext): Observable<any>;
     /**
      * Validates if a given address is a valid account on the network.
      */

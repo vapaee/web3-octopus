@@ -105,7 +105,7 @@ export class AntelopeTokensService extends W3oService {
                     table: 'accounts',
                     limit: 100,
                 };
-                return auth.network.queryContract(params).pipe(
+                return auth.network.queryContract(params, context).pipe(
                     map((result: {rows?: {balance: string}[]}) => {
                         return tokensByContract[contract].map(token => {
                             if (!result?.rows?.length) {
@@ -237,7 +237,7 @@ export class AntelopeTokensService extends W3oService {
             table: 'accounts',
             limit: 100,
         };
-        return auth.network.queryContract(params).pipe(
+        return auth.network.queryContract(params, context).pipe(
             map((result: any) => {
                 if (!result?.rows?.length) {
                     console.warn(`⚠️ No balance found for ${token.symbol}. Returning zero balance.`);

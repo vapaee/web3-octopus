@@ -63,7 +63,7 @@ export abstract class W3oChainSupport extends W3oModule {
     abstract logout(auth: W3oAuthenticator, parent: W3oContext): void;
 
     /** Additional chain specific methods */
-    abstract queryContract(params: { [key: string]: any }): Observable<any>;
+    abstract queryContract(networkName: W3oNetworkName, params: { [key: string]: any }, parent: W3oContext): Observable<any>;
 
     abstract validateAccount(username: string, parent: W3oContext): Observable<boolean>;
 

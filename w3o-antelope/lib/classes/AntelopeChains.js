@@ -3,7 +3,7 @@ import { W3oContextFactory } from '@vapaee/w3o-core';
 import { Chains } from '@wharfkit/common';
 import { W3oNetwork } from '@vapaee/w3o-core';
 const type = 'antelope';
-const w3oRequire = ['antelope.network.support@1.0.0'];
+const w3oRequire = ['antelope.chain.support@1.0.0'];
 const w3oVersion = '1.0.0';
 // ---- EOS ----
 const EOSConfigJSON = {
