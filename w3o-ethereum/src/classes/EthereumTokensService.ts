@@ -66,7 +66,7 @@ export class EthereumTokensService extends W3oService {
         if (!address) {
             return of({ amount: { value: 0, formatted: '0' }, token });
         }
-        const provider = (auth.account as EthereumAccount).authenticator.network['client'];
+        const provider = (auth.account as EthereumAccount).authenticator.network['provider'];
         const contract = new ethers.Contract(token.address, erc20Abi, provider);
         return new Observable<W3oBalance>((observer) => {
             contract.balanceOf(address).then((balance: any) => {
@@ -119,7 +119,7 @@ export class EthereumTokensService extends W3oService {
         void memo;
         const result$ = new Subject<W3oTransferSummary>();
         try {
-            const provider = (auth.account as EthereumAccount).authenticator.network['client'];
+            const provider = (auth.account as EthereumAccount).authenticator.network['provider'];
             const signer = new ethers.Wallet(auth.session.storage.get('privateKey'), provider);
             const contract = new ethers.Contract(token.address, erc20Abi, signer);
             contract.transfer(to, quantity).then((tx: any) => {

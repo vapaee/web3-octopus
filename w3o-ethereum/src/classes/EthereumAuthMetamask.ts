@@ -58,18 +58,51 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
         throw new W3oError(EthereumError.PROVIDER_NOT_FOUND);
     }
 
+    private async ensureNetwork(provider: BrowserProvider, networkName: W3oNetworkName, parent: W3oContext): Promise<void> {
+        const context = logger.method('ensureNetwork', { networkName }, parent);
+        const settings = this.octopus.networks.getNetwork(networkName, context) as any;
+        const chainIdHex = '0x' + parseInt(settings.settings.chainId, 10).toString(16);
+        const currentChainId = await provider.send('eth_chainId', []);
+        if (currentChainId === chainIdHex) return;
+        try {
+            await provider.send('wallet_switchEthereumChain', [{ chainId: chainIdHex }]);
+        } catch (switchError: any) {
+            if (switchError.code === 4902 || switchError?.data?.originalError?.code === 4902) {
+                await provider.send('wallet_addEthereumChain', [{
+                    chainId: chainIdHex,
+                    chainName: settings.settings.displayName,
+                    nativeCurrency: {
+                        name: settings.settings.nativeCurrency ?? 'ETH',
+                        symbol: settings.settings.symbol ?? 'ETH',
+                        decimals: settings.settings.decimals ?? 18,
+                    },
+                    rpcUrls: [settings.settings.rpcUrl],
+                    blockExplorerUrls: [settings.settings.links?.explorer || ''],
+                }]);
+                await provider.send('wallet_switchEthereumChain', [{ chainId: chainIdHex }]);
+            } else {
+                throw switchError;
+            }
+        }
+    }
+
     login(auth: W3oAuthenticator, networkName: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
         return new Observable<W3oAccount>(observer => {
             const context = logger.method('login', { networkName }, parent);
             try {
                 const provider = this.getProvider();
-                provider.send('eth_requestAccounts', []).then(accounts => {
-                    const address = accounts[0];
-                    const account = new EthereumAccount(address, auth, context);
-                    observer.next(account);
-                    observer.complete();
+                this.ensureNetwork(provider, networkName, context).then(() => {
+                    provider.send('eth_requestAccounts', []).then(accounts => {
+                        const address = accounts[0];
+                        const account = new EthereumAccount(address, auth, context);
+                        observer.next(account);
+                        observer.complete();
+                    }).catch(err => {
+                        context.error('login failed', err);
+                        observer.error(err);
+                    });
                 }).catch(err => {
-                    context.error('login failed', err);
+                    context.error('network switch failed', err);
                     observer.error(err);
                 });
             } catch (error) {
@@ -94,16 +127,21 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
         return new Observable<EthereumTransactionResponse>(observer => {
             try {
                 const provider = this.getProvider();
-                provider.getSigner().then((signer: JsonRpcSigner) => {
-                    signer.sendTransaction(trx as any).then(tx => {
-                        observer.next(new EthereumTransactionResponse(tx.hash));
-                        observer.complete();
+                this.ensureNetwork(provider, auth.network.name, context).then(() => {
+                    provider.getSigner().then((signer: JsonRpcSigner) => {
+                        signer.sendTransaction(trx as any).then(tx => {
+                            observer.next(new EthereumTransactionResponse(tx.hash));
+                            observer.complete();
+                        }).catch(err => {
+                            context.error('signTransaction failed', err);
+                            observer.error(err);
+                        });
                     }).catch(err => {
-                        context.error('signTransaction failed', err);
+                        context.error('getSigner failed', err);
                         observer.error(err);
                     });
                 }).catch(err => {
-                    context.error('getSigner failed', err);
+                    context.error('network switch failed', err);
                     observer.error(err);
                 });
             } catch (error) {

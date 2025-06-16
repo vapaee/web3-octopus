@@ -10,20 +10,18 @@ import {
     W3oHttpClient,
 } from '@vapaee/w3o-core';
 import { Observable } from 'rxjs';
+import { ethers } from 'ethers';
 import { EthereumContractManager } from './EthereumContractManager';
 import { W3oEthereumNetworkSettings } from '../types';
-import { EthereumWagmi } from './EthereumWagmi';
-import { createPublicClient, http, PublicClient } from 'viem';
-import { Chain } from 'viem';
 
 const logger = new W3oContextFactory('EthereumNetwork');
 
 /**
- * Network implementation for Ethereum/EVM chains.
+ * Simple Ethereum/EVM network implementation using ethers providers.
  */
 export class EthereumNetwork extends W3oNetwork {
     private _settings!: W3oEthereumNetworkSettings;
-    private _client!: PublicClient;
+    private _provider!: ethers.JsonRpcProvider;
 
     constructor(settings: W3oEthereumNetworkSettings, parent: W3oContext) {
         const context = logger.method('constructor', { chain: settings.displayName, settings }, parent);
@@ -42,27 +40,9 @@ export class EthereumNetwork extends W3oNetwork {
                 }
             } as W3oHttpClient;
         }
-
         super(settings, context);
         this._settings = settings;
-
-        this.initialized$.subscribe((result) => {
-            if (result) {
-                EthereumWagmi.wagmi(settings, context);
-                const chain: Chain = {
-                    id: parseInt(settings.chainId, 10),
-                    name: settings.displayName,
-                    network: settings.name,
-                    nativeCurrency: { name: settings.nativeCurrency ?? 'ETH', symbol: settings.symbol ?? 'ETH', decimals: settings.decimals ?? 18 },
-                    rpcUrls: { default: { http: [settings.rpcUrl] } },
-                };
-                this._client = createPublicClient({ chain, transport: http(settings.rpcUrl) });
-                logger.log('Viem client initialized');
-            } else {
-                context.error(`Module(${this.w3oId}) not initialized correctly`);
-            }
-        });
-
+        this._provider = new ethers.JsonRpcProvider(settings.rpcUrl);
         W3oModule.registerModule(this, context);
     }
 
@@ -70,8 +50,8 @@ export class EthereumNetwork extends W3oNetwork {
         return this._settings;
     }
 
-    get client(): PublicClient {
-        return this._client;
+    get provider(): ethers.JsonRpcProvider {
+        return this._provider;
     }
 
     override get w3oVersion(): string {
@@ -97,8 +77,7 @@ export class EthereumNetwork extends W3oNetwork {
     override createContractManager(network: W3oNetwork, parent: W3oContext): W3oContractManager {
         const context = logger.method('createContractManager', { chain: network.name, network }, parent);
         if (network instanceof EthereumNetwork) {
-            const manager = new EthereumContractManager(this.settings, network, context);
-            return manager;
+            return new EthereumContractManager(this.settings, network, context);
         } else {
             context.error(`Invalid network type: ${network.constructor.name}`);
             throw new Error(`Invalid network type: ${network.constructor.name}`);
@@ -125,10 +104,9 @@ export class EthereumNetwork extends W3oNetwork {
 
     override validateAccount(address: string, parent: W3oContext): Observable<boolean> {
         const context = logger.method('validateAccount', { address }, parent);
-        void context;
-        // Basic validation: check hex string length
-        const isValid = /^0x[a-fA-F0-9]{40}$/.test(address);
+        const isValid = ethers.utils.isAddress(address);
         return new Observable<boolean>(subscriber => {
+            void context;
             subscriber.next(isValid);
             subscriber.complete();
         });

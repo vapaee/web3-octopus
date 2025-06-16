@@ -4,6 +4,5 @@ export * from './EthereumContractManager';
 export * from './EthereumNetwork';
 export * from './EthereumTokensService';
 export * from './EthereumError';
-export * from './EthereumWagmi';
 export * from './EthereumAccount';
 export * from './EthereumChains';
