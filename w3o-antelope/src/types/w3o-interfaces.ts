@@ -45,3 +45,20 @@ export interface AntelopeTransaction extends W3oTransaction {
     context_free_actions?: ActionType[];   // Optional context-free actions
     context_free_data?: string[];          // Optional context-free data
 }
+
+/**
+ * Aggregated resources information for an Antelope account
+ */
+export interface AntelopeResources {
+    total: string;              // Total TLOS owned by the user
+    liquid: string;             // Liquid TLOS available for transfers
+    rexStaked: string;          // Amount of TLOS in REX including savings
+    rexDeposits: string;        // Amount of TLOS deposited in REX fund
+    cpuStaked: string;          // TLOS staked for CPU
+    netStaked: string;          // TLOS staked for NET
+    refunding: string;          // TLOS pending refund from unstaking
+    delegatedToOthers: string;  // TLOS delegated to other accounts
+    delegatedByOthers: string;  // TLOS others have delegated to this account
+    ramTotal: string;           // Total RAM bytes owned
+    ramAvailable: string;       // Available RAM bytes
+}
