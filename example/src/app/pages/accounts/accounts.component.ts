@@ -4,7 +4,7 @@ import { SessionService } from '@app/services/session-kit.service';
 import { Web3OctopusService } from '@app/services/web3-octopus.service';
 import { RedirectService } from '@app/services/redirect.service';
 import { SharedModule } from '@app/shared/shared.module';
-import { W3oContextFactory, W3oSession } from '@vapaee/w3o-core';
+import { W3oContextFactory, W3oNetwork, W3oSession } from '@vapaee/w3o-core';
 import { LucideAngularModule, X } from 'lucide-angular';
 
 const logger = new W3oContextFactory('AccountsComponent');
@@ -29,7 +29,12 @@ export class AccountsComponent implements OnInit, OnDestroy {
         public sessionService: SessionService,
         private w3o: Web3OctopusService,
         private redirect: RedirectService,
-    ) {}
+    ) {
+        w3o.octopus.networks.current$.subscribe((network: W3oNetwork) => {
+            console.log('Current network changed:', network);
+            this.selectedNetwork = network.name;
+        });
+    }
 
     ngOnInit() {
         this.redirect.disable();
@@ -46,7 +51,6 @@ export class AccountsComponent implements OnInit, OnDestroy {
     changeNetwork(name: string) {
         const context = logger.method('changeNetwork');
         this.w3o.octopus.networks.setCurrentNetwork(name, context);
-        this.selectedNetwork = name;
     }
 
     logoutSession(session: W3oSession) {

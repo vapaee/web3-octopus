@@ -131,3 +131,7 @@ dist
 
 Notas.txt
 example/.angular
+example/node_modules
+w3o-*/tsconfig.tsbuildinfo
+w3o-*/lib
+w3o-*/node_modules
