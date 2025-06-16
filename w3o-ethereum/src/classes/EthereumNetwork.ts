@@ -7,7 +7,7 @@ import {
     W3oNetwork,
     W3oToken,
     W3oModule,
-    W3oHttpClient,
+    W3oDefaultHttpClient,
 } from '@vapaee/w3o-core';
 import { Observable } from 'rxjs';
 import { ethers } from 'ethers';
@@ -26,19 +26,7 @@ export class EthereumNetwork extends W3oNetwork {
     constructor(settings: W3oEthereumNetworkSettings, parent: W3oContext) {
         const context = logger.method('constructor', { chain: settings.displayName, settings }, parent);
         if (!settings.httpClient) {
-            settings.httpClient = {
-                get: <T>(url: string): Observable<T> => {
-                    return new Observable<T>(subscriber => {
-                        fetch(url, { method: 'GET' })
-                            .then(res => {
-                                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                                return res.json();
-                            })
-                            .then(data => { subscriber.next(data as T); subscriber.complete(); })
-                            .catch(err => subscriber.error(err));
-                    });
-                }
-            } as W3oHttpClient;
+            settings.httpClient = new W3oDefaultHttpClient();
         }
         super(settings, context);
         this._settings = settings;

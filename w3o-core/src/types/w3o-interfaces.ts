@@ -21,6 +21,7 @@ import {
  */
 export interface W3oHttpClient {
     get<T>(url: string): Observable<T>;
+    post<T>(url: string, body: unknown): Observable<T>;
 }
 
 /**
