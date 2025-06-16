@@ -1,5 +1,5 @@
 export * from './AntelopeError';
-export * from './AntelopeSupport';
+export * from './AntelopeChainSupport';
 export * from './AntelopeTokensService';
 export * from './AntelopeChains';
 export * from './AntelopeWharfkit';

@@ -41,6 +41,18 @@ export class W3oNetwork extends W3oModule {
         this.__tokenlist = new W3oTokenList(settings.httpClient!, settings.tokensUrl);
     }
 
+    override get w3oVersion(): string {
+        return (this.settings as any).w3oVersion ?? '1.0.0';
+    }
+
+    override get w3oName(): string {
+        return (this.settings as any).w3oName ?? `${this.type}.network.${this.name}`;
+    }
+
+    override get w3oRequire(): string[] {
+        return (this.settings as any).w3oRequire ?? [];
+    }
+
     /**
      * Getter to retrieve the network type.
      */
@@ -148,6 +160,7 @@ export class W3oNetwork extends W3oModule {
      * Validates if a given address is a valid account on the network.
      */
     validateAccount(address: string, parent: W3oContext): Observable<boolean> {
-        return this.support.validateAccount(address, parent);
+        const context = logger.method('validateAccount', { address, network: this.name }, parent);
+        return this.support.validateAccount(address, context);
     }
 }

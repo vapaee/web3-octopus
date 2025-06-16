@@ -21,20 +21,22 @@ import { Name } from '@wharfkit/antelope';
 import { AntelopeTransaction, W3oAntelopeNetworkSettings } from '../types';
 import { AntelopeAccount } from './AntelopeAccount';
 
-const logger = new W3oContextFactory('AntelopeSupport');
+const logger = new W3oContextFactory('AntelopeChainSupport');
 
 export class AntelopeTransactionResponse extends W3oTransactionResponse {
     constructor(hash: string) { super(hash); }
     wait(): Observable<any> { return new Observable(o => { o.next({ status: 'success' }); o.complete(); }); }
 }
 
-export class AntelopeSupport extends W3oChainSupport {
+export class AntelopeChainSupport extends W3oChainSupport {
     private _wharfkits: { [network: string]: WharfkitInstance } = {};
 
     constructor(parent: W3oContext) {
         const context = logger.method('constructor', parent);
         super('antelope' as W3oNetworkType, context);
     }
+
+    override isReadOnly(): boolean { return false; }
 
     override get w3oVersion(): string { return '1.0.0'; }
     override get w3oName(): string { return 'antelope.chain.support'; }
@@ -131,7 +133,8 @@ export class AntelopeSupport extends W3oChainSupport {
     }
 
     override validateAccount(username: string, parent: W3oContext): Observable<boolean> {
-        const wk = this.getWharfkit(parent.label as any, parent);
+        const { network } = parent.args<{ network: W3oNetworkName }>();
+        const wk = this.getWharfkit(network, parent);
         return new Observable(sub => {
             wk.accountKit.client.v1.chain.get_account(Name.from(username)).then(() => {
                 sub.next(true); sub.complete();

@@ -16,7 +16,7 @@ import {
 // import the classes to support Antelope (EOSIO) networks
 import {
     AntelopeTokensService,                // extends W3oService
-    AntelopeSupport,
+    AntelopeChainSupport,
     TelosZeroNetwork,
     TelosZeroTestnetNetwork,
 } from '@vapaee/w3o-antelope';
@@ -49,7 +49,7 @@ export class Web3OctopusService implements OnDestroy {
                 // Network type
                 type: 'antelope',
                 // chain support implementation
-                chain: new AntelopeSupport(context),
+                chain: new AntelopeChainSupport(context),
                 // list of supported Antelope networks
                 networks: [
                     new TelosZeroNetwork({}, context),
