@@ -98,15 +98,15 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
                         const account = new EthereumAccount(address, auth, context);
                         observer.next(account);
                         observer.complete();
-                    }).catch(err => {
+                    }).catch((err: any) => {
                         context.error('login failed', err);
                         observer.error(err);
                     });
-                }).catch(err => {
+                }).catch((err: any) => {
                     context.error('network switch failed', err);
                     observer.error(err);
                 });
-            } catch (error) {
+            } catch (error: any) {
                 context.error('login failed', error);
                 observer.error(error);
             }
@@ -129,23 +129,24 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
             try {
                 const provider = this.getProvider();
                 this.ensureNetwork(provider, auth.network.name, context).then(() => {
-                    provider.getSigner().then((signer: ethers.providers.JsonRpcSigner) => {
+                    try {
+                        const signer: ethers.providers.JsonRpcSigner = provider.getSigner();
                         signer.sendTransaction(trx as any).then(tx => {
                             observer.next(new EthereumTransactionResponse(tx.hash));
                             observer.complete();
-                        }).catch(err => {
+                        }).catch((err: any) => {
                             context.error('signTransaction failed', err);
                             observer.error(err);
                         });
-                    }).catch(err => {
+                    } catch (err: any) {
                         context.error('getSigner failed', err);
                         observer.error(err);
-                    });
-                }).catch(err => {
+                    }
+                }).catch((err: any) => {
                     context.error('network switch failed', err);
                     observer.error(err);
                 });
-            } catch (error) {
+            } catch (error: any) {
                 context.error('signTransaction failed', error);
                 observer.error(error);
             }
