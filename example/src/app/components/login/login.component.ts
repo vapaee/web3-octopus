@@ -4,9 +4,9 @@ import { DropDownComponent } from '@app/components/base-components/drop-down/dro
 import { Router, RouterModule } from '@angular/router';
 import { SessionService } from '@app/services/session-kit.service';
 import { LucideAngularModule, User } from 'lucide-angular';
-import { ExpandableManagerService } from '../base-components/expandable/expandable-manager.service';
 import { SharedModule } from '@app/shared/shared.module';
 import { Web3OctopusService } from '@app/services/web3-octopus.service';
+import { W3oSession, W3oContextFactory } from '@vapaee/w3o-core';
 
 @Component({
     selector: 'app-login',
@@ -23,25 +23,25 @@ import { Web3OctopusService } from '@app/services/web3-octopus.service';
 })
 export class LoginComponent {
     readonly UserIcon = User
+    private logger = new W3oContextFactory('LoginComponent');
 
     constructor(
         public sessionService: SessionService,
-        public expandibles: ExpandableManagerService,
         private w3o: Web3OctopusService,
         private router: Router,
     ) {}
-
-    get isAntelope(): boolean {
-        return this.w3o.octopus.networks.current.type === 'antelope';
-    }
 
     async login() {
         await this.router.navigate(['/accounts']);
     }
 
-    async logout() {
-        await this.sessionService.logout();
-        this.expandibles.closeAll();
+    get sessions(): W3oSession[] {
+        return this.w3o.octopus.sessions.list;
+    }
+
+    selectSession(session: W3oSession) {
+        const context = this.logger.method('selectSession');
+        this.w3o.octopus.sessions.setCurrentSession(session.id, context);
     }
 
     shorten(address: string): string {

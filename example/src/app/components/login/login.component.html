@@ -15,12 +15,12 @@
 
             <!-- Dropdown Body -->
             <div dropdown-body class="c-login__menu-body">
-                <a class="c-login__menu-option" routerLink="/wallet">{{'PAGES.WALLET.NAME' | translate}}</a>
-                <a *ngIf="isAntelope" class="c-login__menu-option" routerLink="/resources">{{'PAGES.RESOURCES.NAME' | translate}}</a>
-                <a class="c-login__menu-option" routerLink="/accounts">{{'PAGES.ACCOUNTS.NAME' | translate}}</a>
-                <a class="c-login__menu-option" routerLink="/preferences">{{'PAGES.PREFERENCES.NAME' | translate}}</a>
+                <a class="c-login__menu-option" *ngFor="let s of sessions" (click)="selectSession(s)">
+                    <img class="c-login__menu-network-icon" [src]="'/assets/logos/' + (s.network.name.replace('-testnet','')) + '.png'"/>
+                    {{ shorten(s.address) }}
+                </a>
                 <hr class="c-login__menu-separator">
-                <a class="c-login__menu-option" (click)="logout()">{{'TYPES.BUTTON.LOGOUT' | translate}}</a>
+                <a class="c-login__menu-option" routerLink="/accounts">{{'PAGES.ACCOUNTS.NAME' | translate}}</a>
             </div>
         </app-drop-down>
     </div>
