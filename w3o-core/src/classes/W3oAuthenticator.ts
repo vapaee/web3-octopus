@@ -113,7 +113,7 @@ export class W3oAuthenticator {
      * Returns the account address
      */
     getAddress(): W3oAddress {
-        return this.account.getAddress();
+        return this.account.address
     }
 
     /**
@@ -163,7 +163,7 @@ export class W3oAuthenticator {
                 const accountObservable = this.support.login(this, networkName, context);
                 accountObservable.subscribe({
                     next: (account) => {
-                        logger.log('this.support.login.subscribe() -> result', { account: account.getAddress() });
+                        logger.log('this.support.login.subscribe() -> result', { account: account.address });
                         this.__account = account;
                         subscriber.next(account);
                     },

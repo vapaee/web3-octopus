@@ -1,6 +1,7 @@
 // w3o-ethereum/src/classes/EthereumTokensService.ts
 
 import {
+    W3oAccount,
     W3oContext,
     W3oContextFactory,
     W3oInstance,
@@ -13,7 +14,6 @@ import {
 } from "@vapaee/w3o-core";
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from "rxjs";
 import { ethers } from "ethers";
-import { EthereumAccount } from "./EthereumAccount";
 import { EthereumNetwork } from "./EthereumNetwork";
 
 const logger = new W3oContextFactory('EthereumTokensService');
@@ -67,8 +67,8 @@ export class EthereumTokensService extends W3oService {
         if (!address) {
             return of({ amount: { value: 0, formatted: '0' }, token });
         }
-        const provider = (auth.account as EthereumAccount).authenticator.network as unknown as EthereumNetwork;
-        const contract = new ethers.Contract(token.address, erc20Abi, provider.provider);
+        const network = (auth.account as W3oAccount).authenticator.network as unknown as EthereumNetwork;
+        const contract = new ethers.Contract(token.address, erc20Abi, network.provider);
         return new Observable<W3oBalance>((observer) => {
             contract.balanceOf(address).then((balance: any) => {
                 const value = Number(balance.toString());
@@ -120,7 +120,7 @@ export class EthereumTokensService extends W3oService {
         void memo;
         const result$ = new Subject<W3oTransferSummary>();
         try {
-            const network = (auth.account as EthereumAccount).authenticator.network as unknown as EthereumNetwork;
+            const network = (auth.account as W3oAccount).authenticator.network as unknown as EthereumNetwork;
             const signer = new ethers.Wallet(auth.session.storage.get('privateKey') as string, network.provider);
             const contract = new ethers.Contract(token.address, erc20Abi, signer);
             contract.transfer(to, quantity).then((tx: any) => {
@@ -129,6 +129,7 @@ export class EthereumTokensService extends W3oService {
             }).catch((error: any) => {
                 context.error('transfer error', error);
                 result$.error(error);
+
             });
         } catch (error) {
             context.error('transferToken failed', error as any);

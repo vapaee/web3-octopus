@@ -28,7 +28,7 @@ export class AntelopeAccount extends W3oAccount {
      */
     snapshot(): any {
         return {
-            address: this.getAddress(),
+            address: super.address,
             _class: 'AntelopeAccount',
         };
     }
