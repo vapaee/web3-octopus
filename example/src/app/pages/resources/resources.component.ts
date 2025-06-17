@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ResourcesService } from '@app/services/resources.service';
-import { AntelopeResourcesState } from '@app/types';
 import { Subject, takeUntil } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Web3OctopusService } from '@app/services/web3-octopus.service';
 import { LucideAngularModule, RefreshCcw } from 'lucide-angular';
 import { SharedModule } from '@app/shared/shared.module';
 import { BREAKPOINT } from '@app/types';
+import { AntelopeResourcesState } from '@vapaee/w3o-antelope';
 
 @Component({
     selector: 'app-resources',
