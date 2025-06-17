@@ -15,7 +15,7 @@ export class EthereumAccount extends W3oAccount {
 
     snapshot(): any {
         return {
-            address: super.address,
+            ...super.snapshot(),
             _class: 'EthereumAccount',
         };
     }

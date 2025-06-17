@@ -6,7 +6,7 @@ const logger = new W3oContextFactory('W3oAccount');
 /**
  * Represents a user account, including minimal data and a reference to its authenticator.
  */
-export abstract class W3oAccount {
+export class W3oAccount {
 
     constructor(
         public readonly address: string,
@@ -21,7 +21,12 @@ export abstract class W3oAccount {
     }
 
     /**
-     * Abstract method to take a snapshot of the account state.
+     * method to take a snapshot of the account state.
      */
-    abstract snapshot(): any;
+    snapshot() {
+        return {
+            address: this.address,
+            authenticator: this.authenticator.snapshot(),
+        };
+    }
 }
