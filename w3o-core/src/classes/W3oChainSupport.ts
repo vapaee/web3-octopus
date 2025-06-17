@@ -1,4 +1,4 @@
-// w3o-core/src/classes/W3oAuthManager.ts
+// w3o-core/src/classes/W3oChainSupport.ts
 
 import { Observable } from 'rxjs';
 import {

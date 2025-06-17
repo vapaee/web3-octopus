@@ -43,8 +43,8 @@ export class SessionService {
     async login() {
         const context = logger.method('login');
         try {
-            const network = this.w3o.octopus.networks.current.name;
-            this.w3o.octopus.auth.login(network, 'antelope', context);
+            const network = this.w3o.octopus.networks.current;
+            this.w3o.octopus.auth.login(network.name, network.type, context);
         } catch (error) {
             console.error('Login failed:', error);
             throw error;
