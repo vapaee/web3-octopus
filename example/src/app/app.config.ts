@@ -12,7 +12,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // Factory function to create TranslateHttpLoader
 export function httpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, '/assets/locals/', '.json');
+    return new TranslateHttpLoader(http, './assets/locals/', '.json');
 }
 
 export const appConfig: ApplicationConfig = {
