@@ -138,20 +138,36 @@ export class EthereumTokensService extends W3oService {
         const result$ = new Subject<W3oTransferSummary>();
         try {
             const network = auth.network as unknown as EthereumNetwork;
-            const signer = network.provider.getSigner();
-            const contract = new ethers.Contract(token.address, erc20Abi, signer);
+            if (typeof window !== 'undefined' && (window as any).ethereum) {
+                const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
+                const signer = web3Provider.getSigner();
+                const contract = new ethers.Contract(token.address, erc20Abi, signer);
+                const numericPart = quantity.split(' ')[0];
+                const amount = ethers.utils.parseUnits(numericPart, token.precision);
 
-            const numericPart = quantity.split(' ')[0];
-            const amount = ethers.utils.parseUnits(numericPart, token.precision);
-
-            contract.transfer(to, amount).then((tx: any) => {
-                result$.next({ from: auth.session.address, to, amount: quantity, transaction: tx.hash });
-                result$.complete();
-            }).catch((error: any) => {
-                context.error('transfer error', error);
-                result$.error(error);
-
-            });
+                contract.transfer(to, amount).then((tx: any) => {
+                    result$.next({ from: auth.session.address, to, amount: quantity, transaction: tx.hash });
+                    result$.complete();
+                }).catch((error: any) => {
+                    context.error('transfer error', error);
+                    result$.error(error);
+                });
+            } else {
+                const iface = new ethers.utils.Interface(erc20Abi);
+                const data = iface.encodeFunctionData('transfer', [to, quantity]);
+                auth.session.signTransaction({ to: token.address, data }, context).subscribe({
+                    next: (tx) => {
+                        result$.next({ from: auth.session.address, to, amount: quantity, transaction: tx.hash });
+                    },
+                    error: (error) => {
+                        context.error('transfer error', error);
+                        result$.error(error);
+                    },
+                    complete: () => {
+                        result$.complete();
+                    }
+                });
+            }
         } catch (error) {
             context.error('transferToken failed', error as any);
             result$.error(error);
