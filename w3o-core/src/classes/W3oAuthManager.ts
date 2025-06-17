@@ -138,7 +138,7 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
                 authenticator[method](networkName, context).subscribe({
                     next: account => {
                         const session = this.octopus.sessions.createCurrentSession(
-                            account.getAddress(),
+                            account.address,
                             authenticator,
                             networkInstance,
                             context

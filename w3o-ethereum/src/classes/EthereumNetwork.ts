@@ -3,7 +3,6 @@
 import {
     W3oContext,
     W3oContextFactory,
-    W3oContractManager,
     W3oNetwork,
     W3oToken,
     W3oModule,
@@ -11,7 +10,6 @@ import {
 } from '@vapaee/w3o-core';
 import { Observable } from 'rxjs';
 import { ethers } from 'ethers';
-import { EthereumContractManager } from './EthereumContractManager';
 import { W3oEthereumNetworkSettings } from '../types';
 
 const logger = new W3oContextFactory('EthereumNetwork');
@@ -60,16 +58,6 @@ export class EthereumNetwork extends W3oNetwork {
             _class: 'EthereumNetwork',
             settings: this.settings,
         };
-    }
-
-    override createContractManager(network: W3oNetwork, parent: W3oContext): W3oContractManager {
-        const context = logger.method('createContractManager', { chain: network.name, network }, parent);
-        if (network instanceof EthereumNetwork) {
-            return new EthereumContractManager(this.settings, network, context);
-        } else {
-            context.error(`Invalid network type: ${network.constructor.name}`);
-            throw new Error(`Invalid network type: ${network.constructor.name}`);
-        }
     }
 
     override getSystemToken(): W3oToken {

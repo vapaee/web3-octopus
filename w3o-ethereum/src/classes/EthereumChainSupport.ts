@@ -1,47 +1,39 @@
-// w3o-ethereum/src/classes/EthereumAuthMetamask.ts
-
+import { Observable } from 'rxjs';
 import {
     W3oContext,
     W3oContextFactory,
+    W3oChainSupport,
+    W3oNetworkType,
     W3oInstance,
+    W3oModule,
     W3oTransaction,
     W3oTransactionResponse,
     W3oAccount,
     W3oNetworkName,
     W3oAuthenticator,
     W3oError,
-    W3oModule,
     W3oContract,
 } from '@vapaee/w3o-core';
-import { EthereumAuthSupport } from './EthereumAuthSupport';
-import { Observable } from 'rxjs';
-import { EthereumAccount } from './EthereumAccount';
 import { ethers } from 'ethers';
+import { EthereumAccount } from './EthereumAccount';
 import { EthereumError } from './EthereumError';
 
-const logger = new W3oContextFactory('EthereumAuthMetamask');
+const logger = new W3oContextFactory('EthereumChainSupport');
 
 export class EthereumTransactionResponse extends W3oTransactionResponse {
-    constructor(hash: string) {
-        super(hash);
-    }
-
-    wait(): Observable<any> {
-        return new Observable<any>(observer => {
-            observer.next({} as any);
-            observer.complete();
-        });
-    }
+    constructor(hash: string) { super(hash); }
+    wait(): Observable<any> { return new Observable(o => { o.next({}); o.complete(); }); }
 }
 
-export class EthereumAuthMetamask extends EthereumAuthSupport {
+export class EthereumChainSupport extends W3oChainSupport {
+
     constructor(parent: W3oContext) {
         const context = logger.method('constructor', parent);
-        super(context);
+        super('ethereum' as W3oNetworkType, context);
     }
 
     override get w3oVersion(): string { return '1.0.0'; }
-    override get w3oName(): string { return 'ethereum.auth.metamask'; }
+    override get w3oName(): string { return 'ethereum.chain.support'; }
     override get w3oRequire(): string[] { return []; }
 
     override isReadOnly(): boolean { return false; }
@@ -49,7 +41,7 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
     override init(octopus: W3oInstance, requirements: W3oModule[], parent: W3oContext): void {
         const context = logger.method('init', { octopus, requirements }, parent);
         super.init(octopus, requirements, context);
-        logger.info('EthereumAuthMetamask OK!', super.w3oId);
+        logger.info('EthereumChainSupport OK!', this.w3oId);
     }
 
     private getProvider(): ethers.providers.Web3Provider {
@@ -87,7 +79,7 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
         }
     }
 
-    login(auth: W3oAuthenticator, networkName: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
+    override login(auth: W3oAuthenticator, networkName: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
         return new Observable<W3oAccount>(observer => {
             const context = logger.method('login', { networkName }, parent);
             try {
@@ -113,18 +105,17 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
         });
     }
 
-    autoLogin(auth: W3oAuthenticator, networkName: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
+    override autoLogin(auth: W3oAuthenticator, networkName: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
         return this.login(auth, networkName, parent);
     }
 
-    logout(auth: W3oAuthenticator, parent: W3oContext): void {
+    override logout(auth: W3oAuthenticator, parent: W3oContext): void {
         logger.method('logout', { auth }, parent);
         // nothing to do for Metamask
     }
 
-    signTransaction(auth: W3oAuthenticator, trx: W3oTransaction, parent: W3oContext): Observable<EthereumTransactionResponse> {
+    override signTransaction(auth: W3oAuthenticator, trx: W3oTransaction, parent: W3oContext): Observable<EthereumTransactionResponse> {
         const context = logger.method('signTransaction', { trx }, parent);
-        void auth;
         return new Observable<EthereumTransactionResponse>(observer => {
             try {
                 const provider = this.getProvider();
@@ -153,19 +144,19 @@ export class EthereumAuthMetamask extends EthereumAuthSupport {
         });
     }
 
-    queryContract(networkName: W3oNetworkName, params: { [key: string]: any }, parent: W3oContext): Observable<any> {
+    override queryContract(networkName: W3oNetworkName, params: { [key: string]: any }, parent: W3oContext): Observable<any> {
         const context = logger.method('queryContract', { networkName, params }, parent);
         context.error('queryContract not implemented');
         return new Observable<any>();
     }
 
-    validateAccount(username: string, parent: W3oContext): Observable<boolean> {
+    override validateAccount(username: string, parent: W3oContext): Observable<boolean> {
         const context = logger.method('validateAccount', { username }, parent);
         const isValid = ethers.utils.isAddress(username);
         return new Observable<boolean>(observer => { observer.next(isValid); observer.complete(); });
     }
 
-    fetchContract(address: string, parent: W3oContext): Observable<W3oContract | null> {
+    override fetchContract(address: string, parent: W3oContext): Observable<W3oContract | null> {
         const context = logger.method('fetchContract', { address }, parent);
         context.error('fetchContract not implemented');
         return new Observable<W3oContract | null>();
