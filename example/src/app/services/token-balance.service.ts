@@ -78,7 +78,9 @@ export class TokenBalanceService {
 
     private subscribeToService(service: AntelopeTokensService | EthereumTokensService, auth: any) {
         this.unsubscribe();
-        this.serviceSub = service.getBalances$(auth, logger).subscribe(b => this.balances$.next(b));
+        this.serviceSub = service
+            .getBalances$(auth, logger.method('subscribeToService'))
+            .subscribe(b => this.balances$.next(b));
     }
 
     private unsubscribe() {
