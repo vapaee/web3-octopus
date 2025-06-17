@@ -10,7 +10,7 @@
             <!-- Dropdown Button -->
             <button dropdown-button class="c-login__btn--active">
                 <lucide-icon [img]="UserIcon" size="18"></lucide-icon>
-                {{ session.address }}
+                {{ shorten(session.address) }}
             </button>
 
             <!-- Dropdown Body -->
