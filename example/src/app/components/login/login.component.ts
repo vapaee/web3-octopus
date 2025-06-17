@@ -43,4 +43,8 @@ export class LoginComponent {
         await this.sessionService.logout();
         this.expandibles.closeAll();
     }
+
+    shorten(address: string): string {
+        return address.length > 13 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
+    }
 }
