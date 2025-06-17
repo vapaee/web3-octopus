@@ -28,7 +28,7 @@ export class TokenTransferService {
      */
     public getTransferStatus$(tokenSymbol: string): Observable<W3oTransferStatus> {
         const context = logger.method('getTransferStatus$', { tokenSymbol });
-        return this.w3o.octopus.services.tokens.getTransferStatus(tokenSymbol, context);
+        return this.w3o.octopus.services.antelope.tokens.getTransferStatus(tokenSymbol, context);
     }
 
     /**
@@ -42,7 +42,7 @@ export class TokenTransferService {
             context.error('No active session');
             return;
         }
-        this.w3o.octopus.services.tokens.resetTransferCycle(auth, tokenSymbol, context);
+        this.w3o.octopus.services.antelope.tokens.resetTransferCycle(auth, tokenSymbol, context);
     }
 
     /**
@@ -55,7 +55,7 @@ export class TokenTransferService {
             context.error('No active session');
             return;
         }
-        this.w3o.octopus.services.tokens.resetAllTransfers(auth, context);
+        this.w3o.octopus.services.antelope.tokens.resetAllTransfers(auth, context);
     }
 
     /**
@@ -77,6 +77,6 @@ export class TokenTransferService {
             context.error('No active session');
             return;
         }
-        await this.w3o.octopus.services.tokens.transferToken(auth, to, quantity, token, memo, context);
+        await this.w3o.octopus.services.antelope.tokens.transferToken(auth, to, quantity, token, memo, context);
     }
 }

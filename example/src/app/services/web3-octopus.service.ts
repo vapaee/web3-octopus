@@ -24,6 +24,7 @@ import {
 // import the classes to support Ethereum networks
 import {
     EthereumChainSupport,
+    EthereumTokensService,
     TelosEVMNetwork,
 } from '@vapaee/w3o-ethereum';
 
@@ -77,8 +78,9 @@ export class Web3OctopusService implements OnDestroy {
             // ---- Register the services ----
             // paths must match the keys in the IMyServices interface
             const services: W3oService[] = [
-                new AntelopeTokensService('tokens', context),
-                new AntelopeResourcesService('resources', context),
+                new AntelopeTokensService('antelope.tokens', context),
+                new AntelopeResourcesService('antelope.resources', context),
+                new EthereumTokensService('ethereum.tokens', context),
             ];
             octopus.registerServices(services);
             octopus.init(

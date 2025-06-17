@@ -7,6 +7,9 @@
         &--active {
             @include button-1
         }
+
+        margin-bottom: 4px;
+        margin-top: 4px;
     }
     &__menu {
         &-body {

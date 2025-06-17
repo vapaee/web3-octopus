@@ -16,7 +16,6 @@ const logger = new W3oContextFactory('TokenBalanceService');
 })
 export class TokenBalanceService {
     private balances$ = new BehaviorSubject<Balance[]>([]);
-    private ethTokens = new EthereumTokensService('eth.tokens', logger.method('ethereumTokensService'));
     private serviceSub: Subscription | null = null;
 
     constructor(
@@ -70,10 +69,8 @@ export class TokenBalanceService {
     }
 
     private getServiceFor(type: W3oNetworkType): AntelopeTokensService | EthereumTokensService {
-        if (type === 'antelope') {
-            return this.w3o.octopus.services.tokens;
-        }
-        return this.ethTokens;
+        console.assert(!!this.w3o.octopus.services[type], `No service registered for network type: ${type}`);
+        return this.w3o.octopus.services[type].tokens;
     }
 
     private subscribeToService(service: AntelopeTokensService | EthereumTokensService, auth: any) {

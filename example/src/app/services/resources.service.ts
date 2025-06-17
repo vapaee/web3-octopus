@@ -23,7 +23,7 @@ export class ResourcesService {
             this.sub?.unsubscribe();
             const network = session.network;
             if (session?.authenticator && network.type === 'antelope') {
-                this.sub = this.w3o.octopus.services.resources
+                this.sub = this.w3o.octopus.services.antelope.resources
                     .getResources$(session.authenticator, context)
                     .subscribe(state => this.state$.next(state));
             } else {
@@ -40,14 +40,14 @@ export class ResourcesService {
         const context = logger.method('refresh');
         const auth = this.sessionService.current?.authenticator;
         if (auth && this.w3o.octopus.networks.current.type === 'antelope') {
-            this.w3o.octopus.services.resources.updateResources(auth, context);
+            this.w3o.octopus.services.antelope.resources.updateResources(auth, context);
         }
     }
 
-    stakeCpu(amount: number) { return this.w3o.octopus.services.resources.stakeCpu(amount); }
-    unstakeCpu(amount: number) { return this.w3o.octopus.services.resources.unstakeCpu(amount); }
-    stakeNet(amount: number) { return this.w3o.octopus.services.resources.stakeNet(amount); }
-    unstakeNet(amount: number) { return this.w3o.octopus.services.resources.unstakeNet(amount); }
-    buyRam(bytes: number) { return this.w3o.octopus.services.resources.buyRam(bytes); }
-    sellRam(bytes: number) { return this.w3o.octopus.services.resources.sellRam(bytes); }
+    stakeCpu(amount: number) { return this.w3o.octopus.services.antelope.resources.stakeCpu(amount); }
+    unstakeCpu(amount: number) { return this.w3o.octopus.services.antelope.resources.unstakeCpu(amount); }
+    stakeNet(amount: number) { return this.w3o.octopus.services.antelope.resources.stakeNet(amount); }
+    unstakeNet(amount: number) { return this.w3o.octopus.services.antelope.resources.unstakeNet(amount); }
+    buyRam(bytes: number) { return this.w3o.octopus.services.antelope.resources.buyRam(bytes); }
+    sellRam(bytes: number) { return this.w3o.octopus.services.antelope.resources.sellRam(bytes); }
 }
