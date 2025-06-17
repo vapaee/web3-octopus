@@ -137,11 +137,11 @@ export class EthereumTokensService extends W3oService {
         void memo;
         const result$ = new Subject<W3oTransferSummary>();
         try {
-            const network = (auth.account as W3oAccount).authenticator.network as unknown as EthereumNetwork;
-            const signer = new ethers.Wallet(auth.session.storage.get('privateKey') as string, network.provider);
+            const network = auth.network as unknown as EthereumNetwork;
+            const signer = network.provider.getSigner();
             const contract = new ethers.Contract(token.address, erc20Abi, signer);
             contract.transfer(to, quantity).then((tx: any) => {
-                result$.next({ from: signer.address, to, amount: quantity, transaction: tx.hash });
+                result$.next({ from: auth.session.address, to, amount: quantity, transaction: tx.hash });
                 result$.complete();
             }).catch((error: any) => {
                 context.error('transfer error', error);
