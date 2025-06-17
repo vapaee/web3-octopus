@@ -45,3 +45,129 @@ export interface AntelopeTransaction extends W3oTransaction {
     context_free_actions?: ActionType[];   // Optional context-free actions
     context_free_data?: string[];          // Optional context-free data
 }
+
+/**
+ * Aggregated resources information for an Antelope account
+ */
+export interface AntelopeResources {
+    total: string;              // Total TLOS owned by the user
+    liquid: string;             // Liquid TLOS available for transfers
+    rexStaked: string;          // Amount of TLOS in REX including savings
+    rexDeposits: string;        // Amount of TLOS deposited in REX fund
+    cpuStaked: string;          // TLOS staked for CPU
+    netStaked: string;          // TLOS staked for NET
+    refunding: string;          // TLOS pending refund from unstaking
+    delegatedToOthers: string;  // TLOS delegated to other accounts
+    delegatedByOthers: string;  // TLOS others have delegated to this account
+    ramTotal: string;           // Total RAM bytes owned
+    ramAvailable: string;       // Available RAM bytes
+}
+
+/** Structure describing usage limits for a resource */
+export interface AntelopeResourceLimit {
+    used: number;
+    available: number;
+    max: number;
+}
+
+/** Public key and weight pair inside a permission */
+export interface AntelopeKeyWeight {
+    key: string;
+    weight: number;
+}
+
+/** Authorization details required for a permission */
+export interface AntelopePermissionAuth {
+    threshold: number;
+    keys: AntelopeKeyWeight[];
+    accounts: unknown[];
+    waits: unknown[];
+}
+
+/** Account permission entry */
+export interface AntelopePermission {
+    perm_name: string;
+    parent: string;
+    required_auth: AntelopePermissionAuth;
+    linked_actions: unknown[];
+}
+
+/** Resources owned by an account */
+export interface AntelopeTotalResources {
+    owner: string;
+    net_weight: string;
+    cpu_weight: string;
+    ram_bytes: number;
+}
+
+/** Self delegated bandwidth information */
+export interface AntelopeSelfDelegatedBandwidth {
+    from: string;
+    to: string;
+    net_weight: string;
+    cpu_weight: string;
+}
+
+/** Pending refund request */
+export interface AntelopeRefundRequest {
+    owner: string;
+    request_time: string;
+    net_amount: string;
+    cpu_amount: string;
+}
+
+/** Voting related information */
+export interface AntelopeVoterInfo {
+    owner: string;
+    proxy: string;
+    producers: string[];
+    staked: number;
+    last_stake: number;
+    last_vote_weight: string;
+    proxied_vote_weight: string;
+    is_proxy: number;
+    flags1: number;
+    reserved2: number;
+    reserved3: string;
+}
+
+/** Maturity date/amount pair inside REX info */
+export interface AntelopeRexMaturity {
+    first: string;
+    second: string | number;
+}
+
+/** REX related information */
+export interface AntelopeRexInfo {
+    version: number;
+    owner: string;
+    vote_stake: string;
+    rex_balance: string;
+    matured_rex: string;
+    rex_maturities: AntelopeRexMaturity[];
+}
+
+/** Full account data returned by `get_account` */
+export interface AntelopeAccountData {
+    account_name: string;
+    head_block_num: number;
+    head_block_time: string;
+    privileged: boolean;
+    last_code_update: string;
+    created: string;
+    core_liquid_balance?: string;
+    ram_quota: number;
+    net_weight: number;
+    cpu_weight: number;
+    net_limit: AntelopeResourceLimit;
+    cpu_limit: AntelopeResourceLimit;
+    ram_usage: number;
+    permissions: AntelopePermission[];
+    total_resources?: AntelopeTotalResources;
+    self_delegated_bandwidth?: AntelopeSelfDelegatedBandwidth;
+    refund_request?: AntelopeRefundRequest | null;
+    voter_info?: AntelopeVoterInfo;
+    rex_info?: AntelopeRexInfo;
+    subjective_cpu_bill_limit: AntelopeResourceLimit;
+    eosio_any_linked_actions: unknown[];
+}
