@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DropDownComponent } from '@app/components/base-components/drop-down/drop-down.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SessionService } from '@app/services/session-kit.service';
 import { LucideAngularModule, User } from 'lucide-angular';
 import { ExpandableManagerService } from '../base-components/expandable/expandable-manager.service';
@@ -28,6 +28,7 @@ export class LoginComponent {
         public sessionService: SessionService,
         public expandibles: ExpandableManagerService,
         private w3o: Web3OctopusService,
+        private router: Router,
     ) {}
 
     get isAntelope(): boolean {
@@ -35,12 +36,7 @@ export class LoginComponent {
     }
 
     async login() {
-        try {
-            await this.sessionService.login();
-        } catch (error) {
-            console.error('Login canceled:', error);
-            await this.sessionService.logout();
-        }
+        await this.router.navigate(['/accounts']);
     }
 
     async logout() {
