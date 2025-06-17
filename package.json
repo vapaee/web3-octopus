@@ -17,7 +17,7 @@
     "clear:core": "rm -fr w3o-core/lib w3o-core/node_modules w3o-core/tsconfig.tsbuildinfo",
     "clear:antelope": "rm -fr w3o-antelope/lib w3o-antelope/node_modules w3o-antelope/tsconfig.tsbuildinfo",
     "clear:ethereum": "rm -fr w3o-ethereum/lib w3o-ethereum/node_modules w3o-ethereum/tsconfig.tsbuildinfo",
-    "clear:example": "rm -fr example/node_modules example/.angular",
+    "clear:example": "rm -fr example/node_modules example/.angular example/dist",
     "clear": "npm run clear:core && npm run clear:antelope && npm run clear:ethereum && npm run clear:example"
   }
 }
