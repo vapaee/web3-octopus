@@ -21,7 +21,7 @@ export class ResourcesService {
         this.sessionService.session$.subscribe(session => {
             const context = logger.method('sessionChange');
             this.sub?.unsubscribe();
-            const network = this.w3o.octopus.networks.current;
+            const network = session.network;
             if (session?.authenticator && network.type === 'antelope') {
                 this.sub = this.w3o.octopus.services.resources
                     .getResources$(session.authenticator, context)

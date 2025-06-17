@@ -90,15 +90,6 @@ export class Web3OctopusService implements OnDestroy {
                 context
             );
 
-            // FIXME: verify that this runs as expeted and then remove it
-            octopus.sessions.current$.subscribe(session => {
-                if (session?.authenticator) {
-                    octopus.services.resources
-                        .getResources$(session.authenticator, context)
-                        .subscribe(res => console.log('Resources', res));
-                }
-            });
-
         } catch (error) {
             context.error('constructor', error);
         }

@@ -2,6 +2,7 @@
 
 import { W3oContextFactory, W3oContext, W3oNetworkSettings, W3oNetworkLinks, W3oNetworkName, W3oNetworkType, W3oNetwork } from '@vapaee/w3o-core';
 import { W3oEthereumNetworkSettings } from '../types';
+import { EthereumNetwork } from './EthereumNetwork';
 
 const type = 'ethereum' as W3oNetworkType;
 const w3oRequire = ['ethereum.chain.support@1.0.0'];
@@ -26,7 +27,7 @@ const EthereumMainnetConfigJSON: W3oEthereumNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class EthereumMainnetNetwork extends W3oNetwork {
+export class EthereumMainnetNetwork extends EthereumNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...EthereumMainnetConfigJSON },
@@ -58,7 +59,7 @@ const GoerliConfigJSON: W3oEthereumNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class GoerliNetwork extends W3oNetwork {
+export class GoerliNetwork extends EthereumNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...GoerliConfigJSON },
@@ -93,7 +94,7 @@ const TelosEVMConfigJSON: W3oEthereumNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class TelosEVMNetwork extends W3oNetwork {
+export class TelosEVMNetwork extends EthereumNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...TelosEVMConfigJSON },
@@ -128,7 +129,7 @@ const TelosEVMTestnetConfigJSON: W3oEthereumNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class TelosEVMTestnetNetwork extends W3oNetwork {
+export class TelosEVMTestnetNetwork extends EthereumNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...TelosEVMTestnetConfigJSON },

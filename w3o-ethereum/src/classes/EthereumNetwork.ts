@@ -29,7 +29,6 @@ export class EthereumNetwork extends W3oNetwork {
         super(settings, context);
         this._settings = settings;
         this._provider = new ethers.providers.JsonRpcProvider(settings.rpcUrl);
-        W3oModule.registerModule(this, context);
     }
 
     get ethereumSettings(): W3oEthereumNetworkSettings {
