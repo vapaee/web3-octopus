@@ -142,7 +142,10 @@ export class EthereumTokensService extends W3oService {
                 const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
                 const signer = web3Provider.getSigner();
                 const contract = new ethers.Contract(token.address, erc20Abi, signer);
-                contract.transfer(to, quantity).then((tx: any) => {
+                const numericPart = quantity.split(' ')[0];
+                const amount = ethers.utils.parseUnits(numericPart, token.precision);
+
+                contract.transfer(to, amount).then((tx: any) => {
                     result$.next({ from: auth.session.address, to, amount: quantity, transaction: tx.hash });
                     result$.complete();
                 }).catch((error: any) => {
