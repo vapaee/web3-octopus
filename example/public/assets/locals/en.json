@@ -27,6 +27,12 @@
             "DESCRIPTION": "Your token balance",
             "LOADING": "Loading..."
         },
+        "RESOURCES": {
+            "NAME": "Resources",
+            "TITLE": "Resources",
+            "DESCRIPTION": "Account CPU, NET and RAM usage",
+            "NOT_APPLICABLE": "Not applicable"
+        },
         "PREFERENCES": {
             "NAME": "Preferences",
             "TITLE": "User Preferences",

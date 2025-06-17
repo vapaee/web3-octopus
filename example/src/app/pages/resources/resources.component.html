@@ -1,0 +1,43 @@
+<div class="p-resources" *ngIf="isAntelope; else na">
+    <div class="p-resources__container" [class.mobile]="isMobileView" *ngIf="state as s">
+        <div class="p-resources__card">
+            <p class="p-resources__title">CPU</p>
+            <div class="p-resources__bar">
+                <div class="p-resources__bar-fill" [style.width.%]="s.resources.cpu.percent"></div>
+            </div>
+            <p class="p-resources__text">{{s.resources.cpu.available}} / {{s.resources.cpu.total}}</p>
+            <div class="p-resources__actions">
+                <button class="p-resources__btn" (click)="stakeCpu()">Stake</button>
+                <button class="p-resources__btn" (click)="unstakeCpu()">Unstake</button>
+                <lucide-icon [img]="RefreshIcon" (click)="refresh()" class="p-resources__refresh"></lucide-icon>
+            </div>
+        </div>
+        <div class="p-resources__card">
+            <p class="p-resources__title">NET</p>
+            <div class="p-resources__bar">
+                <div class="p-resources__bar-fill" [style.width.%]="s.resources.net.percent"></div>
+            </div>
+            <p class="p-resources__text">{{s.resources.net.available}} / {{s.resources.net.total}}</p>
+            <div class="p-resources__actions">
+                <button class="p-resources__btn" (click)="stakeNet()">Stake</button>
+                <button class="p-resources__btn" (click)="unstakeNet()">Unstake</button>
+                <lucide-icon [img]="RefreshIcon" (click)="refresh()" class="p-resources__refresh"></lucide-icon>
+            </div>
+        </div>
+        <div class="p-resources__card">
+            <p class="p-resources__title">RAM</p>
+            <div class="p-resources__bar">
+                <div class="p-resources__bar-fill" [style.width.%]="s.resources.ram.percent"></div>
+            </div>
+            <p class="p-resources__text">{{s.resources.ram.available}} / {{s.resources.ram.total}}</p>
+            <div class="p-resources__actions">
+                <button class="p-resources__btn" (click)="buyRam()">Buy</button>
+                <button class="p-resources__btn" (click)="sellRam()">Sell</button>
+                <lucide-icon [img]="RefreshIcon" (click)="refresh()" class="p-resources__refresh"></lucide-icon>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #na>
+    <div class="p-resources__na">{{ 'PAGES.RESOURCES.NOT_APPLICABLE' | translate }}</div>
+</ng-template>

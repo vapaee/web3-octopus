@@ -16,6 +16,7 @@
             <!-- Dropdown Body -->
             <div dropdown-body class="c-login__menu-body">
                 <a class="c-login__menu-option" routerLink="/wallet">{{'PAGES.WALLET.NAME' | translate}}</a>
+                <a *ngIf="isAntelope" class="c-login__menu-option" routerLink="/resources">{{'PAGES.RESOURCES.NAME' | translate}}</a>
                 <a class="c-login__menu-option" routerLink="/accounts">{{'PAGES.ACCOUNTS.NAME' | translate}}</a>
                 <a class="c-login__menu-option" routerLink="/preferences">{{'PAGES.PREFERENCES.NAME' | translate}}</a>
                 <hr class="c-login__menu-separator">

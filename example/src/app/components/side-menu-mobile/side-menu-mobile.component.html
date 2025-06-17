@@ -23,6 +23,10 @@
         <lucide-icon [img]="WalletIcon"></lucide-icon>
         <p>{{'PAGES.WALLET.NAME' | translate}}</p>
     </a>
+    <a *ngIf="isAntelope" class="c-side-menu__option" routerLink="/resources" routerLinkActive="active-link">
+        <lucide-icon [img]="WalletIcon"></lucide-icon>
+        <p>{{'PAGES.RESOURCES.NAME' | translate}}</p>
+    </a>
 
     <a class="c-side-menu__option" routerLink="/preferences" routerLinkActive="active-link">
         <lucide-icon [img]="SettingsIcon"></lucide-icon>

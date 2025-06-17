@@ -6,6 +6,7 @@ import { SessionService } from '@app/services/session-kit.service';
 import { LucideAngularModule, User } from 'lucide-angular';
 import { ExpandableManagerService } from '../base-components/expandable/expandable-manager.service';
 import { SharedModule } from '@app/shared/shared.module';
+import { Web3OctopusService } from '@app/services/web3-octopus.service';
 
 @Component({
     selector: 'app-login',
@@ -26,7 +27,12 @@ export class LoginComponent {
     constructor(
         public sessionService: SessionService,
         public expandibles: ExpandableManagerService,
+        private w3o: Web3OctopusService,
     ) {}
+
+    get isAntelope(): boolean {
+        return this.w3o.octopus.networks.current.type === 'antelope';
+    }
 
     async login() {
         try {

@@ -49,7 +49,7 @@ export interface AntelopeTransaction extends W3oTransaction {
 /**
  * Aggregated resources information for an Antelope account
  */
-export interface AntelopeResources {
+export interface AntelopeBalanceBreakdown {
     total: string;              // Total TLOS owned by the user
     liquid: string;             // Liquid TLOS available for transfers
     rexStaked: string;          // Amount of TLOS in REX including savings
@@ -170,4 +170,52 @@ export interface AntelopeAccountData {
     rex_info?: AntelopeRexInfo;
     subjective_cpu_bill_limit: AntelopeResourceLimit;
     eosio_any_linked_actions: unknown[];
+}
+
+/** Row of the `rexbal` table */
+export interface AntelopeRexbalRow {
+    version: number;
+    owner: string;
+    vote_stake: string;
+    rex_balance: string;
+    matured_rex: string;
+    rex_maturities: AntelopeRexMaturity[];
+}
+
+/** Query result for the `rexbal` table */
+export interface AntelopeRexbalTable {
+    rows: AntelopeRexbalRow[];
+}
+
+/** Row of the `rexfund` table */
+export interface AntelopeRexfundRow {
+    owner: string;
+    balance: string;
+}
+
+/** Query result for the `rexfund` table */
+export interface AntelopeRexfundTable {
+    rows: AntelopeRexfundRow[];
+}
+
+/** Detailed resource usage information */
+export interface AntelopeResource {
+    total: number;
+    used: number;
+    percent: number;
+    available: number;
+}
+
+/** CPU/NET/RAM resources information */
+export interface AntelopeResources {
+    cpu: AntelopeResource;
+    net: AntelopeResource;
+    ram: AntelopeResource;
+}
+
+/** Complete resources state object */
+export interface AntelopeResourcesState {
+    balance: AntelopeBalanceBreakdown;
+    resources: AntelopeResources;
+    account: AntelopeAccountData | null;
 }

@@ -27,6 +27,12 @@
             "DESCRIPTION": "Balance de tus tokens",
             "LOADING": "Cargando..."
         },
+        "RESOURCES": {
+            "NAME": "Recursos",
+            "TITLE": "Recursos",
+            "DESCRIPTION": "Uso de CPU, NET y RAM de la cuenta",
+            "NOT_APPLICABLE": "No aplica"
+        },
         "PREFERENCES": {
             "NAME": "Preferencias",
             "TITLE": "Preferencias de Usuario",
