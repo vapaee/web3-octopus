@@ -16,8 +16,6 @@
 
                 <p *ngIf="form.get('recipient')?.value" class="c-token-transfer__status">
                     <span *ngIf="form.get('recipient')?.pending" class="c-token-transfer__status-checking">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.CHECKING' | translate }}</span>
-                    <span *ngIf="form.get('recipient')?.errors?.['pattern']" class="c-token-transfer__status-invalid">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.INVALID-PATTERN' | translate }}</span>
-                    <span *ngIf="form.get('recipient')?.errors?.['selfTransfer']" class="c-token-transfer__status-invalid">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.INVALID-SELF' | translate }}</span>
                     <span *ngIf="form.get('recipient')?.errors?.['accountNotFound']" class="c-token-transfer__status-invalid">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.INVALID-EXIST' | translate }}</span>
                     <span *ngIf="form.get('recipient')?.valid && !form.get('recipient')?.pending" class="c-token-transfer__status-valid">{{ 'COMPONENTS.TRANSFER-FORM.TO.VALIDATION.VALID' | translate }}</span>
                 </p>

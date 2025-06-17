@@ -75,7 +75,8 @@ export class SessionService {
     }
 
     validateAccount(address: string): Observable<boolean> {
-        const context = logger.method('validateAccount');
+        const sender = this.current?.address;
+        const context = logger.method('validateAccount', { sender });
         const network = this.w3o.octopus.networks.current;
         return network.validateAccount(address, context);
     }

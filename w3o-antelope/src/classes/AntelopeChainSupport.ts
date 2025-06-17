@@ -133,6 +133,17 @@ export class AntelopeChainSupport extends W3oChainSupport {
 
     override validateAccount(username: string, parent: W3oContext): Observable<boolean> {
         const { network } = parent.args<{ network: W3oNetworkName }>();
+        const sender = parent.parent()?.args<{ sender?: string }>()?.sender;
+
+        const validPattern = /^[a-z1-5]{1,12}$/.test(username);
+        if (!validPattern) {
+            return new Observable(o => { o.next(false); o.complete(); });
+        }
+
+        if (sender && sender === username) {
+            return new Observable(o => { o.next(false); o.complete(); });
+        }
+
         const wk = this.getWharfkit(network, parent);
         return new Observable(sub => {
             wk.accountKit.client.v1.chain.get_account(Name.from(username)).then(() => {

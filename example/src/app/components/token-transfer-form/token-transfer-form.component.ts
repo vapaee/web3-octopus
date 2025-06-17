@@ -52,11 +52,7 @@ export class TokenTransferFormComponent implements OnInit, OnDestroy {
         this.form = this.fb.group({
             recipient: [
                 '',
-                [
-                    Validators.required,
-                    Validators.pattern(/^[a-z1-5]{1,12}$/),
-                    this.selfTransferValidator()
-                ],
+                [Validators.required],
                 [this.accountValidator()]
             ],
             amount: [
@@ -111,16 +107,6 @@ export class TokenTransferFormComponent implements OnInit, OnDestroy {
 
     // ================================================
     // Recipient Methods
-
-    selfTransferValidator() {
-        return (control: any) => {
-            const sessionActor = this.sessionService.current?.address;
-            if (control.value === sessionActor) {
-                return { selfTransfer: true };
-            }
-            return null;
-        };
-    }
 
     accountValidator() {
         return (control: AbstractControl) => {
