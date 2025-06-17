@@ -1,11 +1,10 @@
 // w3o-ethereum/src/classes/EthereumChains.ts
 
-import { W3oContextFactory, W3oContext, W3oNetworkSettings, W3oNetworkLinks, W3oNetworkName, W3oNetworkType } from '@vapaee/w3o-core';
+import { W3oContextFactory, W3oContext, W3oNetworkSettings, W3oNetworkLinks, W3oNetworkName, W3oNetworkType, W3oNetwork } from '@vapaee/w3o-core';
 import { W3oEthereumNetworkSettings } from '../types';
-import { EthereumNetwork } from './EthereumNetwork';
 
 const type = 'ethereum' as W3oNetworkType;
-const w3oRequire = ['ethereum.network.support@1.0.0'];
+const w3oRequire = ['ethereum.chain.support@1.0.0'];
 const w3oVersion = '1.0.0';
 
 const EthereumMainnetConfigJSON: W3oEthereumNetworkSettings = {
@@ -27,13 +26,17 @@ const EthereumMainnetConfigJSON: W3oEthereumNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class EthereumMainnetNetwork extends EthereumNetwork {
+export class EthereumMainnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...EthereumMainnetConfigJSON },
             (new W3oContextFactory('EthereumMainnetNetwork')).method('constructor', { settings }, parent)
         );
     }
+
+    override get w3oVersion(): string { return w3oVersion; }
+    override get w3oRequire(): string[] { return w3oRequire; }
+    override get w3oName(): string { return 'ethereum.network.mainnet'; }
 }
 
 const GoerliConfigJSON: W3oEthereumNetworkSettings = {
@@ -55,13 +58,17 @@ const GoerliConfigJSON: W3oEthereumNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class GoerliNetwork extends EthereumNetwork {
+export class GoerliNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...GoerliConfigJSON },
             (new W3oContextFactory('GoerliNetwork')).method('constructor', { settings }, parent)
         );
     }
+
+    override get w3oVersion(): string { return w3oVersion; }
+    override get w3oRequire(): string[] { return w3oRequire; }
+    override get w3oName(): string { return 'ethereum.network.goerli'; }
 }
 
 const TelosEVMConfigJSON: W3oEthereumNetworkSettings = {
@@ -86,13 +93,17 @@ const TelosEVMConfigJSON: W3oEthereumNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class TelosEVMNetwork extends EthereumNetwork {
+export class TelosEVMNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...TelosEVMConfigJSON },
             (new W3oContextFactory('TelosEVMNetwork')).method('constructor', { settings }, parent)
         );
     }
+
+    override get w3oVersion(): string { return w3oVersion; }
+    override get w3oRequire(): string[] { return w3oRequire; }
+    override get w3oName(): string { return 'ethereum.network.telos-evm'; }
 }
 
 const TelosEVMTestnetConfigJSON: W3oEthereumNetworkSettings = {
@@ -117,11 +128,15 @@ const TelosEVMTestnetConfigJSON: W3oEthereumNetworkSettings = {
     } as W3oNetworkLinks
 };
 
-export class TelosEVMTestnetNetwork extends EthereumNetwork {
+export class TelosEVMTestnetNetwork extends W3oNetwork {
     constructor(settings: Partial<W3oNetworkSettings>, parent: W3oContext) {
         super(
             { ...TelosEVMTestnetConfigJSON },
             (new W3oContextFactory('TelosEVMTestnetNetwork')).method('constructor', { settings }, parent)
         );
     }
+
+    override get w3oVersion(): string { return w3oVersion; }
+    override get w3oRequire(): string[] { return w3oRequire; }
+    override get w3oName(): string { return 'ethereum.network.telos-evm-testnet'; }
 }

@@ -38,7 +38,7 @@ export class EthereumTokensService extends W3oService {
 
     get w3oRequire(): string[] {
         return [
-            'ethereum.auth.metamask@1.0.0',
+            'ethereum.chain.support@1.0.0',
             'ethereum.network.support@1.0.0',
         ];
     }
