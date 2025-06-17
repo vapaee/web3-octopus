@@ -68,6 +68,23 @@ export class EthereumTokensService extends W3oService {
             return of({ amount: { value: 0, formatted: '0' }, token });
         }
         const network = (auth.account as W3oAccount).authenticator.network as unknown as EthereumNetwork;
+
+        // If the token address indicates the native currency, fetch balance directly from provider
+        if (token.address === '___NATIVE_CURRENCY___') {
+            return new Observable<W3oBalance>((observer) => {
+                network.provider.getBalance(address).then((balance: any) => {
+                    const value = Number(balance.toString());
+                    const formatted = (value / Math.pow(10, token.precision)).toFixed(token.precision);
+                    observer.next({ amount: { value, formatted }, token });
+                    observer.complete();
+                }).catch((error: any) => {
+                    context.error('fetchSingleBalance error', {error, token: token.symbol, address});
+                    observer.next({ amount: { value: 0, formatted: '0' }, token });
+                    observer.complete();
+                });
+            });
+        }
+
         const contract = new ethers.Contract(token.address, erc20Abi, network.provider);
         return new Observable<W3oBalance>((observer) => {
             contract.balanceOf(address).then((balance: any) => {
