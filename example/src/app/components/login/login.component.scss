@@ -3,13 +3,12 @@
 .c-login {
     &__btn {
         @include button-0;
+        margin-bottom: 4px;
+        margin-top: 4px;
 
         &--active {
             @include button-1
         }
-
-        margin-bottom: 4px;
-        margin-top: 4px;
     }
     &__menu {
         &-body {
