@@ -4,7 +4,11 @@
       "address": "___NATIVE_CURRENCY___",
       "symbol": "TLOS",
       "name": "Telos",
-      "decimals": 18
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/telosnetwork/token-list/main/logos/telos.png",
+      "tags": ["telosevm"],
+      "issuer": "Telos",
+      "issuer_link": "https://telos.net/"
     },
     {
       "chainId": 40,

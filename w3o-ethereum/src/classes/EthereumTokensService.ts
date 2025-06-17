@@ -76,7 +76,7 @@ export class EthereumTokensService extends W3oService {
                 observer.next({ amount: { value, formatted }, token });
                 observer.complete();
             }).catch((error: any) => {
-                context.error('fetchSingleBalance error', error);
+                context.error('fetchSingleBalance error', {error, token: token.symbol, address});
                 observer.next({ amount: { value: 0, formatted: '0' }, token });
                 observer.complete();
             });
