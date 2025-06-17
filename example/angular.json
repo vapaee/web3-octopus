@@ -39,7 +39,18 @@
                             "includePaths": [
                                 "src/app/style"
                             ]
-                        }
+                        },
+                        "allowedCommonJsDependencies": [
+                            "brorand",
+                            "hash.js",
+                            "bn.js",
+                            "elliptic",
+                            "eventemitter3",
+                            "js-sha3",
+                            "bech32",
+                            "aes-js",
+                            "scrypt-js"
+                        ]
                     },
                     "configurations": {
                         "production": {
