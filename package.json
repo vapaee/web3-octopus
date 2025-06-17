@@ -8,7 +8,7 @@
     "build:antelope": "npm --prefix w3o-antelope run build",
     "build:ethereum": "npm --prefix w3o-ethereum run build",
     "build:example": "npm --prefix example run build",
-    "build": "npm run build:core && npm run install:antelope && npm run build:antelope && npm run install:ethereum && npm run build:ethereum",
+    "build": "npm run build:core && npm run install:antelope && npm run build:antelope && npm run install:ethereum && npm run build:ethereum && npm run build:example",
     "install:core": "npm --prefix w3o-core install",
     "install:antelope": "npm --prefix w3o-antelope install",
     "install:ethereum": "npm --prefix w3o-ethereum install",
