@@ -1,0 +1,62 @@
+@use 'mixin' as *;
+
+:host {
+    @include page;
+}
+
+.p-resources {
+    width: 100%;
+    max-width: 770px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &__container {
+        display: flex;
+        gap: 20px;
+
+        &.mobile {
+            flex-direction: column;
+        }
+    }
+
+    &__card {
+        @include container-border;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__title {
+        @include text-subtitle;
+    }
+
+    &__bar {
+        @include progress-bar();
+    }
+
+    &__text {
+        @include text-smaller;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    &__btn {
+        @include button-1;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    &__refresh {
+        cursor: pointer;
+    }
+
+    &__na {
+        @include text-subtitle;
+    }
+}

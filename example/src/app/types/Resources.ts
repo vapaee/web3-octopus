@@ -1,1 +1,5 @@
-export type { AntelopeResources as Resources } from '@vapaee/w3o-antelope';
+export type {
+    AntelopeResourcesState as ResourcesState,
+    AntelopeBalanceBreakdown,
+    AntelopeResources
+} from '@vapaee/w3o-antelope';

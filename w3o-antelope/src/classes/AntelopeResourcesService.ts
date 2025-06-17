@@ -17,7 +17,14 @@ import {
     W3oService,
     W3oTransactionReceipt
 } from '@vapaee/w3o-core';
-import { AntelopeResources, AntelopeAccountData } from '../types';
+import {
+    AntelopeResourcesState,
+    AntelopeBalanceBreakdown,
+    AntelopeResources,
+    AntelopeAccountData,
+    AntelopeRexbalTable,
+    AntelopeRexfundTable
+} from '../types';
 
 const logger = new W3oContextFactory('AntelopeResourcesService');
 
@@ -59,11 +66,11 @@ export class AntelopeResourcesService extends W3oService {
      * Returns or creates the shared BehaviorSubject of resources for the
      * provided authenticator.
      */
-    public getResources$(auth: W3oAuthenticator, parent: W3oContext): BehaviorSubject<AntelopeResources> {
+    public getResources$(auth: W3oAuthenticator, parent: W3oContext): BehaviorSubject<AntelopeResourcesState> {
         const context = logger.method('getResources$', { auth }, parent);
-        let resources$ = auth.session.storage.get('resources$') as BehaviorSubject<AntelopeResources>;
+        let resources$ = auth.session.storage.get('resources$') as BehaviorSubject<AntelopeResourcesState>;
         if (!resources$) {
-            resources$ = new BehaviorSubject<AntelopeResources>(this.emptyResources());
+            resources$ = new BehaviorSubject<AntelopeResourcesState>(this.emptyState());
             auth.session.storage.set('resources$', resources$);
             this.updateResources(auth, context);
         }
@@ -84,13 +91,13 @@ export class AntelopeResourcesService extends W3oService {
      * Performs the RPC calls required to gather the full resources
      * information for the given authenticator.
      */
-    private fetchResources(auth: W3oAuthenticator, parent: W3oContext): Observable<AntelopeResources> {
+    private fetchResources(auth: W3oAuthenticator, parent: W3oContext): Observable<AntelopeResourcesState> {
         const context = logger.method('fetchResources', {}, parent);
         const session = auth.session;
         const address = session.address?.toString();
         if (!address) {
             context.error('No active session');
-            return of(this.emptyResources());
+            return of(this.emptyState());
         }
 
         const http = auth.network.settings.httpClient!;
@@ -113,11 +120,11 @@ export class AntelopeResourcesService extends W3oService {
     }
 
     /** Parses RPC responses into AntelopeResources */
-    private parseResources(account: AntelopeAccountData | null, rexbal: any, rexfund: any, context: W3oContext): AntelopeResources {
+    private parseResources(account: AntelopeAccountData | null, rexbal: AntelopeRexbalTable, rexfund: AntelopeRexfundTable, context: W3oContext): AntelopeResourcesState {
         logger.method('parseResources', { account, rexbal, rexfund }, context);
 
         if (!account) {
-            return this.emptyResources();
+            return this.emptyState();
         }
 
         const liquid = account.core_liquid_balance || '0.0000 TLOS';
@@ -152,7 +159,7 @@ export class AntelopeResourcesService extends W3oService {
             this.assetToValue(rexDeposits) +
             refundingVal;
 
-        return {
+        const balance: AntelopeBalanceBreakdown = {
             total: this.valueToAsset(totalVal),
             liquid,
             rexStaked,
@@ -164,23 +171,54 @@ export class AntelopeResourcesService extends W3oService {
             delegatedByOthers,
             ramTotal: `${ramTotalBytes} bytes`,
             ramAvailable: `${ramAvailableBytes} bytes`
-        } as AntelopeResources;
+        };
+
+        const resources: AntelopeResources = {
+            cpu: {
+                total: account.cpu_limit.max,
+                used: account.cpu_limit.used,
+                percent: account.cpu_limit.max ? (account.cpu_limit.used / account.cpu_limit.max) * 100 : 0,
+                available: account.cpu_limit.max - account.cpu_limit.used
+            },
+            net: {
+                total: account.net_limit.max,
+                used: account.net_limit.used,
+                percent: account.net_limit.max ? (account.net_limit.used / account.net_limit.max) * 100 : 0,
+                available: account.net_limit.max - account.net_limit.used
+            },
+            ram: {
+                total: ramTotalBytes,
+                used: account.ram_usage,
+                percent: ramTotalBytes ? (account.ram_usage / ramTotalBytes) * 100 : 0,
+                available: ramAvailableBytes
+            }
+        };
+
+        return { balance, resources, account };
     }
 
     /** Creates an empty resources object */
-    private emptyResources(): AntelopeResources {
+    private emptyState(): AntelopeResourcesState {
         return {
-            total: '0.0000 TLOS',
-            liquid: '0.0000 TLOS',
-            rexStaked: '0.0000 TLOS',
-            rexDeposits: '0.0000 TLOS',
-            cpuStaked: '0.0000 TLOS',
-            netStaked: '0.0000 TLOS',
-            refunding: '0.0000 TLOS',
-            delegatedToOthers: '0.0000 TLOS',
-            delegatedByOthers: '0.0000 TLOS',
-            ramTotal: '0 bytes',
-            ramAvailable: '0 bytes'
+            balance: {
+                total: '0.0000 TLOS',
+                liquid: '0.0000 TLOS',
+                rexStaked: '0.0000 TLOS',
+                rexDeposits: '0.0000 TLOS',
+                cpuStaked: '0.0000 TLOS',
+                netStaked: '0.0000 TLOS',
+                refunding: '0.0000 TLOS',
+                delegatedToOthers: '0.0000 TLOS',
+                delegatedByOthers: '0.0000 TLOS',
+                ramTotal: '0 bytes',
+                ramAvailable: '0 bytes'
+            },
+            resources: {
+                cpu: { total: 0, used: 0, percent: 0, available: 0 },
+                net: { total: 0, used: 0, percent: 0, available: 0 },
+                ram: { total: 0, used: 0, percent: 0, available: 0 }
+            },
+            account: null
         };
     }
 

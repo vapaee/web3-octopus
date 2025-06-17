@@ -13,6 +13,7 @@ import {
 import { RouterModule } from '@angular/router';
 import { SessionService } from '@app/services/session-kit.service';
 import { SharedModule } from '@app/shared/shared.module';
+import { Web3OctopusService } from '@app/services/web3-octopus.service';
 
 @Component({
     selector: 'app-side-menu-mobile',
@@ -44,8 +45,13 @@ export class SideMenuMobileComponent {
     // }
 
     constructor(
-        public sessionService: SessionService
+        public sessionService: SessionService,
+        private w3o: Web3OctopusService
     ) {}
+
+    get isAntelope(): boolean {
+        return this.w3o.octopus.networks.current.type === 'antelope';
+    }
 
     get isLogged(): boolean {
         return !!this.sessionService.current;
