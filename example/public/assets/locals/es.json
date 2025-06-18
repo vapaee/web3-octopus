@@ -2,23 +2,9 @@
     "PAGES": {
         "HOME": {
             "NAME": "Inicio",
-            "TITLE": "DEX",
-            "DESCRIPTION": "Un mercado peer-to-peer donde las transacciones se realizan directamente entre operadores de criptomonedas."
-        },
-        "TRADE": {
-            "NAME": "Tradeo",
-            "TITLE": "Página de Tradeo",
-            "DESCRIPTION": "¡Descripción!"
-        },
-        "EXPLORE": {
-            "NAME": "Explorar",
-            "TITLE": "Página de Exploración",
-            "DESCRIPTION": "¡Descubre nuevo contenido aquí!"
-        },
-        "POOL": {
-            "NAME": "Piscina",
-            "TITLE": "Página de Piscina de Liquidez",
-            "DESCRIPTION": "¡Descripción!"
+            "TITLE": "Web3 Octopus",
+            "DESCRIPTION": "A typescript framework to write once and comunicate with any blockchain.",
+            "SOURCE": "See source code on github"
         },
         "WALLET": {
             "NAME": "Billetera",

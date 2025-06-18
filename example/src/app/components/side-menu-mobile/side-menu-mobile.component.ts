@@ -2,12 +2,10 @@ import { Component } from '@angular/core';
 import { SideContainerComponent } from '@app/components/base-components/side-container/side-container.component';
 import {
     LucideAngularModule,
-    ChartCandlestick,
+    Home,
     Settings,
-    Coins,
     Wallet,
     LogOut,
-    ListTree,
     Users
 } from 'lucide-angular';
 import { RouterModule } from '@angular/router';
@@ -27,12 +25,10 @@ import { Web3OctopusService } from '@app/services/web3-octopus.service';
     styleUrl: './side-menu-mobile.component.scss'
 })
 export class SideMenuMobileComponent {
-    readonly ChartCandlestickIcon = ChartCandlestick;
+    readonly HomeIcon = Home;
     readonly SettingsIcon = Settings;
-    readonly CoinsIcon = Coins;
     readonly WalletIcon = Wallet;
     readonly LogoutIcon = LogOut;
-    readonly ListTreeIcon = ListTree;
     readonly UsersIcon = Users
 
     // public isLogged: boolean = false;
