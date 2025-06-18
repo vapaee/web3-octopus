@@ -11,4 +11,10 @@
     &__subtitle {
         @include text-subtitle;
     }
+    &__link {
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
 }
