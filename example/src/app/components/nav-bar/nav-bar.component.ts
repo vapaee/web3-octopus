@@ -8,6 +8,7 @@ import { LoginComponent } from '../login/login.component';
 import { Subject, takeUntil } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LucideAngularModule, Menu, ScanQrCode, Sun, Moon, Globe} from 'lucide-angular'
+import { SessionService } from '@app/services/session-kit.service';
 import { BREAKPOINT } from '@app/types';
 import { SideContainerService } from '@app/components/base-components/side-container/side-container.service';
 import { DropDownComponent } from '../base-components/drop-down/drop-down.component';
@@ -46,6 +47,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
         private breakpointObserver: BreakpointObserver,
         private sideContainerService: SideContainerService,
         private translate: TranslateService,
+        private sessionService: SessionService,
     ) {}
 
     ngOnInit() {
@@ -76,6 +78,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
     setLang( l: string ) {
         this.translate.use(l)
+    }
+
+    get isLogged(): boolean {
+        return !!this.sessionService.current;
     }
 
     ngOnDestroy() {

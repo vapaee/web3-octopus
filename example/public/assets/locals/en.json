@@ -2,23 +2,9 @@
     "PAGES": {
         "HOME": {
             "NAME": "Home",
-            "TITLE": "DEX",
-            "DESCRIPTION": "A peer-to-peer marketplace where transactions occur directly between cryptocurrency traders."
-        },
-        "TRADE": {
-            "NAME": "Trade",
-            "TITLE": "Trading Page",
-            "DESCRIPTION": "Description!"
-        },
-        "EXPLORE": {
-            "NAME": "Explore",
-            "TITLE": "Exploration Page",
-            "DESCRIPTION": "Discover new content here!"
-        },
-        "POOL": {
-            "NAME": "Pool",
-            "TITLE": "Liquidity Pool Page",
-            "DESCRIPTION": "Description!"
+            "TITLE": "Web3 Octopus",
+            "DESCRIPTION": "A typescript framework to write once and comunicate with any blockchain.",
+            "SOURCE": "See source code on github"
         },
         "WALLET": {
             "NAME": "Wallet",

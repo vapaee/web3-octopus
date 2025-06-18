@@ -20,9 +20,9 @@
                 </svg>
             </a>
 
-            <a class="c-navbar__button" routerLink="/trade" routerLinkActive="active-link">{{ 'PAGES.TRADE.NAME' | translate }}</a>
-            <a class="c-navbar__button" routerLink="/explore" routerLinkActive="active-link">{{ 'PAGES.EXPLORE.NAME' | translate }}</a>
-            <a class="c-navbar__button" routerLink="/pool" routerLinkActive="active-link">{{ 'PAGES.POOL.NAME' | translate }}</a>
+            <a class="c-navbar__button" routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">{{ 'PAGES.HOME.NAME' | translate }}</a>
+            <a class="c-navbar__button" routerLink="/accounts" routerLinkActive="active-link">{{ 'PAGES.ACCOUNTS.NAME' | translate }}</a>
+            <a class="c-navbar__button" *ngIf="isLogged" routerLink="/wallet" routerLinkActive="active-link">{{ 'PAGES.WALLET.NAME' | translate }}</a>
         </div>
 
         <div class="c-navbar__row">

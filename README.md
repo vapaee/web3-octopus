@@ -1,116 +1,121 @@
 # Web3 Octopus
 
+[Demo](https://vapaee.github.io/web3-octopus)
+
 **This framework is still in development.**
 
-Web3 Octopus es un framework en TypeScript que simplifica la gestión de múltiples blockchains a la vez. Su arquitectura modular permite incorporar solo los componentes que cada proyecto requiera.
+Web3 Octopus is a TypeScript framework that simplifies the management of multiple blockchains at the same time. Its modular architecture lets you include only the components required by each project.
 
-## Arquitectura
-El marco se apoya en tres conceptos básicos:
-- **Autenticación**: gestiona la identificación del usuario y la firma de transacciones.
-- **Network**: representa los datos y contratos de una blockchain concreta.
-- **Servicios**: módulos que simplifican la interacción con uno o varios contratos.
+## Architecture
+The framework relies on three basic concepts:
+- **Authentication** – handles user identification and transaction signing.
+- **Network** – represents the data and contracts of a specific blockchain.
+- **Services** – modules that simplify the interaction with one or more contracts.
 
-De esta forma se pueden crear implementaciones específicas para cada familia de redes.
+This approach allows you to create implementations for any family of networks.
 
-## Paquetes incluidos
-- **`@vapaee/w3o-core`**: núcleo con todas las clases base.
-- **`@vapaee/w3o-antelope`**: implementación para cadenas basadas en Antelope (EOSIO).
+## Included packages
+- **`@vapaee/w3o-core`** – base classes for the framework.
+- **`@vapaee/w3o-antelope`** – support for Antelope (EOSIO) chains.
+- **`@vapaee/w3o-ethereum`** – support for Ethereum compatible chains.
 
-En el directorio `examples/` hay un ejemplo sencillo construido con Vue que utiliza estos paquetes.
+A simple Angular example using these packages can be found in the `example/` directory.
 
-## Ejemplo de uso
+## Usage example
 ```typescript
 import {
     Web3Octopus,
-    W3oIServices,
-    W3oNetworkSupportSettings
+    W3oService,
+    W3oNetworkSupportSettings,
+    W3oContextFactory
 } from '@vapaee/w3o-core';
-git branch -D 
-
 import {
-    AntelopeNetwork,
     AntelopeTokensService,
-    AntelopeBalancesService,
-    AntelopeAnchorAuth,
+    AntelopeResourcesService,
+    AntelopeChainSupport,
     TelosZeroNetwork,
     TelosZeroTestnetNetwork
 } from '@vapaee/w3o-antelope';
+import {
+    EthereumChainSupport,
+    EthereumTokensService,
+    TelosEVMNetwork
+} from '@vapaee/w3o-ethereum';
 
-interface IMyServices extends W3oIServices {
-    telos: {
-        tokens: AntelopeTokensService;
-        balances: AntelopeBalancesService;
-    };
-}
+const logger = new W3oContextFactory('Web3OctopusService');
+const octopus = new Web3Octopus();
 
-const octopus = new Web3Octopus<IMyServices>();
-
-const telosSupport: W3oNetworkSupportSettings<IMyServices> = {
+const telosSupportSettings: W3oNetworkSupportSettings = {
     type: 'antelope',
-    auth: [new AntelopeAnchorAuth(octopus)],
+    chain: new AntelopeChainSupport(logger),
     networks: [
-        new TelosZeroNetwork({}, octopus),
-        new TelosZeroTestnetNetwork({}, octopus)
+        new TelosZeroNetwork({}, logger),
+        new TelosZeroTestnetNetwork({}, logger)
     ]
 };
+octopus.addNetworkSupport(telosSupportSettings, logger);
 
-octopus.addNetworkSupport(telosSupport);
+const telosEvmSupportSettings: W3oNetworkSupportSettings = {
+    type: 'ethereum',
+    chain: new EthereumChainSupport(logger),
+    networks: [ new TelosEVMNetwork({}, logger) ]
+};
+octopus.addNetworkSupport(telosEvmSupportSettings, logger);
 
-const services = [
-    new AntelopeTokensService('telos.tokens', octopus),
-    new AntelopeBalancesService('telos.balances', octopus)
+const services: W3oService[] = [
+    new AntelopeTokensService('antelope.tokens', logger),
+    new AntelopeResourcesService('antelope.resources', logger),
+    new EthereumTokensService('ethereum.tokens', logger),
 ];
-
 octopus.registerServices(services);
-octopus.init();
+octopus.init({ appName: 'VortDEX', multiSession: false, autoLogin: true }, logger);
 
-export function getOctopus(): Web3Octopus<IMyServices> {
+export function getOctopus(): Web3Octopus {
     return octopus;
 }
 ```
 
-Luego desde cualquier otra parte del proyecto podemos hacer lo siguiente
+From anywhere else in the project you can do the following:
 
 ```typescript
 import { getOctopus } from '...';
 
-getOctopus().services.telos.balances$.subscribe(console.log);
+getOctopus().services['ethereum.tokens'];
 ```
 
-
-## Instalación
+## Installation
 ```bash
 npm install
 npm run build
 ```
-El script `build` compila los paquetes locales y deja todo listo para usarlos desde la carpeta `lib` de cada uno.
+The `build` script compiles the local packages and leaves everything ready under each `lib` folder.
 
-## Dependencias
-- **rxjs**: Todos los datos internos se manejarán como observables, facilitando la gestión de estados reactivos y asincrónicos.
-- **typescript**: Proporciona un entorno robusto y agnóstico, permitiendo integrar Web3 Octopus con otras herramientas de desarrollo.
+## Dependencies
+- **rxjs** – All internal data is handled as observables making reactive state management easier.
+- **typescript** – Provides a robust and agnostic environment allowing Web3 Octopus to integrate with other tools.
 
-## Clases principales
-| #  | Entidad                   | Tipo             | Rol                                                               |
-|----|---------------------------|------------------|------------------------------------------------------------------|
-| 1  | W3oNetworkType            | Tipo             | Define los tipos de redes blockchain soportadas.                 |
-| 2  | W3oNetworkName            | Tipo             | Identificador único de una red blockchain.                       |
-| 3  | W3oAddress                | Tipo             | Representa una dirección o cuenta de usuario.                    |
-| 4  | W3oError                  | Clase            | Manejo de errores con código y payload opcional.                 |
-| 5  | W3oAuthenticator          | Clase abstracta  | Base para la implementación de autenticadores.                   |
-| 6  | W3oTransaction            | Interfaz         | Modelo común para transacciones en distintas redes.              |
-| 7  | W3oTransactionResponse    | Clase            | Resultado de firmar una transacción.                             |
-| 8  | W3oTransactionReceipt     | Interfaz         | Recibo que confirma la ejecución de la transacción.              |
-| 9  | W3oAccount                | Clase            | Información y estado de una cuenta de usuario.                   |
-| 10 | W3oNetwork                | Clase abstracta  | Representa una red blockchain concreta.                          |
-| 11 | W3oNetworkLinks           | Interfaz         | Enlaces útiles como explorer o puente.                           |
-| 12 | W3oContractManager        | Clase            | Gestiona y cachea contratos desplegados en una red.              |
-| 13 | W3oContractABI            | Interfaz         | Describe la ABI de un contrato.                                  |
-| 14 | W3oToken                  | Clase            | Representación de un token estándar.                             |
-| 15 | W3oContract               | Clase            | Representación de un contrato desplegado.                        |
-| 16 | W3oNetworkManager         | Clase            | Administración de las redes registradas.                         |
-| 17 | W3oNetworkSupportSettings | Interfaz         | Configuración de redes y autenticadores.                         |
-| 18 | W3oNetworkSettings        | Interfaz         | Datos de configuración específicos de una red.                   |
-| 19 | W3oService                | Clase            | Lógica de alto nivel sobre contratos y tokens.                   |
-| 20 | W3oSessionManager         | Clase            | Manejo de múltiples sesiones de usuario.                         |
-| 21 | W3oSession                | Clase            | Datos de una sesión y su red asociada.                           |
-| 22 | Web3Octopus               | Clase            | Punto de entrada principal del framework.                        |
+## Main classes
+| #  | Entity                   | Type            | Role                                                 |
+|----|-------------------------|-----------------|------------------------------------------------------|
+| 1  | W3oNetworkType          | Type            | Defines the supported blockchain network types.      |
+| 2  | W3oNetworkName          | Type            | Unique identifier for a blockchain network.          |
+| 3  | W3oAddress              | Type            | Represents a user address or account.                |
+| 4  | W3oError                | Class           | Error handling with code and payload.                |
+| 5  | W3oAuthenticator        | Abstract class  | Base for authenticator implementations.              |
+| 6  | W3oTransaction          | Interface       | Common transaction model.                            |
+| 7  | W3oTransactionResponse  | Class           | Result of signing a transaction.                     |
+| 8  | W3oTransactionReceipt   | Interface       | Receipt confirming transaction execution.            |
+| 9  | W3oAccount              | Class           | User account information and state.                  |
+| 10 | W3oNetwork              | Abstract class  | Represents a specific blockchain.                    |
+| 11 | W3oNetworkLinks         | Interface       | Useful links like explorer or bridge.                |
+| 12 | W3oContractManager      | Class           | Manages and caches deployed contracts.               |
+| 13 | W3oContractABI          | Interface       | Describes a contract's ABI.                          |
+| 14 | W3oToken                | Class           | Token representation.                                |
+| 15 | W3oContract             | Class           | Deployed contract representation.                    |
+| 16 | W3oNetworkManager       | Class           | Registered networks management.                      |
+| 17 | W3oNetworkSupportSettings | Interface     | Configuration for networks and authenticators.       |
+| 18 | W3oNetworkSettings      | Interface       | Specific network configuration data.                 |
+| 19 | W3oService              | Class           | High level logic over contracts and tokens.          |
+| 20 | W3oSessionManager       | Class           | Handles multiple user sessions.                      |
+| 21 | W3oSession              | Class           | Session data and its network.                        |
+| 22 | Web3Octopus             | Class           | Main entry point of the framework.                   |
