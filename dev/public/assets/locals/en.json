@@ -75,6 +75,7 @@
                 }
             },
             "SUCCESS": "✅ Transaction Successful",
+            "SUCCSES": "✅ Transaction Successful",
             "FAILURE": "❌ Transaction Failed"
         }
     },
