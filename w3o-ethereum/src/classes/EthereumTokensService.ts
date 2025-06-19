@@ -11,8 +11,10 @@ import {
     W3oAuthenticator,
     W3oToken,
     W3oTransferSummary,
+    W3oTransferStatus,
 } from "@vapaee/w3o-core";
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from "rxjs";
+import { map } from "rxjs/operators";
 import { ethers } from "ethers";
 import { EthereumNetwork } from "./EthereumNetwork";
 
@@ -114,6 +116,94 @@ export class EthereumTokensService extends W3oService {
         }
     }
 
+    public getTransferStatus$(auth: W3oAuthenticator, parent: W3oContext): BehaviorSubject<Map<string, W3oTransferStatus>> {
+        logger.method('getTransferStatus$', { auth }, parent);
+        let transferStatus$ = auth.session.storage.get('transferStatus$') as BehaviorSubject<Map<string, W3oTransferStatus>>;
+        if (!transferStatus$) {
+            transferStatus$ = new BehaviorSubject<Map<string, W3oTransferStatus>>(new Map<string, W3oTransferStatus>());
+            auth.session.storage.set('transferStatus$', transferStatus$);
+        }
+        return transferStatus$;
+    }
+
+    public getTransferStatusForAuth(auth: W3oAuthenticator, tokenSymbol: string, parent: W3oContext): Observable<W3oTransferStatus> {
+        return this.getTransferStatus$(auth, parent).asObservable().pipe(
+            map(statusMap => statusMap.get(tokenSymbol) || { state: 'none' } as W3oTransferStatus)
+        );
+    }
+
+    public getTransferStatus(tokenSymbol: string, parent: W3oContext): Observable<W3oTransferStatus> {
+        const context = logger.method('getTransferStatus', { tokenSymbol }, parent);
+        const session = this.octopus.sessions.current;
+        if (!session) {
+            context.error('No active session');
+            return of({ state: 'none' } as W3oTransferStatus);
+        }
+        const auth = session.authenticator;
+        return this.getTransferStatus$(auth, parent).asObservable().pipe(
+            map(statusMap => statusMap.get(tokenSymbol) || { state: 'none' } as W3oTransferStatus)
+        );
+    }
+
+    private setTransferStatus(
+        auth: W3oAuthenticator,
+        tokenSymbol: string,
+        state: 'none' | 'success' | 'failure',
+        message?: string,
+        summary?: W3oTransferSummary,
+        parent?: W3oContext
+    ): void {
+        const context = logger.method('setTransferStatus', { auth, tokenSymbol, state }, parent);
+        const transferStatus$ = this.getTransferStatus$(auth, context);
+        const statusMap = transferStatus$.getValue();
+        statusMap.set(tokenSymbol, { state, message, summary });
+        transferStatus$.next(statusMap);
+    }
+
+    public resetTransferCycle(auth: W3oAuthenticator, tokenSymbol: string, parent: W3oContext): void {
+        this.setTransferStatus(auth, tokenSymbol, 'none', undefined, undefined, parent);
+    }
+
+    public resetAllTransfers(auth: W3oAuthenticator, parent: W3oContext): void {
+        const context = logger.method('resetAllTransfers', {}, parent);
+        auth.network.tokens$.subscribe(tokenList => {
+            tokenList.forEach(token => {
+                this.resetTransferCycle(auth, token.symbol, context);
+            });
+        });
+    }
+
+    public waitUntilBalanceChanges(
+        auth: W3oAuthenticator,
+        token: W3oToken,
+        delay: number,
+        maxSeconds: number,
+        parent: W3oContext
+    ): Observable<W3oBalance> {
+        const context = logger.method('waitUntilBalanceChanges', { auth, token, delay, maxSeconds }, parent);
+        return new Observable<W3oBalance>(observer => {
+            const startTime = Date.now();
+            const check = () => {
+                this.fetchSingleBalance(auth, token, context).subscribe(balance => {
+                    const current = this.getBalances$(auth, context).getValue().find(b => b.token.symbol === token.symbol);
+                    if (balance.amount.value !== current?.amount.value) {
+                        this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
+                        observer.next(balance);
+                        observer.complete();
+                    } else if ((Date.now() - startTime) / 1000 >= maxSeconds) {
+                        observer.error(new Error('Timeout: Balance did not change within the specified time.'));
+                    } else {
+                        setTimeout(check, 1000);
+                    }
+                }, err => {
+                    context.error('Error checking balance change', err);
+                    observer.error(err);
+                });
+            };
+            setTimeout(check, delay * 1000);
+        });
+    }
+
     public updateAllBalances(auth: W3oAuthenticator, parent: W3oContext): void {
         const context = logger.method('updateAllBalances', { auth }, parent);
         const balances$ = this.getBalances$(auth, context);
@@ -146,10 +236,22 @@ export class EthereumTokensService extends W3oService {
                 const amount = ethers.utils.parseUnits(numericPart, token.precision);
 
                 contract.transfer(to, amount).then((tx: any) => {
-                    result$.next({ from: auth.session.address, to, amount: quantity, transaction: tx.hash });
+                    const summary: W3oTransferSummary = {
+                        from: auth.session.address!,
+                        to,
+                        amount: quantity,
+                        transaction: tx.hash
+                    };
+                    this.setTransferStatus(auth, token.symbol, 'success', `Transferred ${quantity} to ${to}. TX: ${tx.hash}`, summary, context);
+                    this.fetchSingleBalance(auth, token, context).subscribe(balance => {
+                        this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
+                    });
+                    result$.next(summary);
                     result$.complete();
                 }).catch((error: any) => {
+                    const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
                     context.error('transfer error', error);
+                    this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
                     result$.error(error);
                 });
             } else {
@@ -157,10 +259,17 @@ export class EthereumTokensService extends W3oService {
                 const data = iface.encodeFunctionData('transfer', [to, quantity]);
                 auth.session.signTransaction({ to: token.address, data }, context).subscribe({
                     next: (tx) => {
-                        result$.next({ from: auth.session.address, to, amount: quantity, transaction: tx.hash });
+                        const summary: W3oTransferSummary = { from: auth.session.address!, to, amount: quantity, transaction: tx.hash };
+                        this.setTransferStatus(auth, token.symbol, 'success', `Transferred ${quantity} to ${to}. TX: ${tx.hash}`, summary, context);
+                        this.fetchSingleBalance(auth, token, context).subscribe(balance => {
+                            this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
+                        });
+                        result$.next(summary);
                     },
                     error: (error) => {
+                        const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
                         context.error('transfer error', error);
+                        this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
                         result$.error(error);
                     },
                     complete: () => {
@@ -169,8 +278,10 @@ export class EthereumTokensService extends W3oService {
                 });
             }
         } catch (error) {
+            const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
             context.error('transferToken failed', error as any);
-            result$.error(error);
+            this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
+            result$.error(error as any);
         }
         return result$.asObservable();
     }
