@@ -1,4 +1,4 @@
-name: Build and Deploy Example
+name: Build and Deploy Dev
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
       - name: Upload static files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: example/dist/browser
+          path: dev/dist/browser
 
   deploy:
     needs: build
