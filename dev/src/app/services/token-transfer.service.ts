@@ -41,7 +41,7 @@ export class TokenTransferService {
             return of({ state: 'none' } as W3oTransferStatus);
         }
         const svc = this.getServiceFor(session.network.type);
-        if (svc instanceof AntelopeTokensService) {
+        if (svc instanceof AntelopeTokensService || svc instanceof EthereumTokensService) {
             return svc.getTransferStatus(tokenSymbol, context);
         }
         return of({ state: 'none' } as W3oTransferStatus);
@@ -59,7 +59,7 @@ export class TokenTransferService {
             return;
         }
         const svc = this.getServiceFor(auth.network.type);
-        if (svc instanceof AntelopeTokensService) {
+        if (svc instanceof AntelopeTokensService || svc instanceof EthereumTokensService) {
             svc.resetTransferCycle(auth, tokenSymbol, context);
         }
     }
@@ -75,13 +75,13 @@ export class TokenTransferService {
             return;
         }
         const svc = this.getServiceFor(auth.network.type);
-        if (svc instanceof AntelopeTokensService) {
+        if (svc instanceof AntelopeTokensService || svc instanceof EthereumTokensService) {
             svc.resetAllTransfers(auth, context);
         }
     }
 
     /**
-     * Transfers tokens using the AntelopeTokensService
+     * Transfers tokens using the underlying network service
      * @param to Recipient account
      * @param quantity Quantity string (e.g. '1.0000 TLOS')
      * @param token W3oToken object
