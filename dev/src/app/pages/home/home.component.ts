@@ -10,7 +10,7 @@ import { LucideAngularModule, Github, Copy } from 'lucide-angular';
     template: `
         <div class="p-home">
             <div class="p-home__header">
-                <img class="p-home__logo" src="/assets/octopus.png" alt="octopus" />
+                <img class="p-home__logo" src="./assets/octopus.png" alt="octopus" />
                 <div class="p-home__title">{{ 'PAGES.HOME.TITLE' | translate }}</div>
             </div>
             <p class="p-home__subtitle">{{ 'PAGES.HOME.DESCRIPTION' | translate }}</p>
