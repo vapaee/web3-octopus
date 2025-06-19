@@ -224,31 +224,3 @@ export interface AntelopeResourcesState {
     resources: AntelopeResources;
     account: AntelopeAccountData | null;
 }
-
-/**
- * Common interface that any token service implementation must follow.
- */
-export interface W3oTokensService {
-    getBalances$(auth: W3oAuthenticator, parent: W3oContext): BehaviorSubject<W3oBalance[]>;
-    updateAllBalances(auth: W3oAuthenticator, parent: W3oContext): void;
-    waitUntilBalanceChanges(
-        auth: W3oAuthenticator,
-        token: W3oToken,
-        delay: number,
-        maxSeconds: number,
-        parent: W3oContext
-    ): Observable<W3oBalance>;
-    getTransferStatus$(auth: W3oAuthenticator, parent: W3oContext): BehaviorSubject<Map<string, W3oTransferStatus>>;
-    getTransferStatusForAuth(auth: W3oAuthenticator, tokenSymbol: string, parent: W3oContext): Observable<W3oTransferStatus>;
-    getTransferStatus(tokenSymbol: string, parent: W3oContext): Observable<W3oTransferStatus>;
-    resetTransferCycle(auth: W3oAuthenticator, tokenSymbol: string, parent: W3oContext): void;
-    resetAllTransfers(auth: W3oAuthenticator, parent: W3oContext): void;
-    transferToken(
-        auth: W3oAuthenticator,
-        to: string,
-        quantity: string,
-        token: W3oToken,
-        memo: string,
-        parent: W3oContext
-    ): Observable<W3oTransferSummary>;
-}

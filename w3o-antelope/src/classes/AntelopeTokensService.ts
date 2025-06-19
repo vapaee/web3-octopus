@@ -12,10 +12,11 @@ import {
     W3oTransferStatus,
     W3oTransferSummary,
     W3oError,
+    W3oTokensService,
 } from "@vapaee/w3o-core";
 import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
-import { AntelopeTransferSummary, W3oTokensService } from "../types";
+import { AntelopeTransferSummary } from "../types";
 
 const logger = new W3oContextFactory('AntelopeTokensService');
 

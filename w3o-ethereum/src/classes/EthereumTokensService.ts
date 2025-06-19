@@ -12,12 +12,12 @@ import {
     W3oToken,
     W3oTransferSummary,
     W3oTransferStatus,
+    W3oTokensService,
 } from "@vapaee/w3o-core";
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ethers } from "ethers";
 import { EthereumNetwork } from "./EthereumNetwork";
-import { W3oTokensService } from "@vapaee/w3o-antelope";
 
 const logger = new W3oContextFactory('EthereumTokensService');
 const erc20Abi = [
