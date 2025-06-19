@@ -227,55 +227,103 @@ export class EthereumTokensService extends W3oService {
         void memo;
         const result$ = new Subject<W3oTransferSummary>();
         try {
-            const network = auth.network as unknown as EthereumNetwork;
-            if (typeof window !== 'undefined' && (window as any).ethereum) {
-                const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
-                const signer = web3Provider.getSigner();
-                const contract = new ethers.Contract(token.address, erc20Abi, signer);
-                const numericPart = quantity.split(' ')[0];
-                const amount = ethers.utils.parseUnits(numericPart, token.precision);
+            const numericPart = quantity.split(' ')[0];
+            const amount = ethers.utils.parseUnits(numericPart, token.precision);
 
-                contract.transfer(to, amount).then((tx: any) => {
-                    const summary: W3oTransferSummary = {
-                        from: auth.session.address!,
-                        to,
-                        amount: quantity,
-                        transaction: tx.hash
-                    };
-                    this.setTransferStatus(auth, token.symbol, 'success', `Transferred ${quantity} to ${to}. TX: ${tx.hash}`, summary, context);
-                    this.fetchSingleBalance(auth, token, context).subscribe(balance => {
-                        this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
-                    });
-                    result$.next(summary);
-                    result$.complete();
-                }).catch((error: any) => {
-                    const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
-                    context.error('transfer error', error);
-                    this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
-                    result$.error(error);
-                });
-            } else {
-                const iface = new ethers.utils.Interface(erc20Abi);
-                const data = iface.encodeFunctionData('transfer', [to, quantity]);
-                auth.session.signTransaction({ to: token.address, data }, context).subscribe({
-                    next: (tx) => {
-                        const summary: W3oTransferSummary = { from: auth.session.address!, to, amount: quantity, transaction: tx.hash };
+            // Native currency transfer
+            if (token.address === '___NATIVE_CURRENCY___') {
+                if (typeof window !== 'undefined' && (window as any).ethereum) {
+                    const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
+                    const signer = web3Provider.getSigner();
+                    signer.sendTransaction({ to, value: amount }).then((tx: any) => {
+                        const summary: W3oTransferSummary = {
+                            from: auth.session.address!,
+                            to,
+                            amount: quantity,
+                            transaction: tx.hash
+                        };
                         this.setTransferStatus(auth, token.symbol, 'success', `Transferred ${quantity} to ${to}. TX: ${tx.hash}`, summary, context);
                         this.fetchSingleBalance(auth, token, context).subscribe(balance => {
                             this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
                         });
                         result$.next(summary);
-                    },
-                    error: (error) => {
+                        result$.complete();
+                    }).catch((error: any) => {
                         const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
                         context.error('transfer error', error);
                         this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
                         result$.error(error);
-                    },
-                    complete: () => {
+                    });
+                } else {
+                    auth.session.signTransaction({ to, value: amount }, context).subscribe({
+                        next: (tx) => {
+                            const summary: W3oTransferSummary = { from: auth.session.address!, to, amount: quantity, transaction: tx.hash };
+                            this.setTransferStatus(auth, token.symbol, 'success', `Transferred ${quantity} to ${to}. TX: ${tx.hash}`, summary, context);
+                            this.fetchSingleBalance(auth, token, context).subscribe(balance => {
+                                this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
+                            });
+                            result$.next(summary);
+                        },
+                        error: (error) => {
+                            const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
+                            context.error('transfer error', error);
+                            this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
+                            result$.error(error);
+                        },
+                        complete: () => {
+                            result$.complete();
+                        }
+                    });
+                }
+            } else {
+                // ERC20 token transfer
+                if (typeof window !== 'undefined' && (window as any).ethereum) {
+                    const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
+                    const signer = web3Provider.getSigner();
+                    const contract = new ethers.Contract(token.address, erc20Abi, signer);
+
+                    contract.transfer(to, amount).then((tx: any) => {
+                        const summary: W3oTransferSummary = {
+                            from: auth.session.address!,
+                            to,
+                            amount: quantity,
+                            transaction: tx.hash
+                        };
+                        this.setTransferStatus(auth, token.symbol, 'success', `Transferred ${quantity} to ${to}. TX: ${tx.hash}`, summary, context);
+                        this.fetchSingleBalance(auth, token, context).subscribe(balance => {
+                            this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
+                        });
+                        result$.next(summary);
                         result$.complete();
-                    }
-                });
+                    }).catch((error: any) => {
+                        const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
+                        context.error('transfer error', error);
+                        this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
+                        result$.error(error);
+                    });
+                } else {
+                    const iface = new ethers.utils.Interface(erc20Abi);
+                    const data = iface.encodeFunctionData('transfer', [to, amount]);
+                    auth.session.signTransaction({ to: token.address, data }, context).subscribe({
+                        next: (tx) => {
+                            const summary: W3oTransferSummary = { from: auth.session.address!, to, amount: quantity, transaction: tx.hash };
+                            this.setTransferStatus(auth, token.symbol, 'success', `Transferred ${quantity} to ${to}. TX: ${tx.hash}`, summary, context);
+                            this.fetchSingleBalance(auth, token, context).subscribe(balance => {
+                                this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
+                            });
+                            result$.next(summary);
+                        },
+                        error: (error) => {
+                            const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
+                            context.error('transfer error', error);
+                            this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
+                            result$.error(error);
+                        },
+                        complete: () => {
+                            result$.complete();
+                        }
+                    });
+                }
             }
         } catch (error) {
             const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
