@@ -9,7 +9,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "node ../copy_version.js && tsc"
   },
   "dependencies": {
     "@vapaee/w3o-core": "file:../w3o-core/lib",
