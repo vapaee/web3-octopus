@@ -15,14 +15,14 @@ import {
 } from "@vapaee/w3o-core";
 import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
-import { AntelopeTransferSummary } from "../types";
+import { AntelopeTransferSummary, W3oTokensService } from "../types";
 
 const logger = new W3oContextFactory('AntelopeTokensService');
 
 /**
  * Service responsible for managing token balances and transfers on Antelope networks.
  */
-export class AntelopeTokensService extends W3oService {
+export class AntelopeTokensService extends W3oService implements W3oTokensService {
 
     constructor(path: string, parent: W3oContext) {
         const context = logger.method('constructor', { path }, parent);
