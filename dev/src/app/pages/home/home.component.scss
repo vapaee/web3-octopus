@@ -5,11 +5,51 @@
 }
 
 .p-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__logo {
+        width: 150px;
+        height: auto;
+    }
     &__title {
         @include text-title;
     }
     &__subtitle {
         @include text-subtitle;
+    }
+    &__packages {
+        margin: 1.5rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    &__package {
+        @include hyperlink;
+    }
+    &__install {
+        @include container-border;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: monospace;
+    }
+    &__code {
+        white-space: nowrap;
+    }
+    &__copy {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--c-foreground-0);
     }
     &__link {
         margin-top: 3rem;
