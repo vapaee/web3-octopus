@@ -90,4 +90,8 @@
             color: var(--c-alert-0);
         }
     }
+
+    &__tx-link {
+        @include hyperlink;
+    }
 }
