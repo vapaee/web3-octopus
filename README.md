@@ -1,6 +1,7 @@
+![Image](dev/public/assets/octopus.png)
 # Web3 Octopus
 
-[Demo](https://vapaee.github.io/web3-octopus)
+[Check Demo Webapp](https://vapaee.github.io/web3-octopus)
 
 **This framework is still in development.**
 
