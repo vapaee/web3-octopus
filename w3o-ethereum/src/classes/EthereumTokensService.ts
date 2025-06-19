@@ -17,6 +17,7 @@ import { BehaviorSubject, combineLatest, Observable, of, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ethers } from "ethers";
 import { EthereumNetwork } from "./EthereumNetwork";
+import { W3oTokensService } from "@vapaee/w3o-antelope";
 
 const logger = new W3oContextFactory('EthereumTokensService');
 const erc20Abi = [
@@ -24,7 +25,7 @@ const erc20Abi = [
     "function transfer(address to, uint amount) returns (bool)"
 ];
 
-export class EthereumTokensService extends W3oService {
+export class EthereumTokensService extends W3oService implements W3oTokensService {
     constructor(path: string, parent: W3oContext) {
         const context = logger.method('constructor', { path }, parent);
         super(path, context);

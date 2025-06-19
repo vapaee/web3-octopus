@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@vapaee/w3o-core": "file:../w3o-core/lib",
+    "@vapaee/w3o-antelope": "file:../w3o-antelope/lib",
     "ethers": "^5.5.1",
     "rxjs": ">=6.0.0"
   },
