@@ -1,6 +1,6 @@
 {
   "name": "@vapaee/w3o-antelope",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Web3 Octopus Antelope Support",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -9,7 +9,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "node ../copy_version.js && tsc"
   },
   "dependencies": {
     "@vapaee/w3o-core": "file:../w3o-core/lib",

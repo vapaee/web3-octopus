@@ -130,9 +130,9 @@ dist
 .pnp.*
 
 Notas.txt
-example/.angular
-example/node_modules
-example/dist
+dev/.angular
+dev/node_modules
+dev/dist
 w3o-*/tsconfig.tsbuildinfo
 w3o-*/lib
 w3o-*/node_modules

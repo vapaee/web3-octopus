@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Libre",
+    "symbol": "LIBRE",
+    "account": "eosio.token",
+    "precision": 4,
+    "logo": "./assets/logos/eos.png",
+    "chain": "libre-testnet"
+  }
+]

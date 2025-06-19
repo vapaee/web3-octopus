@@ -1,0 +1,10 @@
+[
+  {
+    "name": "WAX",
+    "symbol": "WAX",
+    "account": "eosio.token",
+    "precision": 8,
+    "logo": "./assets/logos/eos.png",
+    "chain": "wax-testnet"
+  }
+]

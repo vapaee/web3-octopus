@@ -1,6 +1,7 @@
+![Image](dev/public/assets/octopus.png)
 # Web3 Octopus
 
-[Demo](https://vapaee.github.io/web3-octopus)
+[Check Demo Webapp](https://vapaee.github.io/web3-octopus)
 
 **This framework is still in development.**
 
@@ -19,7 +20,7 @@ This approach allows you to create implementations for any family of networks.
 - **`@vapaee/w3o-antelope`** – support for Antelope (EOSIO) chains.
 - **`@vapaee/w3o-ethereum`** – support for Ethereum compatible chains.
 
-A simple Angular example using these packages can be found in the `example/` directory.
+A simple Angular example using these packages can be found in the `dev/` directory.
 
 ## Usage example
 ```typescript

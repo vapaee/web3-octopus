@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Proton",
+    "symbol": "XPR",
+    "account": "eosio.token",
+    "precision": 4,
+    "logo": "./assets/logos/eos.png",
+    "chain": "proton"
+  }
+]

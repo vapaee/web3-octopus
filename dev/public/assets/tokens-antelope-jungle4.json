@@ -1,0 +1,10 @@
+[
+  {
+    "name": "EOS",
+    "symbol": "EOS",
+    "account": "eosio.token",
+    "precision": 4,
+    "logo": "./assets/logos/eos.png",
+    "chain": "jungle4"
+  }
+]

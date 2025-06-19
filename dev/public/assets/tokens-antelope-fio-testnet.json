@@ -1,0 +1,10 @@
+[
+  {
+    "name": "FIO",
+    "symbol": "FIO",
+    "account": "fio.token",
+    "precision": 9,
+    "logo": "./assets/logos/eos.png",
+    "chain": "fio-testnet"
+  }
+]
