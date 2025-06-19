@@ -9,7 +9,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "node ../copy_version.js && tsc"
   },
   "dependencies": {
     "rxjs": ">=6.0.0"
