@@ -5,7 +5,7 @@
     <div class="p-accounts__sessions" *ngIf="sessions.length > 0; else noSessions">
         <p>{{ 'PAGES.ACCOUNTS.DESCRIPTION' | translate}}</p>
         <div class="p-accounts__session" *ngFor="let s of sessions" (click)="selectSession(s)">
-            <img class="p-accounts__network-icon" [src]="'/assets/logos/' + (s.network.name.replace('-testnet','')) + '.png'"/>
+            <img class="p-accounts__network-icon" [src]="'./assets/logos/' + (s.network.name.replace('-testnet','')) + '.png'"/>
             <span class="p-accounts__account">{{ shorten(s.address) }}</span>
             <lucide-icon [img]="XIcon" class="p-accounts__logout" (click)="logoutSession(s); $event.stopPropagation()"></lucide-icon>
         </div>

@@ -4,7 +4,7 @@
     "symbol": "UX",
     "account": "eosio.token",
     "precision": 4,
-    "logo": "./assets/logos/eos.png",
+    "logo": "../assets/logos/eos.png",
     "chain": "ux"
   }
 ]

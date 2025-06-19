@@ -16,7 +16,7 @@
             <!-- Dropdown Body -->
             <div dropdown-body class="c-login__menu-body">
                 <a class="c-login__menu-option" *ngFor="let s of sessions" (click)="selectSession(s)">
-                    <img class="c-login__menu-network-icon" [src]="'/assets/logos/' + (s.network.name.replace('-testnet','')) + '.png'"/>
+                    <img class="c-login__menu-network-icon" [src]="'./assets/logos/' + (s.network.name.replace('-testnet','')) + '.png'"/>
                     {{ shorten(s.address) }}
                 </a>
                 <hr class="c-login__menu-separator">
