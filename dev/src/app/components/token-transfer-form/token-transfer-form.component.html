@@ -65,7 +65,7 @@
             <p><strong>{{ 'TYPES.TRANSFER-SUMMARY.TO' | translate }}</strong> {{ transferStatus.summary.to }}</p>
             <p><strong>{{ 'TYPES.TRANSFER-SUMMARY.AMOUNT' | translate }}</strong> {{ transferStatus.summary.amount }}</p>
             <p><strong>{{ 'TYPES.TRANSFER-SUMMARY.TRANSACTION' | translate }}</strong>
-                <a [href]="tokenTransferService.getExplorerTxUrl(transferStatus.summary.transaction)" target="_blank">
+                <a class="c-token-transfer__tx-link" [href]="tokenTransferService.getExplorerTxUrl(transferStatus.summary.transaction)" target="_blank">
                     {{ transferStatus.summary.transaction.substring(0, 10) }} <!-- ✅ Shorten only in UI -->
                 </a>
             </p>

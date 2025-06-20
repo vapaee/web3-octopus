@@ -52,6 +52,7 @@
         color: var(--c-foreground-0);
     }
     &__link {
+        @include hyperlink;
         margin-top: 3rem;
         display: flex;
         align-items: center;

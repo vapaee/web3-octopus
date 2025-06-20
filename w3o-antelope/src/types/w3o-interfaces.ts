@@ -5,7 +5,12 @@ import {
     W3oTransaction,
     W3oTransferStatus,
     W3oTransferSummary,
+    W3oAuthenticator,
+    W3oContext,
+    W3oBalance,
+    W3oToken,
 } from "@vapaee/w3o-core";
+import { BehaviorSubject, Observable } from "rxjs";
 import { ActionType, AnyAction, AnyTransaction } from "@wharfkit/antelope";
 import { ChainDefinition } from "@wharfkit/common";
 import { SigningRequest } from "@wharfkit/session";
