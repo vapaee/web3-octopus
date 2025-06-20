@@ -4,7 +4,7 @@
         "symbol": "TLOS",
         "account": "eosio.token",
         "precision": 4,
-        "logo": "../assets/logos/telos.png",
+        "logo": "./assets/logos/telos.png",
         "chain": "telos-testnet"
     },
     {
@@ -12,7 +12,7 @@
         "symbol": "USDT",
         "account": "tokens.swaps",
         "precision": 4,
-        "logo": "../assets/logos/USDT.png",
+        "logo": "./assets/logos/USDT.png",
         "chain": "telos-testnet"
     },
     {
@@ -20,7 +20,7 @@
         "symbol": "ACORN",
         "account": "acornaccount",
         "precision": 4,
-        "logo": "../assets/logos/acorn.png",
+        "logo": "./assets/logos/acorn.png",
         "chain": "telos-testnet"
     }
 ]
