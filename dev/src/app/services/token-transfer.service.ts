@@ -1,7 +1,7 @@
 // src/app/services/token-transfer.service.ts
 
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, firstValueFrom } from 'rxjs';
 import {
     W3oContextFactory,
     W3oTransferStatus,
@@ -100,7 +100,7 @@ export class TokenTransferService {
             return;
         }
         const svc = this.getServiceFor(auth.network.type);
-        await svc.transferToken(auth, to, quantity, token, memo, context);
+        await firstValueFrom(svc.transferToken(auth, to, quantity, token, memo, context));
     }
 
     public getExplorerTxUrl(tx: string): string {
