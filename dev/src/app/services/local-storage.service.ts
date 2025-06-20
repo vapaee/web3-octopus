@@ -51,8 +51,13 @@ export class LocalStorageService {
                 this.store.dispatch(user.actions.setLight());
             }
             if (typeof preferences.h0 === 'number' && typeof preferences.h1 === 'number') {
-                this.store.dispatch(user.actions.setHueTheme({ h0: preferences.h0, h1: preferences.h1 }));
+                this.store.dispatch(
+                    user.actions.setHueTheme({ h0: preferences.h0, h1: preferences.h1 })
+                );
             }
+        } else {
+            // If no preferences exist, apply dark theme by default
+            this.store.dispatch(user.actions.setDark());
         }
     }
 }
