@@ -47,6 +47,7 @@
                     type="submit"
                     [disabled]="form.invalid || isLoading"
                 >
+                    <span *ngIf="isLoading" class="c-token-transfer__spinner"></span>
                     {{ isLoading ? ['TYPES.BUTTON.PROCESSING' | translate] : ['TYPES.BUTTON.TRANSFER' | translate] }}
                 </button>
             </div>

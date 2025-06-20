@@ -94,4 +94,18 @@
     &__tx-link {
         @include hyperlink;
     }
+
+    &__spinner {
+        border: 2px solid var(--c-accent-0);
+        border-top-color: transparent;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        animation: spin 1s linear infinite;
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
