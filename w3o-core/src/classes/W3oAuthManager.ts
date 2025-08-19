@@ -77,6 +77,7 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
     /**
      * Authenticates user (interactive login)
      */
+    login(): Observable<W3oSession>;
     login(parent: W3oContext): Observable<W3oSession>;
     login(
         chain: W3oNetworkName,
@@ -84,7 +85,7 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
         parent: W3oContext
     ): Observable<W3oSession>;
     login(
-        networkNameOrParent: W3oNetworkName | W3oContext,
+        networkNameOrParent?: W3oNetworkName | W3oContext,
         networkType?: W3oNetworkType,
         parent?: W3oContext
     ): Observable<W3oSession> {
@@ -94,6 +95,7 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
     /**
      * Attempts automatic login using cached session
      */
+    autoLogin(): Observable<W3oSession>;
     autoLogin(parent: W3oContext): Observable<W3oSession>;
     autoLogin(
         chain: W3oNetworkName,
@@ -101,7 +103,7 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
         parent: W3oContext
     ): Observable<W3oSession>;
     autoLogin(
-        networkNameOrParent: W3oNetworkName | W3oContext,
+        networkNameOrParent?: W3oNetworkName | W3oContext,
         networkType?: W3oNetworkType,
         parent?: W3oContext
     ): Observable<W3oSession> {
@@ -113,7 +115,7 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
      */
     private __authenticate(
         method: 'login' | 'autoLogin',
-        networkNameOrParent: W3oNetworkName | W3oContext,
+        networkNameOrParent?: W3oNetworkName | W3oContext,
         networkType?: W3oNetworkType,
         parent?: W3oContext
     ): Observable<W3oSession> {
@@ -166,7 +168,7 @@ export class W3oAuthManager extends W3oManager implements W3oAuthInstance {
     /**
      * Logs out from the current session
      */
-    logout(parent: W3oContext): Observable<void> {
+    logout(parent?: W3oContext): Observable<void> {
         const context = logger.method('logout', parent);
         const session = this.octopus.sessions.current;
         if (!session) {
