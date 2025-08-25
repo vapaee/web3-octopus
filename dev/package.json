@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "ng serve",
-    "build": "ng build --configuration production --output-path dist --base-href ./"
+    "build": "ng build --configuration production --output-path dist --base-href ./",
+    "clear": "rm -rf dist node_modules .angular;"
   },
   "_": {
     "@vapaee/w3o-antelope": "file:../w3o-antelope/src",
