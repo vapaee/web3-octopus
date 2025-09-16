@@ -1,6 +1,6 @@
 {
   "name": "@vapaee/w3o-core",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Web3 Octopus Framework Core",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

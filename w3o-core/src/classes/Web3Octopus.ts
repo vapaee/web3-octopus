@@ -164,7 +164,7 @@ export class Web3Octopus<Tw3o extends W3oIServices & WithSnapshot> implements W3
         const sub = this.onManagersReady$.pipe(
             filter((initialized: any) => initialized)
         ).subscribe(() => {
-            logger.log('processing support', support.type, 'with requirements', support.networks, support.chain, { support });
+            logger.log('processing support', support.type, 'with requirements', { support });
 
             for (const network of support.networks) {
                 this.networks.addNetwork(network, context);

@@ -64,4 +64,12 @@
     &__login-btn {
         @include button-0;
     }
+
+    &__google-one-tap {
+        display: none;
+        margin-top: 20px;
+        &--show {
+            display: block;
+        }
+    }
 }

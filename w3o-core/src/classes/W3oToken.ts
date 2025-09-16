@@ -1,5 +1,7 @@
 // w3o-core/src/classes/W3oToken.ts
 
+import { W3oContract } from "./W3oContract";
+
 /**
  * Represents a token, including methods to get information about the token and its associated contract
  */
@@ -8,7 +10,8 @@ export class W3oToken {
     constructor(
         public readonly data: {
             [key: string]: any;
-        }
+        },
+        public readonly contract: W3oContract
     ) {}
 
     /**

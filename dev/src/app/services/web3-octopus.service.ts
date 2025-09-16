@@ -18,14 +18,18 @@ import {
     AntelopeTokensService,                // extends W3oService
     AntelopeResourcesService,
     AntelopeChainSupport,
+    AntelopeWalletAnchor,
     TelosZeroNetwork,
     TelosZeroTestnetNetwork,
 } from '@vapaee/w3o-antelope';
 // import the classes to support Ethereum networks
 import {
     EthereumChainSupport,
+    EthereumWalletMetamask,
     EthereumTokensService,
     TelosEVMNetwork,
+    // EthereumWalletMetakeep,
+    googleCtrl,
 } from '@vapaee/w3o-ethereum';
 
 import { VortDEXw3oServices } from '@app/types';
@@ -48,6 +52,7 @@ export class Web3OctopusService implements OnDestroy {
     constructor() {
         const context = logger.method('constructor');
         try {
+            googleCtrl.setClientId('639241197544-pdd2fjldd0jeo0obmracoes7414eotpm.apps.googleusercontent.com');
             const octopus = new Web3Octopus<VortDEXw3oServices>(context);
             this.octopus = octopus;
             window.w3o = octopus; // assign the instance to the window object so it can be accessed from anywhere
@@ -56,7 +61,9 @@ export class Web3OctopusService implements OnDestroy {
                 // Network type
                 type: 'antelope',
                 // chain support implementation
-                chain: new AntelopeChainSupport(context),
+                chain: new AntelopeChainSupport(context, [
+                    new AntelopeWalletAnchor(context)
+                ]),
                 // list of supported Antelope networks
                 networks: [
                     new TelosZeroNetwork({}, context),
@@ -68,7 +75,15 @@ export class Web3OctopusService implements OnDestroy {
             // ---- Register Telos EVM support ----
             const telosEvmSupportSettings: W3oNetworkSupportSettings = {
                 type: 'ethereum',
-                chain: new EthereumChainSupport(context),
+                chain: new EthereumChainSupport(context, [
+                    // Metamask wallet
+                    new EthereumWalletMetamask(context),
+                    // Metakeep wallet
+                    // new EthereumWalletMetakeep({
+                    //     appName: 'Web3 Octopus Wallet',
+                    //     appId: 'd190c88f-1bb5-4e16-bc48-96dbf33b77e0',
+                    // } as MetakeepOptions, context)
+                ]),
                 networks: [
                     new TelosEVMNetwork({}, context),
                 ]
@@ -85,7 +100,7 @@ export class Web3OctopusService implements OnDestroy {
             octopus.registerServices(services);
             octopus.init(
                 {
-                    appName: 'VortDEX',
+                    appName: 'We3 Octopus',
                     multiSession: false,
                     autoLogin: true,
                 },

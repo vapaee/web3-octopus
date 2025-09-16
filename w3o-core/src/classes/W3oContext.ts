@@ -58,12 +58,7 @@ export class W3oContext {
         if (!parentContext) {
             this.rootTimeoutId = window.setTimeout(() => {
                 if (!this.destroyedSubject.value) {
-                    // TODO: Handle context timeout
-                    // console.warn(
-                    //     'Warning: context not dismissed after 10 seconds',
-                    //     this
-                    // );
-                    // this.dismiss();
+                    // Is it worth closing a context automatically due to time?
                 }
             }, 10_000);
         }

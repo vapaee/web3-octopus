@@ -11,7 +11,7 @@ const TELOS_NETWORK_PARAMS = {
         symbol: 'TLOS',
         decimals: 18,
     },
-    rpcUrls: ['https://mainnet.telos.net/evm'],
+    rpcUrls: ['https://rpc.telos.net'],
     blockExplorerUrls: ['https://teloscan.io'],
 }
 

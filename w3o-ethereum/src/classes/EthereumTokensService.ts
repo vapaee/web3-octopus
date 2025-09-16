@@ -13,11 +13,14 @@ import {
     W3oTransferSummary,
     W3oTransferStatus,
     W3oTokensService,
+    W3oTransactionResponse,
 } from "@vapaee/w3o-core";
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ethers } from "ethers";
 import { EthereumNetwork } from "./EthereumNetwork";
+import { EthereumTransaction } from "../types";
+import { EthereumContract } from "./EthereumContract";
 
 const logger = new W3oContextFactory('EthereumTokensService');
 const erc20Abi = [
@@ -78,7 +81,7 @@ export class EthereumTokensService extends W3oService implements W3oTokensServic
                 network.provider.getBalance(address).then((balance: any) => {
                     const value = Number(balance.toString());
                     const formatted = (value / Math.pow(10, token.precision)).toFixed(token.precision);
-                    observer.next({ amount: { value, formatted }, token });
+                    observer.next({ amount: { value, formatted }, token } as W3oBalance);
                     observer.complete();
                 }).catch((error: any) => {
                     context.error('fetchSingleBalance error', {error, token: token.symbol, address});
@@ -88,12 +91,12 @@ export class EthereumTokensService extends W3oService implements W3oTokensServic
             });
         }
 
-        const contract = new ethers.Contract(token.address, erc20Abi, network.provider);
+        const contract = (token.contract as EthereumContract).getReadOnlyContract(network.provider);
         return new Observable<W3oBalance>((observer) => {
             contract.balanceOf(address).then((balance: any) => {
                 const value = Number(balance.toString());
                 const formatted = (value / Math.pow(10, token.precision)).toFixed(token.precision);
-                observer.next({ amount: { value, formatted }, token });
+                observer.next({ amount: { value, formatted }, token } as W3oBalance);
                 observer.complete();
             }).catch((error: any) => {
                 context.error('fetchSingleBalance error', {error, token: token.symbol, address});
@@ -231,8 +234,39 @@ export class EthereumTokensService extends W3oService implements W3oTokensServic
             const numericPart = quantity.split(' ')[0];
             const amount = ethers.utils.parseUnits(numericPart, token.precision);
 
-            // Native currency transfer
+            // transfer transaction
+            const trx: EthereumTransaction = {
+                contract: token.contract as EthereumContract,
+                function: "transfer",
+                params: { to, amount },
+                value: amount
+            }
+
+            
+            auth.session.signTransaction(trx, context).subscribe({
+                next: (tx: W3oTransactionResponse) => {
+                    const summary: W3oTransferSummary = { from: auth.session.address!, to, amount: quantity, transaction: tx.hash };
+                    context.log('transfer success', summary);
+                    this.setTransferStatus(auth, token.symbol, 'success', `Transferred ${quantity} to ${to}. TX: ${tx.hash}`, summary, context);
+                    this.fetchSingleBalance(auth, token, context).subscribe(balance => {
+                        this.addSingleBalanceToState(this.getBalances$(auth, context), balance);
+                    });
+                    result$.next(summary);
+                },
+                error: (error: Error) => {
+                    const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';
+                    context.error('transfer error', error);
+                    this.setTransferStatus(auth, token.symbol, 'failure', msg, undefined, context);
+                    result$.error(error);
+                },
+                complete: () => {
+                    result$.complete();
+                }
+            });
+
+
             if (token.address === '___NATIVE_CURRENCY___') {
+                /*
                 if (typeof window !== 'undefined' && (window as any).ethereum) {
                     const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
                     const signer = web3Provider.getSigner();
@@ -276,8 +310,10 @@ export class EthereumTokensService extends W3oService implements W3oTokensServic
                         }
                     });
                 }
+                */
             } else {
                 // ERC20 token transfer
+                /*
                 if (typeof window !== 'undefined' && (window as any).ethereum) {
                     const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
                     const signer = web3Provider.getSigner();
@@ -325,6 +361,7 @@ export class EthereumTokensService extends W3oService implements W3oTokensServic
                         }
                     });
                 }
+                */
             }
         } catch (error) {
             const msg = error instanceof Error ? error.message : 'Transaction failed: Unknown error';

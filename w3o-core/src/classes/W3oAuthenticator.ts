@@ -15,6 +15,7 @@ import { W3oError } from './W3oError';
 import { W3oTransactionResponse } from './W3oTransactionResponse';
 import { W3oSession } from './W3oSession';
 import { W3oNetwork } from './W3oNetwork';
+import { W3oWallet } from './W3oWallet';
 
 const logger = new W3oContextFactory('W3oAuthenticator');
 
@@ -36,6 +37,7 @@ export class W3oAuthenticator {
     constructor(
         public readonly support: W3oChainSupport,
         public readonly network: W3oNetwork,
+        public readonly wallet: W3oWallet,
         parent: W3oContext,
     ) {
         logger.method('constructor', { support }, parent);
@@ -83,23 +85,15 @@ export class W3oAuthenticator {
     }
 
     /**
-     * Internally sets the session ID and emits session change event
-     */
-    private setSessionId(sessionId: string, parent: W3oContext): void {
-        logger.method('setSessionId', { sessionId }, parent);
-        this.onSessionChange$.next(sessionId);
-    }
-
-    /**
      * Sets the session if not already set, otherwise throws
      */
     setSession(session: W3oSession, parent: W3oContext): void {
-        const context = logger.method('setSession', { session: session.id }, parent);
+        logger.method('setSession', { session: session.id }, parent);
         if (this.__session) {
             throw new W3oError(W3oError.SESSION_ALREADY_SET, { authenticator: this, session });
         }
         this.__session = session;
-        this.setSessionId(session.id, context);
+        this.onSessionChange$.next(session.id);
     }
 
     /**
@@ -127,7 +121,7 @@ export class W3oAuthenticator {
      * Checks if the authenticator is in read-only mode
      */
     isReadOnly(): boolean {
-        return this.support.isReadOnly();
+        return this.wallet.isReadOnly();
     }
 
     /**
@@ -140,7 +134,7 @@ export class W3oAuthenticator {
         }
         return new Observable<W3oTransactionResponse>(subscriber => {
             try {
-                const response = this.support.signTransaction(this, trx, context);
+                const response = this.wallet.signTransaction(this, trx, context);
                 response.subscribe({
                     next: (res) => subscriber.next(res),
                     error: (err) => subscriber.error(err),
@@ -160,15 +154,16 @@ export class W3oAuthenticator {
         const context = logger.method('login', { networkName }, parent);
         return new Observable<W3oAccount>(subscriber => {
             try {
-                const accountObservable = this.support.login(this, networkName, context);
-                accountObservable.subscribe({
+                this.wallet.login(this, networkName, context).subscribe({
                     next: (account) => {
-                        logger.log('this.support.login.subscribe() -> result', { account: account.address });
+                        context.log('this.wallet.login.subscribe() -> result', { account });
                         this.__account = account;
-                        subscriber.next(account);
                     },
                     error: (err) => subscriber.error(err),
-                    complete: () => subscriber.complete(),
+                    complete: () => {
+                        subscriber.next(this.__account!);
+                        subscriber.complete()
+                    },
                 });
             } catch (error) {
                 context.error((error as Error).message);
@@ -180,13 +175,13 @@ export class W3oAuthenticator {
     /**
      * Attempts auto-login through the support layer
      */
-    autoLogin(network: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
+    autoLogin(address: W3oAddress, network: W3oNetworkName, parent: W3oContext): Observable<W3oAccount> {
         const context = logger.method('autoLogin', { network }, parent);
         return new Observable<W3oAccount>(subscriber => {
             try {
-                const accountObservable = this.support.autoLogin(this, network, context);
-                accountObservable.subscribe({
+                this.wallet.autoLogin(this, address, network, context).subscribe({
                     next: (account) => {
+                        context.log('this.wallet.autoLogin.subscribe() -> result', { account });
                         this.__account = account;
                         subscriber.next(account);
                     },
@@ -206,7 +201,7 @@ export class W3oAuthenticator {
     logout(parent: W3oContext): void {
         const context = logger.method('logout', parent);
         try {
-            this.support.logout(this, context);
+            this.wallet.logout(this, context);
             this.__account = null;
             this.__session = null;
         } catch (error) {
@@ -222,6 +217,7 @@ export class W3oAuthenticator {
             _class: 'W3oAuthenticator',
             account: this.__account?.snapshot(),
             session: this.__session?.snapshot(),
+            wallet: this.wallet.snapshot(),
             support: this.support.snapshot(),
             network: this.network.snapshot(),
         };

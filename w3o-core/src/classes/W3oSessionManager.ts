@@ -1,6 +1,6 @@
 // w3o-core/src/classes/W3oSessionManager.ts
 
-import { BehaviorSubject, mapTo, Observable, Subject, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, concatMap, EMPTY, finalize, from, mapTo, Observable, Subject, tap } from 'rxjs';
 
 import {
     W3oAddress,
@@ -61,11 +61,6 @@ export class W3oSessionManager extends W3oManager implements W3oSessionInstance 
         super('W3oSessionManager');
         this.__multiSession = settings.multiSession;
         this.__autologin = settings.autoLogin;
-
-        this.__current$.subscribe((session) => {
-            logger.log('session change detected', { session });
-            this.saveSessions(context);
-        });
     }
 
     /**
@@ -108,7 +103,7 @@ export class W3oSessionManager extends W3oManager implements W3oSessionInstance 
      * Initializes the session manager with an octopus instance and subscribes to network change events.
      */
     init(octopus: W3oInstance, parent: W3oContext): void {
-        logger.method('init', { octopus }, parent);
+        const context = logger.method('init', { octopus }, parent);
         if (this.__initCalled) {
             throw new W3oError(
                 W3oError.ALREADY_INITIALIZED,
@@ -138,6 +133,17 @@ export class W3oSessionManager extends W3oManager implements W3oSessionInstance 
                 this.__current$.next(null);
             }
         });
+
+
+        if (this.__autologin) {
+            this.loadSessions(context);
+        }
+
+        this.__current$.subscribe((session) => {
+            logger.log('session change detected', { session });
+            this.saveSessions(context);
+        });
+
         this.__initialized$.next(true);
     }
 
@@ -257,7 +263,11 @@ export class W3oSessionManager extends W3oManager implements W3oSessionInstance 
             sessions: Object.keys(this.__sessions),
         };
         logger.log('Saving sessions to local storage', { stored });
+        //*
         localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+        /*/
+        console.error('localStorage.setItem is disabled for now');
+        //*/
     }
 
     /**
@@ -285,39 +295,53 @@ export class W3oSessionManager extends W3oManager implements W3oSessionInstance 
         }
 
         if (!!stored) {
-            let isFirstSession = true;
+            // let isFirstSession = true;
             const data = JSON.parse(stored) as W3oStoredSessions;
             context.log('sessions found in local storage', { data });
 
-            const separator = W3oSession.ID_SEPARATOR;
-            for (const id of data.sessions) {
-                const [address, networkType, networkName] = id.split(separator);
-                const network = this.octopus.networks.getNetwork(networkName, context);
-                const authenticator = this.octopus.auth.createAuthenticator(network, context);
-                console.log('There are ', data.sessions.length, ' sessions in local storage', { address, networkType, networkName });
-                if (isFirstSession) {
-                    this.createCurrentSession(address, authenticator, network, context);
-                    isFirstSession = false;
-                } else {
-                    this.createSession(address, authenticator, network, context);
-                }
-            }
+            from(data.sessions).pipe(
+                // Process each session ID sequentially
+                concatMap((id) => {
+                    const payload = W3oSession.splitId(id);
+                    const network = this.octopus.networks.getNetwork(payload.networkName, context);
+                    const authenticator = this.octopus.auth.createAuthenticator(network, payload.walletName, context);
 
-            if (this.__autologin && data.currentSessionId) {
-                const session = this.__sessions[data.currentSessionId];
-                if (!session) {
-                    return throwError(() => new W3oError(
-                        W3oError.SESSION_NOT_FOUND,
-                        { id: data.currentSessionId, message: 'could not perform autologin' }
-                    ));
-                }
-                return session.authenticator
-                    .autoLogin(session.network.settings.name, context)
-                    .pipe(
-                        tap(() => this.setCurrentSession(session.id, context)),
-                        mapTo(void 0)
+                    context.log('Auto Login Session', { id });
+
+                    // Return the login observable so concatMap chains it
+                    return authenticator.autoLogin(payload.address, payload.networkName, context).pipe(
+                        // delay(0),
+                        tap((account) => {
+                            context.log('authenticator.autoLogin.subscribe() -> (WharfkitInstance)', { account });
+                            const session = this.createSession(
+                                account.address,
+                                account.authenticator,
+                                account.authenticator.network,
+                                context
+                            );
+                            if (data.currentSessionId === session.id) {
+                                this.setCurrentSession(session.id, context);
+                            }
+                        }),
+                        // delay(0),
+                        // Keep sequence going even if one login fails
+                        catchError((err) => {
+                            context.error('authenticator.autoLogin.subscribe() -> (WharfkitInstance)', err);
+                            return EMPTY;
+                        }),
+                        // Per-item completion log (optional)
+                        finalize(() => {
+                            context.log('authenticator.autoLogin.subscribe() -> complete', { id });
+                        })
                     );
-            }
+                }),
+                // When ALL logins have completed (successes or handled errors), save sessions
+                finalize(() => {
+                    this.saveSessions(context);
+                })
+            ).subscribe();
+
+
         } else {
             context.log('no sessions found in local storage');
         }

@@ -2,6 +2,7 @@
   "name": "dev",
   "version": "1.0.0",
   "scripts": {
+    "version": "ng version",
     "start": "ng serve",
     "build": "ng build --configuration production --output-path dist --base-href ./",
     "clear": "rm -rf dist node_modules .angular;"

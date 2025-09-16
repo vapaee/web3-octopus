@@ -5,6 +5,7 @@ import {
     W3oAuthenticator,
     W3oChainSupport,
     W3oContext,
+    W3oContract,
     W3oModule,
     W3oNetwork,
     W3oSession,
@@ -13,7 +14,8 @@ import {
 import {
     W3oAddress,
     W3oNetworkName,
-    W3oNetworkType
+    W3oNetworkType,
+    W3oWalletName
 } from './w3o-types';
 
 /**
@@ -94,12 +96,6 @@ export interface W3oGlobalSettings {
 }
 
 /**
- * Represents the ABI of a contract.
- * To be specified by each implementation.
- */
-export interface W3oContractABI {}
-
-/**
  * Represents support settings for multiple networks and authenticators.
  */
 export interface W3oNetworkSupportSettings {
@@ -157,7 +153,7 @@ export interface W3oNetworkInstance {
  * Represents the authentication management instance.
  */
 export interface W3oAuthInstance {
-    createAuthenticator(network: W3oNetwork, parent: W3oContext): W3oAuthenticator;
+    createAuthenticator(network: W3oNetwork, walletName: W3oWalletName, parent: W3oContext): W3oAuthenticator;
 }
 
 /**
@@ -199,6 +195,15 @@ export interface W3oBalance {
     token: W3oToken;
 }
 
+/**
+ * Represents a session id splitted into its parts
+ */
+export interface W3oSessionSplittedId {
+    address: string;
+    networkType: string;
+    walletName: string;
+    networkName: string;
+}
 
 /**
  * Common interface that any token service implementation must follow.

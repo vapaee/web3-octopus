@@ -13,6 +13,7 @@ export * from './W3oDefaultHttpClient';
 // Authentication
 export * from './W3oAuthenticator';
 export * from './W3oAccount';
+export * from './W3oWallet';
 
 export * from './W3oService';
 export * from './W3oToken';

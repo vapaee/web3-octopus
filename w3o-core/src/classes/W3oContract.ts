@@ -10,7 +10,7 @@ const logger = new W3oContextFactory('W3oContract');
 /**
  * Base class for blockchain contracts providing address, name, and ABI metadata
  */
-export abstract class W3oContract {
+export class W3oContract {
 
     constructor(
         public readonly address: string,

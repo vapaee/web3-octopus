@@ -7,7 +7,7 @@ import { WebRenderer } from '@wharfkit/web-renderer';
 import { WalletPluginAnchor } from '@wharfkit/wallet-plugin-anchor';
 import { WalletPluginCleos } from '@wharfkit/wallet-plugin-cleos';
 import { W3oAntelopeNetworkSettings } from '../types';
-import { W3oContextFactory, W3oContext } from '@vapaee/w3o-core';
+import { W3oContextFactory, W3oContext, W3oNetwork, W3oAuthenticator, W3oAddress } from '@vapaee/w3o-core';
 
 const logger = new W3oContextFactory('WharfkitInstance');
 
@@ -32,6 +32,7 @@ export class WharfkitInstance {
     constructor(
         public readonly sessionKit: SessionKit,
         public readonly accountKit: AccountKit,
+        public readonly networkSettings: W3oAntelopeNetworkSettings,
         parent: W3oContext
     ) {
         logger.method('constructor', {id: this.id}, parent);
@@ -77,16 +78,24 @@ export class WharfkitInstance {
     /**
      * Attempts to restore a previously active session
      */
-    public async restoreSession(parent: W3oContext): Promise<Session | undefined> {
-        logger.method('restoreSession', { id: this.id, sessionKit: this.sessionKit }, parent);
-        const session = await this.sessionKit.restore();
-        this.__currentSession = session;
-        if (session) {
-            logger.info('Session restored', { session });
-        } else {
-            logger.info('No session to restore');
+    public async restoreSession(actor: W3oAddress, parent: W3oContext): Promise<Session | undefined> {
+        const context = logger.method('restoreSession', { actor, chain: this.sessionKit.chains[0].id.hexString, sessionKit: this.sessionKit }, parent);
+        try {
+            const session = await this.sessionKit.restore({
+                chain: this.sessionKit.chains[0],
+                actor: actor.toString(),
+            });
+            this.__currentSession = session;
+            if (session) {
+                context.info('Session restored', { actor: session.actor.toString(), session });
+            } else {
+                context.info('No session to restore');
+            }
+            return session;
+        } catch (error) {
+            context.error('WharfkitInstance.restoreSession() Failed to restore session', (error as Error).message);
+            return undefined;
         }
-        return session;
     }
 
     /**
@@ -157,10 +166,10 @@ export class AntelopeWharfkit {
     /**
      * Returns a fully initialized WharfkitInstance including SessionKit and AccountKit
      */
-    public static wharfkit(appName: string, network: W3oAntelopeNetworkSettings, parent: W3oContext): WharfkitInstance {
-        const context = logger.method('wharfkit', { appName, network }, parent);
-        const sessionKit = AntelopeWharfkit.createSessionKit(appName, network, context);
-        const accountKit = AntelopeWharfkit.createAccountKit(network, context);
-        return new WharfkitInstance(sessionKit, accountKit, context);
+    public static wharfkit(appName: string, networkSettings: W3oAntelopeNetworkSettings, parent: W3oContext): WharfkitInstance {
+        const context = logger.method('wharfkit', { appName, networkSettings }, parent);
+        const sessionKit = AntelopeWharfkit.createSessionKit(appName, networkSettings, context);
+        const accountKit = AntelopeWharfkit.createAccountKit(networkSettings, context);
+        return new WharfkitInstance(sessionKit, accountKit, networkSettings, context);
     }
 }

@@ -1,7 +1,7 @@
 // w3o-core/src/classes/W3oSession.ts
 
 import { Observable, Subject } from 'rxjs';
-import { W3oAddress, W3oSessionInstance, W3oTransaction } from '../types';
+import { W3oAddress, W3oSessionInstance, W3oSessionSplittedId, W3oTransaction } from '../types';
 
 import { W3oContextFactory, W3oContext } from './W3oContext';
 import { W3oAuthenticator } from './W3oAuthenticator';
@@ -21,6 +21,14 @@ export class W3oSession {
      * Static property that provides the separator used to build the session ID
      */
     public static readonly ID_SEPARATOR = '--';
+
+    /**
+     * Static method to split a session id into its parts
+     */
+    public static splitId(sessionId: string): W3oSessionSplittedId {
+        const [address, networkType, walletName, networkName] = sessionId.split(W3oSession.ID_SEPARATOR);
+        return { address, networkType, walletName, networkName };
+    }
 
     /**
      * Subject to emit and complete when logout is triggered
@@ -45,7 +53,7 @@ export class W3oSession {
         parent: W3oContext,
     ) {
         logger.method('constructor', {address, authenticator, network}, parent);
-        this.__id = `${address}${W3oSession.ID_SEPARATOR}${authenticator.type}${W3oSession.ID_SEPARATOR}${network.name}`;
+        this.__id = `${address}${W3oSession.ID_SEPARATOR}${authenticator.type}${W3oSession.ID_SEPARATOR}${authenticator.wallet.name}${W3oSession.ID_SEPARATOR}${network.name}`;
     }
 
     /**
@@ -71,7 +79,7 @@ export class W3oSession {
      */
     signTransaction(transaction: W3oTransaction, parent: W3oContext): Observable<W3oTransactionResponse> {
         const context = logger.method('transact', {transaction}, parent);
-        return this.authenticator.support.signTransaction(this.authenticator, transaction, context);
+        return this.authenticator.signTransaction(transaction, context);
     }
 
     /**

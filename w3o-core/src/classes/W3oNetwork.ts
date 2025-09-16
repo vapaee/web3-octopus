@@ -98,7 +98,7 @@ export class W3oNetwork extends W3oModule {
      */
     fetchTokens(parent: W3oContext): Observable<W3oToken[]> {
         const context = logger.method('fetchTokens', { w3oId: this.w3oId }, parent);
-        return this.__tokenlist.load(context);
+        return this.__tokenlist.load(this.support, context);
     }
 
     /**

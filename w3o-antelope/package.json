@@ -1,6 +1,6 @@
 {
   "name": "@vapaee/w3o-antelope",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Web3 Octopus Antelope Support",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

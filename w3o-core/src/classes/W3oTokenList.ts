@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { W3oContext, W3oContextFactory } from "./W3oContext";
 import { W3oToken } from "./W3oToken";
 import { W3oHttpClient, W3oTokenData } from "../types";
+import { W3oChainSupport } from "./W3oChainSupport";
 
 const logger = new W3oContextFactory('W3oTokenList');
 
@@ -44,11 +45,11 @@ export class W3oTokenList {
     /**
      * Loads the token list from a remote source via HTTP and emits it
      */
-    public load(parent: W3oContext): Observable<W3oToken[]> {
-        logger.method('load', parent);
+    public load(support: W3oChainSupport, parent: W3oContext): Observable<W3oToken[]> {
+        const context = logger.method('load', parent);
         this.http.get<W3oTokenData[]>(this.url).subscribe({
             next: (tokens: W3oTokenData[]) => {
-                this.__list$.next(tokens.map(data => new W3oToken(data)));
+                this.__list$.next(tokens.map(data => support.createToken(data, context)));
             },
             error: (err: any) => console.error('Error loading token list:', err),
         });

@@ -50,8 +50,8 @@ export class AntelopeResourcesService extends W3oService {
     /** Dependencies required to operate */
     get w3oRequire(): string[] {
         return [
-            'antelope.chain.support@1.0.0',
-            'antelope.network.support@1.0.0',
+            'antelope.chain.support@^1.0.0',
+            'antelope.network.support@^1.0.0',
         ];
     }
 

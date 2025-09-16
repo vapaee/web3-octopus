@@ -15,9 +15,22 @@
     </ng-template>
 
     <div class="p-accounts__login">
-        <select class="p-accounts__network-select" [(ngModel)]="selectedNetwork" (change)="changeNetwork(selectedNetwork)">
+        <select class="p-accounts__network-select" [(ngModel)]="networkName" (change)="changeNetwork(networkName)">
             <option *ngFor="let net of networks" [ngValue]="net.name">{{ net.settings.displayName }}</option>
         </select>
         <button class="p-accounts__login-btn" (click)="login()">{{ 'TYPES.BUTTON.LOGIN' | translate }}</button>
     </div>
+
+    <!--div
+        class="p-accounts__google-one-tap"
+        [class.p-accounts__google-one-tap--show]="networkType === 'ethereum'"
+    >
+        <div
+            id="google_btn"
+            [attr.data-client_id]="googleCtrl.clientId"
+            class="p-accounts__google-one-tap-btn"
+        >
+            <div id="google_btn_content" class="p-accounts__google-one-tap-btn-loading">loading...</div>
+        </div>
+    </div-->
 </div>

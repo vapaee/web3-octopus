@@ -4,3 +4,6 @@ export * from './EthereumError';
 export * from './EthereumAccount';
 export * from './EthereumNetwork';
 export * from './EthereumChains';
+export * from './EthereumWallet';
+export * from './EthereumWalletMetamask';
+export * from './EthereumWalletMetakeep';

@@ -14,6 +14,7 @@ import { SideContainerService } from '@app/components/base-components/side-conta
 import { DropDownComponent } from '../base-components/drop-down/drop-down.component';
 import { TranslateService } from '@ngx-translate/core';
 import { SharedModule } from '@app/shared/shared.module';
+import { Web3OctopusService } from '@app/services/web3-octopus.service';
 
 @Component({
     selector: 'app-nav-bar',
@@ -48,7 +49,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
         private sideContainerService: SideContainerService,
         private translate: TranslateService,
         private sessionService: SessionService,
+        private w3o: Web3OctopusService,
     ) {}
+
+    get isAntelope(): boolean {
+        return this.w3o.octopus.networks.current.type === 'antelope';
+    }
 
     ngOnInit() {
         // Detect theme preference

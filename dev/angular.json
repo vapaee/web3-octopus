@@ -49,7 +49,8 @@
                             "js-sha3",
                             "bech32",
                             "aes-js",
-                            "scrypt-js"
+                            "scrypt-js",
+                            "metakeep"
                         ]
                     },
                     "configurations": {
@@ -127,5 +128,8 @@
                 }
             }
         }
+    },
+    "cli": {
+      "analytics": false
     }
 }

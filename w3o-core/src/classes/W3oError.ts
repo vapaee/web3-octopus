@@ -85,4 +85,5 @@ export class W3oError extends Error {
     public static readonly SESSION_WITHOUT_NETWORK        = { code: 1025, message: 'Session without network' };
     public static readonly SUPPORT_NOT_FOUND              = { code: 1026, message: 'Support not found' };
     public static readonly TRANSACTION_ERROR              = { code: 1027, message: 'Transaction error' };
+    public static readonly WALLET_NOT_FOUND               = { code: 1028, message: 'Wallet not found' };
 }

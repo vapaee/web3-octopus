@@ -16,7 +16,7 @@ import {
 } from "@vapaee/w3o-core";
 import { BehaviorSubject, combineLatest, Observable, of, Subject, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
-import { AntelopeTransferSummary } from "../types";
+import { AntelopeTransaction, AntelopeTransferSummary } from "../types";
 
 const logger = new W3oContextFactory('AntelopeTokensService');
 
@@ -49,8 +49,8 @@ export class AntelopeTokensService extends W3oService implements W3oTokensServic
      */
     get w3oRequire(): string[] {
         return [
-            'antelope.chain.support@1.0.0',
-            'antelope.network.support@1.0.0',
+            'antelope.chain.support@^1.0.0',
+            'antelope.network.support@^1.0.0',
         ];
     }
 
@@ -408,15 +408,17 @@ export class AntelopeTokensService extends W3oService implements W3oTokensServic
 
         const result$ = new Subject<AntelopeTransferSummary>();
         try {
-            const action = {
-                account: token.account,
-                name: 'transfer',
-                authorization: [{ actor: from, permission: 'active' }],
-                data: { from, to, quantity, memo },
+            const trx: AntelopeTransaction = {
+                action: {
+                    account: token.account,
+                    name: 'transfer',
+                    authorization: [{ actor: from, permission: 'active' }],
+                    data: { from, to, quantity, memo },
+                }
             };
-            logger.info('Sending transfer transaction', action);
+            logger.info('Sending transfer transaction', { trx });
 
-            auth.session.signTransaction({ action }, context).subscribe({
+            auth.session.signTransaction(trx, context).subscribe({
                 next: (result) => {
                     const txId = result.hash;
                     logger.info(`Transaction successful: ${txId}`);

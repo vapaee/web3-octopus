@@ -80,7 +80,7 @@ const TelosEVMConfigJSON: W3oEthereumNetworkSettings = {
     name: 'telos-evm' as W3oNetworkName,
     chainId: '40',
     displayName: 'Telos EVM Mainnet',
-    rpcUrl: 'https://mainnet.telos.net/evm',
+    rpcUrl: 'https://rpc.telos.net',
     tokensUrl: 'assets/tokens-ethereum-telos-evm.json',
     symbol: 'TLOS',
     nativeCurrency: 'Telos',

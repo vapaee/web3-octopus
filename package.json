@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "version": "npm --prefix dev version",
     "serve": "npm --prefix dev run start",
     "build:core": "npm --prefix w3o-core run build",
     "build:antelope": "npm --prefix w3o-antelope run build",
@@ -19,5 +20,8 @@
     "clear:ethereum": "rm -fr w3o-ethereum/lib w3o-ethereum/node_modules w3o-ethereum/tsconfig.tsbuildinfo",
     "clear:dev": "rm -fr dev/node_modules dev/.angular dev/dist",
     "clear": "npm run clear:core && npm run clear:antelope && npm run clear:ethereum && npm run clear:dev"
+  },
+  "dependencies": {
+    
   }
 }

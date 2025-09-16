@@ -14,17 +14,6 @@ export class UserEffects {
     private localStorageService = inject(LocalStorageService);
     private sessionService = inject(SessionService);
 
-    initPreferences$ = createEffect(
-        () =>
-        this.actions$.pipe(
-            ofType('@ngrx/effects/init'),
-            tap(() => {
-                this.sessionService.restoreSession();
-            })
-        ),
-        { dispatch: false }
-    );
-
     savePreferences$ = createEffect(
         () =>
         this.actions$.pipe(

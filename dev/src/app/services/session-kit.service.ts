@@ -62,18 +62,6 @@ export class SessionService {
         }
     }
 
-    // Restore session method
-    async restoreSession() {
-        const context = logger.method('restoreSession');
-        try {
-            this.w3o.octopus.auth.autoLogin(context);
-        } catch (error) {
-            console.error('Error restoring session:', error);
-            throw error;
-        }
-
-    }
-
     validateAccount(address: string): Observable<boolean> {
         const sender = this.current?.address;
         const context = logger.method('validateAccount', { sender });

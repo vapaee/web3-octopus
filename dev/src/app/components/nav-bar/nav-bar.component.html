@@ -22,6 +22,7 @@
 
             <a class="c-navbar__button" routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">{{ 'PAGES.HOME.NAME' | translate }}</a>
             <a class="c-navbar__button" routerLink="/accounts" routerLinkActive="active-link">{{ 'PAGES.ACCOUNTS.NAME' | translate }}</a>
+            <a class="c-navbar__button" routerLink="/resources" *ngIf="isAntelope" routerLinkActive="active-link">{{ 'PAGES.RESOURCES.NAME' | translate }}</a>
             <a class="c-navbar__button" *ngIf="isLogged" routerLink="/wallet" routerLinkActive="active-link">{{ 'PAGES.WALLET.NAME' | translate }}</a>
         </div>
 
