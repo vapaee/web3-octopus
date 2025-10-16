@@ -1,6 +1,6 @@
 {
   "name": "@vapaee/w3o-ethereum",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Web3 Octopus Ethereum Support",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -14,7 +14,6 @@
   "dependencies": {
     "@vapaee/w3o-core": "file:../w3o-core/lib",
     "@vapaee/w3o-antelope": "file:../w3o-antelope/lib",
-    "metakeep": "^2.2.8",
     "ethers": "^5.5.1",
     "rxjs": ">=6.0.0"
   },

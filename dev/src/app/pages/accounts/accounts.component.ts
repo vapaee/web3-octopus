@@ -6,7 +6,7 @@ import { RedirectService } from '@app/services/redirect.service';
 import { SharedModule } from '@app/shared/shared.module';
 import { W3oContextFactory, W3oNetwork, W3oSession } from '@vapaee/w3o-core';
 import { LucideAngularModule, X } from 'lucide-angular';
-import { EthereumWalletMetakeep, googleCtrl, MetakeepWallets } from '@vapaee/w3o-ethereum';
+import { googleCtrl } from '@vapaee/w3o-ethereum';
 import { Subscription } from 'rxjs';
 
 const logger = new W3oContextFactory('AccountsComponent');

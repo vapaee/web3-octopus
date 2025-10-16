@@ -1,5 +1,5 @@
 // w3o-ethereum/src/classes/EthereumWalletMetakeep.ts
-
+/*
 import {
     W3oContextFactory,
     W3oContext,
@@ -188,3 +188,4 @@ export class EthereumWalletMetakeep extends EthereumWallet {
         };
     }
 }
+*/
