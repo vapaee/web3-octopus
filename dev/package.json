@@ -35,7 +35,7 @@
     "@wharfkit/wallet-plugin-cleos": "^1.2.0",
     "@wharfkit/web-renderer": "^1.4.1",
     "esbuild": "^0.25.0",
-    "ethers": "^5.5.1",
+    "ethers": "6.15.0",
     "lucide-angular": "^0.483.0",
     "ngrx-store-localstorage": "^19.0.0",
     "rxjs": "~7.8.0",

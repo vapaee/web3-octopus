@@ -16,8 +16,8 @@ export class EthereumContract extends W3oContract {
     }
 
     /** Returns an ethers.js Contract bound to a signer when possible */
-    getEthersContract(provider: ethers.providers.Web3Provider): ethers.Contract {
-        const signer = provider.getSigner ? provider.getSigner() : undefined;
+    async getEthersContract(provider: ethers.BrowserProvider): Promise<ethers.Contract> {
+        const signer = provider.getSigner ? await provider.getSigner() : undefined;
         return new ethers.Contract(
             this.address,
             this.abi as EthereumContractAbi,
@@ -26,7 +26,7 @@ export class EthereumContract extends W3oContract {
     }
 
     /** Returns a read-only ethers.js Contract (no signer required) */
-    getReadOnlyContract(provider: ethers.providers.Provider): ethers.Contract {
+    getReadOnlyContract(provider: ethers.Provider): ethers.Contract {
         return new ethers.Contract(this.address, this.abi as EthereumContractAbi, provider);
     }
 }

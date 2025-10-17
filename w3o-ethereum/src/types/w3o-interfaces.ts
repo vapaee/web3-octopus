@@ -9,7 +9,6 @@ import {
     W3oNetworkName,
     W3oNetworkLinks,
 } from "@vapaee/w3o-core";
-import { ethers } from "ethers";
 import { EthereumContract } from "../classes/EthereumContract";
 
 /**
@@ -46,5 +45,5 @@ export interface EthereumTransaction extends W3oTransaction {
     contract: EthereumContract;
     function: string;
     params: any;
-    value?: ethers.BigNumber; // only used for payable calls or native transfers
+    value?: bigint; // only used for payable calls or native transfers
 }
