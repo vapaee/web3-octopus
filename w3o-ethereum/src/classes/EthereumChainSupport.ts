@@ -63,7 +63,7 @@ export class EthereumChainSupport extends W3oChainSupport {
 
     override validateAccount(username: string, parent: W3oContext): Observable<boolean> {
         const context = logger.method('validateAccount', { username }, parent);
-        const isValid = ethers.utils.isAddress(username);
+        const isValid = ethers.isAddress(username);
         return new Observable<boolean>(observer => { observer.next(isValid); observer.complete(); });
     }
 

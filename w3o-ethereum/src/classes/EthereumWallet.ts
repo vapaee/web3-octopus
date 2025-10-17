@@ -29,14 +29,14 @@ export abstract class EthereumWallet extends W3oWallet {
         super(name, context);
     }
 
-    protected getProvider(): ethers.providers.Web3Provider {
+    protected getProvider(): ethers.BrowserProvider {
         if (typeof window !== 'undefined' && (window as any).ethereum) {
-            return new ethers.providers.Web3Provider((window as any).ethereum);
+            return new ethers.BrowserProvider((window as any).ethereum);
         }
         throw new EthereumError(EthereumError.PROVIDER_NOT_FOUND);
     }
 
-    protected async ensureNetwork(provider: ethers.providers.Web3Provider, networkName: W3oNetworkName, parent: W3oContext): Promise<void> {
+    protected async ensureNetwork(provider: ethers.BrowserProvider, networkName: W3oNetworkName, parent: W3oContext): Promise<void> {
         const context = logger.method('ensureNetwork', { networkName }, parent);
         const settings = this.octopus.networks.getNetwork(networkName, context) as any;
         const chainIdHex = '0x' + parseInt(settings.settings.chainId, 10).toString(16);
@@ -80,7 +80,7 @@ export abstract class EthereumWallet extends W3oWallet {
                     const provider = this.getProvider();
                     await this.ensureNetwork(provider, auth.network.name, context);
 
-                    const signer: ethers.providers.JsonRpcSigner = provider.getSigner();
+                    const signer: ethers.JsonRpcSigner = await provider.getSigner();
 
                     // Native currency transfer branch
                     if (contract.address === '___NATIVE_CURRENCY___') {
@@ -91,7 +91,7 @@ export abstract class EthereumWallet extends W3oWallet {
                             }
 
                             const value = this.normalizeBigNumberish(trx.value ?? (trx.params && (trx.params.amount as any)), context);
-                            if (!value) {
+                            if (value === undefined) {
                                 throw new Error('Missing "value" for native currency transfer');
                             }
 
@@ -111,7 +111,7 @@ export abstract class EthereumWallet extends W3oWallet {
 
                     // Contract function call branch
                     try {
-                        const ethersContract: ethers.Contract = contract.getEthersContract(provider);
+                        const ethersContract: ethers.Contract = await contract.getEthersContract(provider);
                         const abi = contract.abi as EthereumContractAbi;
 
                         if (!trx.function || typeof trx.function !== 'string') {
@@ -124,7 +124,7 @@ export abstract class EthereumWallet extends W3oWallet {
                         }
 
                         const args = this.buildArgsFromParams(abiItem, (trx.params as Record<string, unknown>) || {}, context);
-                        const overrides: ethers.CallOverrides = {};
+                        const overrides: Record<string, unknown> = {};
 
                         // If payable, attach value
                         if ((abiItem as any).stateMutability === 'payable') {
@@ -168,7 +168,7 @@ export abstract class EthereumWallet extends W3oWallet {
     // Helpers ----------
 
     // Helper: normalize value to BigNumberish or undefined
-    protected normalizeBigNumberish(value: unknown, parent: W3oContext): ethers.BigNumber {
+    protected normalizeBigNumberish(value: unknown, parent: W3oContext): bigint {
         logger.method('normalizeBigNumberish', { value }, parent);
         if (value === null || value === undefined) {
             throw new EthereumError(
@@ -176,19 +176,8 @@ export abstract class EthereumWallet extends W3oWallet {
                 { value, message: 'could not normalize null or undefined' }
             )
         }
-        // ethers v5 BigNumber detection
-        if (ethers.BigNumber.isBigNumber(value)) {
-            return value as ethers.BigNumber;
-        }
-        if (typeof value === 'string' || typeof value === 'number') {
-            throw new EthereumError(
-                EthereumError.NOT_VALID_NUMBERISH,
-                { value, message: 'could not normalize string or number' }
-            )
-        }
-        // Last resort: try to construct
         try {
-            return ethers.BigNumber.from(value as any);
+            return ethers.toBigInt(value as any);
         } catch {
            throw new EthereumError(
                 EthereumError.NOT_VALID_NUMBERISH,

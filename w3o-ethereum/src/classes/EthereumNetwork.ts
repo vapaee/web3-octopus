@@ -19,7 +19,7 @@ const logger = new W3oContextFactory('EthereumNetwork');
  */
 export class EthereumNetwork extends W3oNetwork {
     private _settings!: W3oEthereumNetworkSettings;
-    private _provider!: ethers.providers.JsonRpcProvider;
+    private _provider!: ethers.JsonRpcProvider;
 
     constructor(settings: W3oEthereumNetworkSettings, parent: W3oContext) {
         const context = logger.method('constructor', { chain: settings.displayName, settings }, parent);
@@ -28,14 +28,14 @@ export class EthereumNetwork extends W3oNetwork {
         }
         super(settings, context);
         this._settings = settings;
-        this._provider = new ethers.providers.JsonRpcProvider(settings.rpcUrl);
+        this._provider = new ethers.JsonRpcProvider(settings.rpcUrl);
     }
 
     get ethereumSettings(): W3oEthereumNetworkSettings {
         return this._settings;
     }
 
-    get provider(): ethers.providers.JsonRpcProvider {
+    get provider(): ethers.JsonRpcProvider {
         return this._provider;
     }
 
@@ -79,7 +79,7 @@ export class EthereumNetwork extends W3oNetwork {
 
     override validateAccount(address: string, parent: W3oContext): Observable<boolean> {
         const context = logger.method('validateAccount', { address }, parent);
-        const isValid = ethers.utils.isAddress(address);
+        const isValid = ethers.isAddress(address);
         return new Observable<boolean>(subscriber => {
             void context;
             subscriber.next(isValid);

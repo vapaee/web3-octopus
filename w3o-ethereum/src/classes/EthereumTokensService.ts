@@ -78,7 +78,7 @@ export class EthereumTokensService extends W3oService implements W3oTokensServic
         // If the token address indicates the native currency, fetch balance directly from provider
         if (token.address === '___NATIVE_CURRENCY___') {
             return new Observable<W3oBalance>((observer) => {
-                network.provider.getBalance(address).then((balance: any) => {
+                network.provider.getBalance(address).then((balance: bigint) => {
                     const value = Number(balance.toString());
                     const formatted = (value / Math.pow(10, token.precision)).toFixed(token.precision);
                     observer.next({ amount: { value, formatted }, token } as W3oBalance);
@@ -93,7 +93,7 @@ export class EthereumTokensService extends W3oService implements W3oTokensServic
 
         const contract = (token.contract as EthereumContract).getReadOnlyContract(network.provider);
         return new Observable<W3oBalance>((observer) => {
-            contract.balanceOf(address).then((balance: any) => {
+            contract.balanceOf(address).then((balance: bigint) => {
                 const value = Number(balance.toString());
                 const formatted = (value / Math.pow(10, token.precision)).toFixed(token.precision);
                 observer.next({ amount: { value, formatted }, token } as W3oBalance);
@@ -232,7 +232,7 @@ export class EthereumTokensService extends W3oService implements W3oTokensServic
         const result$ = new Subject<W3oTransferSummary>();
         try {
             const numericPart = quantity.split(' ')[0];
-            const amount = ethers.utils.parseUnits(numericPart, token.precision);
+            const amount = ethers.parseUnits(numericPart, token.precision);
 
             // transfer transaction
             const trx: EthereumTransaction = {
