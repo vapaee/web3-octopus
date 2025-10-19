@@ -115,7 +115,7 @@ const TelosEVMTestnetConfigJSON: W3oEthereumNetworkSettings = {
     name: 'telos-evm-testnet' as W3oNetworkName,
     chainId: '41',
     displayName: 'Telos EVM Testnet',
-    rpcUrl: 'https://testnet.telos.net/evm',
+    rpcUrl: 'https://rpc.testnet.telos.net',
     tokensUrl: 'assets/tokens-ethereum-telos-evm-testnet.json',
     symbol: 'TLOS',
     nativeCurrency: 'Telos',
