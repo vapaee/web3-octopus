@@ -8,7 +8,7 @@ import {
     W3oWalletName,
     W3oNetworkName,
 } from '@vapaee/w3o-core';
-import { ethers } from 'ethers';
+import { ethers, FunctionFragment } from 'ethers';
 import { EthereumError } from './EthereumError';
 import { EthereumAbiItem, EthereumContractAbi, EthereumTransaction } from '../types';
 import { EthereumTransactionResponse } from './EthereumChainSupport';
@@ -189,7 +189,32 @@ export abstract class EthereumWallet extends W3oWallet {
     // Helper: find ABI function by name
     protected findFunctionAbi(abi: EthereumContractAbi, fnName: string, parent: W3oContext): EthereumAbiItem | undefined {
         logger.method('findFunctionAbi', { abi, fnName }, parent);
-        return abi.find(i => i.type === 'function' && i.name === fnName);
+
+        for (const item of abi) {
+            if (typeof item === 'string') {
+                const trimmed = item.trim();
+                if (!trimmed.startsWith('function ')) {
+                    continue;
+                }
+
+                try {
+                    const fragment = FunctionFragment.from(trimmed);
+                    if (fragment.type === 'function' && fragment.name === fnName) {
+                        const parsed = JSON.parse(fragment.format('json')) as EthereumAbiItem;
+                        return parsed;
+                    }
+                } catch (error) {
+                    parent.warn('Failed to parse ABI function string', { item, error });
+                }
+                continue;
+            }
+
+            if (item.type === 'function' && item.name === fnName) {
+                return item;
+            }
+        }
+
+        return undefined;
     }
 
     // Helper: build ordered args from named params using the ABI inputs

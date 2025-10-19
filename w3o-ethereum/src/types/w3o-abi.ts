@@ -65,4 +65,4 @@ export type EthereumAbiItem =
     | EthereumFallbackAbiItem
     | EthereumReceiveAbiItem;
 
-export type EthereumContractAbi = readonly EthereumAbiItem[];
+export type EthereumContractAbi = readonly (EthereumAbiItem | string)[];
